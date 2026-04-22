@@ -79,36 +79,36 @@ window.addEventListener('load', function() {
     }
 });
 const allProducts = [
-    { id: 1, name: "Premium Drop Shoulder Blue", price: 850, category: "drop-shoulder", img: "images/p1.jpg" },
-    { id: 2, name: "Black Half Sleeve Tee", price: 650, category: "half-sleeve", img: "images/p2.jpg" },
-    { id: 3, name: "Solid Regular Fit T-Shirt", price: 550, category: "regular-tshirt", img: "images/p3.jpg" },
-    { id: 4, name: "Black Winter Hoodie", price: 1250, category: "hoodie", img: "images/p4.jpg" },
+    { id: 1, name: "Premium Drop Shoulder Black", price: 850, category: "drop-shoulder", img: "images/p1.jpg" },
+    { id: 2, name: "Basic Half Sleeve Navy", price: 650, category: "half-sleeve", img: "images/p2.jpg" },
+    { id: 3, name: "Regular Fit White Tee", price: 550, category: "regular-tshirt", img: "images/p3.jpg" },
+    { id: 4, name: "Winter Special Hoodie", price: 1250, category: "hoodie", img: "images/p4.jpg" },
     { id: 5, name: "King & Queen Couple Set", price: 1100, category: "couple-tshirt", img: "images/p5.jpg" }
 ];
 
-// ক্যাটাগরি ফিল্টার করার ফাংশন
-function filterCategory(categoryName) {
+function displayProducts(productsToShow) {
     const grid = document.getElementById('product-grid');
-    grid.innerHTML = ""; // আগের সব প্রোডাক্ট মুছে ফেলা
+    if(!grid) return;
+    grid.innerHTML = ""; 
 
-    // শুধু সিলেক্ট করা ক্যাটাগরির প্রোডাক্টগুলো খুঁজে বের করা
-    const filteredProducts = allProducts.filter(product => product.category === categoryName);
-
-    if (filteredProducts.length === 0) {
-        grid.innerHTML = "<p class='col-span-full text-center text-gray-500'>এই ক্যাটাগরিতে বর্তমানে কোনো প্রোডাক্ট নেই।</p>";
-    } else {
-        filteredProducts.forEach(product => {
-            grid.innerHTML += `
-                <div class="group bg-white p-4 rounded-lg shadow-sm hover:shadow-lg transition">
-                    <img src="${product.img}" class="w-full h-64 object-cover rounded-md">
-                    <h3 class="mt-4 font-semibold text-gray-800 text-sm">${product.name}</h3>
-                    <p class="text-gray-500 font-bold">৳ ${product.price}</p>
-                    <button onclick="addToCart('${product.name}', ${product.price})" class="mt-3 w-full bg-black text-white py-2 rounded text-xs uppercase">Add to Cart</button>
-                </div>
-            `;
-        });
-    }
-
-    // ক্লিক করার পর অটোমেটিক স্ক্রল করে প্রোডাক্ট সেকশনে নিয়ে যাবে
-    grid.scrollIntoView({ behavior: 'smooth' });
+    productsToShow.forEach(product => {
+        grid.innerHTML += `
+            <div class="group bg-white p-4 rounded-lg shadow-sm hover:shadow-lg transition">
+                <img src="${product.img}" class="w-full h-64 object-cover rounded-md group-hover:scale-105 transition duration-300">
+                <h3 class="mt-4 font-semibold text-gray-800">${product.name}</h3>
+                <p class="text-gray-500 font-bold">৳ ${product.price}</p>
+                <button onclick="addToCart('${product.name}', ${product.price})" class="mt-3 w-full bg-black text-white py-2 rounded text-xs uppercase hover:bg-gray-800 transition">Add to Cart</button>
+            </div>
+        `;
+    });
 }
+
+function filterCategory(catName) {
+    const filtered = allProducts.filter(p => p.category === catName);
+    displayProducts(filtered);
+    document.getElementById('product-grid').scrollIntoView({ behavior: 'smooth' });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    displayProducts(allProducts);
+});
