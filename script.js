@@ -41,5 +41,5 @@ function sendToWhatsApp() {
 
     let items = cart.map(i => i.name).join(", ");
     const msg = `New Order from Redams:%0AName: ${name}%0AAddress: ${address}%0AProducts: ${items}`;
-    window.open(`https://wa.me/8801XXXXXXXXX?text=${msg}`); // এখানে আপনার নম্বর দিন
+    window.open(`https://wa.me/8801894357549 text=${msg}`); // এখানে আপনার নম্বর দিন
 }
