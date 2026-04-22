@@ -78,3 +78,37 @@ window.addEventListener('load', function() {
         }, 10000); // ১০ সেকেন্ড দেরি
     }
 });
+// ১. এখানে আপনি যত ইচ্ছা প্রোডাক্ট অ্যাড করতে পারবেন
+const allProducts = [
+    { id: 1, name: "Premium Drop Shoulder Blue", price: 850, img: "images/p1.jpg" },
+    { id: 2, name: "Black Signature T-Shirt", price: 750, img: "images/p2.jpg" },
+    { id: 3, name: "White Minimalist Tee", price: 650, img: "images/p3.jpg" },
+    { id: 4, name: "Olive Cargo Drop Shoulder", price: 950, img: "images/p4.jpg" },
+    { id: 5, name: "Redams Special Edition", price: 1200, img: "images/p5.jpg" }
+    // নতুন প্রোডাক্ট বাড়াতে চাইলে শুধু ওপরের লাইনটি কপি করে নিচে বসান
+];
+
+// ২. প্রোডাক্টগুলো স্ক্রিনে দেখানোর ফাংশন
+function displayProducts() {
+    const grid = document.getElementById('product-grid');
+    grid.innerHTML = ""; // আগের কন্টেন্ট ক্লিয়ার করা
+
+    allProducts.forEach(product => {
+        grid.innerHTML += `
+            <div class="group bg-white p-4 rounded-lg shadow-sm hover:shadow-lg transition">
+                <div class="relative overflow-hidden rounded-md bg-gray-100">
+                    <img src="${product.img}" alt="${product.name}" class="w-full h-64 object-cover group-hover:scale-105 transition duration-300">
+                </div>
+                <h3 class="mt-4 font-semibold text-gray-800 text-sm md:text-base">${product.name}</h3>
+                <p class="text-gray-500 font-bold mt-1">৳ ${product.price}</p>
+                <button onclick="addToCart('${product.name}', ${product.price})" class="mt-3 w-full bg-black text-white py-2 rounded text-sm hover:bg-gray-800 uppercase">Add to Cart</button>
+            </div>
+        `;
+    });
+}
+
+// ৩. পেজ লোড হওয়ার সাথে সাথে ফাংশনটি চালু হবে
+window.onload = function() {
+    displayProducts();
+    // যদি আপনার স্লাইডার বা অন্য কোনো ফাংশন থাকে সেগুলোও এখানে থাকবে
+};
