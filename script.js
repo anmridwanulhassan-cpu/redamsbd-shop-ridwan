@@ -88,15 +88,18 @@ const allProducts = [
 
 function displayProducts(productsToShow) {
     const grid = document.getElementById('product-grid');
-    if(!grid) return;
+    if(!grid) return; 
+    
+    // ১. প্রথমে গ্রিডটি একদম খালি করে নিতে হবে (এটি খুব জরুরি)
     grid.innerHTML = ""; 
 
     productsToShow.forEach(product => {
+        // ২. এখন লুপের ভেতর += ব্যবহার করে একটি একটি করে প্রোডাক্ট যোগ হবে
         grid.innerHTML += `
-            <div class="group bg-white p-4 rounded-lg shadow-sm hover:shadow-lg transition">
-                <img src="${product.img}" class="w-full h-64 object-cover rounded-md group-hover:scale-105 transition duration-300">
-                <h3 class="mt-4 font-semibold text-gray-800">${product.name}</h3>
-                <p class="text-gray-500 font-bold">৳ ${product.price}</p>
+            <div class="group bg-white p-4 rounded-lg shadow-sm hover:shadow-lg transition border border-gray-100">
+                <img src="${product.img}" alt="${product.name}" class="w-full h-64 object-cover rounded-md group-hover:scale-105 transition duration-300">
+                <h3 class="mt-4 font-semibold text-gray-800 text-sm md:text-base">${product.name}</h3>
+                <p class="text-gray-500 font-bold mt-1">৳ ${product.price}</p>
                 <button onclick="addToCart('${product.name}', ${product.price})" class="mt-3 w-full bg-black text-white py-2 rounded text-xs uppercase hover:bg-gray-800 transition">Add to Cart</button>
             </div>
         `;
