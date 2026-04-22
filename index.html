@@ -47,7 +47,26 @@
     <div class="swiper-button-prev"></div>
     <div class="swiper-pagination"></div>
 </div>
+<div class="container mx-auto px-4 py-10">
+    <h2 class="text-2xl font-bold text-center mb-8 uppercase tracking-widest">Featured Categories</h2>
+    
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div onclick="filterCategory('drop-shoulder')" class="cursor-pointer group relative overflow-hidden rounded-lg shadow-md">
+            <img src="images/cat1.jpg" alt="Drop Shoulder" class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
+            <div class="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-40 transition flex items-end justify-center pb-4">
+                <span class="text-white font-bold bg-black bg-opacity-60 px-3 py-1 rounded uppercase text-xs">Drop Shoulder</span>
+            </div>
+        </div>
 
+        <div onclick="filterCategory('half-sleeve')" class="cursor-pointer group relative overflow-hidden rounded-lg shadow-md">
+            <img src="images/cat2.jpg" alt="Half Sleeve" class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
+            <div class="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-40 transition flex items-end justify-center pb-4">
+                <span class="text-white font-bold bg-black bg-opacity-60 px-3 py-1 rounded uppercase text-xs">Half Sleeve</span>
+            </div>
+        </div>
+
+        </div>
+</div>
     <div class="container mx-auto px-4 py-10">
         <h2 class="text-3xl font-bold text-center mb-10">Featured Products</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
