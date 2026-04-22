@@ -6,6 +6,14 @@
     <title>Redams - Premium Lifestyle</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<style>
+    .swiper { width: 100%; height: auto; aspect-ratio: 16/9; } 
+    @media (min-width: 768px) { .swiper { height: 450px; } }
+    .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
+    .swiper-button-next, .swiper-button-prev { color: #000 !important; }
+    .swiper-pagination-bullet-active { background: #000 !important; }
+</style>
 </head>
 <body class="bg-gray-50">
 
@@ -26,6 +34,19 @@
             </div>
         </div>
     </nav>
+    <div class="swiper mySwiper">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide">
+            <img src="https://via.placeholder.com/1200x450?text=Premium+Lifestyle+Redams" alt="Banner 1">
+        </div>
+        <div class="swiper-slide">
+            <img src="https://via.placeholder.com/1200x450?text=New+Drop+Shoulder+Collection" alt="Banner 2">
+        </div>
+    </div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-pagination"></div>
+</div>
 
     <div class="container mx-auto px-4 py-10">
         <h2 class="text-3xl font-bold text-center mb-10">Featured Products</h2>
@@ -62,5 +83,24 @@
     </button>
 
     <script src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<script>
+  var swiper = new Swiper(".mySwiper", {
+    loop: true,
+    autoplay: {
+      delay: 3500, // ৩.৫ সেকেন্ড পর পর স্লাইড পরিবর্তন হবে
+      disableOnInteraction: false,
+    },
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+  });
+</script>
 </body>
 </html>
