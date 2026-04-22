@@ -40,7 +40,7 @@
             <img src="https://via.placeholder.com/1200x450?text=Premium+Lifestyle+Redams" alt="Banner 1">
         </div>
         <div class="swiper-slide">
-            <img src="https://via.placeholder.com/1200x450?text=New+Drop+Shoulder+Collection" alt="Banner 2">
+            <img src="https://img.freepik.com/free-photo/fashion-clothes-design-concept-studio-shoot_53876-133742.jpg" alt="Banner 2">
         </div>
     </div>
     <div class="swiper-button-next"></div>
@@ -86,6 +86,25 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 <script>
+  // এটি নিশ্চিত করবে যে পুরো পেজ লোড হওয়ার পর স্লাইডার চালু হবে
+  document.addEventListener('DOMContentLoaded', function () {
+    var swiper = new Swiper(".mySwiper", {
+      loop: true,
+      autoplay: {
+        delay: 3500,
+        disableOnInteraction: false,
+      },
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+    });
+  });
+</script>
   var swiper = new Swiper(".mySwiper", {
     loop: true,
     autoplay: {
