@@ -34,12 +34,41 @@ function addToCart(name, price) {
 }
 
 function sendToWhatsApp() {
-    const name = document.getElementById('cust-name').value;
+    // ফর্ম থেকে কাস্টমারের তথ্য নেওয়া
+    const name = document.getElementById('cust-name').value; // আপনার ইনপুট ID চেক করুন
     const address = document.getElementById('cust-address').value;
-    
-    if(!name || !address) return alert("সব তথ্য দিন");
+    const phone = document.getElementById('cust-phone').value;
 
-    let items = cart.map(i => i.name).join(", ");
-    const msg = `New Order from Redams:%0AName: ${name}%0AAddress: ${address}%0AProducts: ${items}`;
-    window.open(`https://wa.me/8801894357549 text=${msg}`); // এখানে আপনার নম্বর দিন
+    // কার্ট থেকে সিলেক্ট করা প্রোডাক্টের নাম ও প্রাইস নেওয়া
+    if (cart.length === 0) {
+        alert("আপনার কার্ট খালি! আগে প্রোডাক্ট যোগ করুন।");
+        return;
+    }
+
+    let productDetails = "";
+    let totalPrice = 0;
+
+    cart.forEach((item, index) => {
+        productDetails += `${index + 1}. ${item.name} - ৳${item.price}%0A`;
+        totalPrice += item.price;
+    });
+
+    // আপনার হোয়াটসঅ্যাপ নম্বর এখানে দিন (অবশ্যই ৮৮০ দিয়ে শুরু করবেন)
+    const myNumber = "8801XXXXXXXXX"; 
+
+    // মেসেজের ফরম্যাট তৈরি (এটি সুন্দরভাবে সাজানো থাকবে)
+    const message = `*New Order - REDAMS*%0A%0A` +
+                    `*Customer Info:*%0A` +
+                    `Name: ${name}%0A` +
+                    `Address: ${address}%0A` +
+                    `WhatsApp: ${phone}%0A%0A` +
+                    `*Order Items:*%0A${productDetails}%0A` +
+                    `*Total Bill:* ৳${totalPrice}%0A` +
+                    `*Payment:* Cash on Delivery`;
+
+    // হোয়াটসঅ্যাপ লিংক জেনারেট করা
+    const whatsappUrl = `https://wa.me/${myNumber}?text=${message}`;
+
+    // নতুন ট্যাবে হোয়াটসঅ্যাপ ওপেন করা
+    window.open(whatsappUrl, '_blank');
 }
