@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redams - Premium Lifestyle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold tracking-widest text-black">REDAMS</h1>
+            <div class="hidden md:flex space-x-6">
+                <a href="#" class="hover:text-blue-600">Home</a>
+                <a href="#" class="hover:text-blue-600">Shop</a>
+                <a href="#" class="hover:text-blue-600">Drop Shoulder</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <i class="fa-solid fa-magnifying-glass cursor-pointer"></i>
+                <div class="relative">
+                    <i class="fa-solid fa-bag-shopping text-xl cursor-pointer"></i>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-10">
+        <h2 class="text-3xl font-bold text-center mb-10">Featured Products</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="group bg-white p-4 rounded-lg shadow-sm hover:shadow-lg transition">
+                <div class="relative overflow-hidden rounded-md">
+                    <img src="https://via.placeholder.com/400x500" alt="Product" class="w-full h-64 object-cover group-hover:scale-105 transition duration-300">
+                </div>
+                <h3 class="mt-4 font-semibold text-gray-800 text-sm md:text-base">Premium Drop Shoulder T-Shirt</h3>
+                <p class="text-gray-500 font-bold mt-1">৳ 850</p>
+                <button onclick="addToCart('Drop Shoulder Black', 850)" class="mt-3 w-full bg-black text-white py-2 rounded text-sm hover:bg-gray-800 uppercase">Add to Cart</button>
+            </div>
+            </div>
+    </div>
+
+    <div id="checkout-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div class="bg-white w-full max-w-md p-6 rounded-lg">
+            <h2 class="text-xl font-bold mb-4">Complete Your Order (COD)</h2>
+            <div class="space-y-4">
+                <input type="text" id="cust-name" placeholder="Full Name" class="w-full border p-2 rounded">
+                <input type="text" id="cust-address" placeholder="Delivery Address" class="w-full border p-2 rounded">
+                <input type="text" id="cust-phone" placeholder="WhatsApp Number" class="w-full border p-2 rounded">
+                <button onclick="sendToWhatsApp()" class="w-full bg-green-600 text-white py-3 rounded font-bold hover:bg-green-700">
+                    <i class="fa-brands fa-whatsapp"></i> Confirm via WhatsApp
+                </button>
+                <button onclick="toggleModal()" class="w-full text-gray-500 mt-2">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <button onclick="toggleModal()" class="fixed bottom-6 right-6 bg-black text-white px-6 py-3 rounded-full shadow-2xl flex items-center space-x-2">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span>Checkout Now</span>
+    </button>
+
+    <script src="script.js"></script>
+</body>
+</html>
