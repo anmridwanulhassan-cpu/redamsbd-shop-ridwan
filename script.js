@@ -49,14 +49,15 @@ function sendToWhatsApp() {
     let totalPrice = 0;
 
     cart.forEach((item, index) => {
+       productDetails += `${index + 1}. ${item.name} - ৳${item.price}%0A`;
+       cart.forEach((item, index) => {
         productDetails += `${index + 1}. ${item.name} - ৳${item.price}%0A`;
         totalPrice += item.price;
     });
 
-    // আপনার হোয়াটসঅ্যাপ নম্বর এখানে দিন (অবশ্যই ৮৮০ দিয়ে শুরু করবেন)
-    const myNumber = "8801XXXXXXXXX"; 
+    // আপনার আসল হোয়াটসঅ্যাপ নম্বর এখানে দিন (অবশ্যই ৮৮০ দিয়ে শুরু করবেন)
+    const myNumber = "8801894357549"; // এখানে আপনার সঠিক নম্বরটি লিখুন
 
-    // মেসেজের ফরম্যাট তৈরি (এটি সুন্দরভাবে সাজানো থাকবে)
     const message = `*New Order - REDAMS*%0A%0A` +
                     `*Customer Info:*%0A` +
                     `Name: ${name}%0A` +
@@ -66,9 +67,6 @@ function sendToWhatsApp() {
                     `*Total Bill:* ৳${totalPrice}%0A` +
                     `*Payment:* Cash on Delivery`;
 
-    // হোয়াটসঅ্যাপ লিংক জেনারেট করা
     const whatsappUrl = `https://wa.me/${myNumber}?text=${message}`;
-
-    // নতুন ট্যাবে হোয়াটসঅ্যাপ ওপেন করা
     window.open(whatsappUrl, '_blank');
 }
