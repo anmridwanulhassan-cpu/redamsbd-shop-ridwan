@@ -78,40 +78,71 @@ window.addEventListener('load', function() {
         }, 10000); // ১০ সেকেন্ড দেরি
     }
 });
-const allProducts = [
-    { id: 1, name: "Premium Drop Shoulder Black", price: 850, category: "drop-shoulder", img: "images/p1.jpg" },
-    { id: 2, name: "Basic Half Sleeve Navy", price: 650, category: "half-sleeve", img: "images/p2.jpg" },
-    { id: 3, name: "Regular Fit White Tee", price: 550, category: "regular-tshirt", img: "images/p3.jpg" },
-    { id: 4, name: "Winter Special Hoodie", price: 1250, category: "hoodie", img: "images/p4.jpg" },
-    { id: 5, name: "King & Queen Couple Set", price: 1100, category: "couple-tshirt", img: "images/p5.jpg" }
-];
+let allProducts = []; // এখানে ডাটা অটোমেটিক লোড হবে
 
-function displayProducts(productsToShow) {
+// ১. JSON ফাইল থেকে ডাটা নিয়ে আসার ফাংশন
+async function loadProducts() {
+    try {
+        const response = await fetch('products.json');
+        allProducts = await response.json();
+        displayProducts(allProducts); // শুরুতে সব দেখাবে
+    } catch (error) {
+        console.error("প্রোডাক্ট লোড করতে সমস্যা হয়েছে:", error);
+    }
+}
+
+// ২. প্রোডাক্ট দেখানোর মেইন ফাংশন
+function displayProducts(products) {
     const grid = document.getElementById('product-grid');
-    if(!grid) return; 
-    
-    // ১. প্রথমে গ্রিডটি একদম খালি করে নিতে হবে (এটি খুব জরুরি)
-    grid.innerHTML = ""; 
+    if (!grid) return;
+    grid.innerHTML = "";
 
-    productsToShow.forEach(product => {
-        // ২. এখন লুপের ভেতর += ব্যবহার করে একটি একটি করে প্রোডাক্ট যোগ হবে
+    products.forEach(p => {
         grid.innerHTML += `
-            <div class="group bg-white p-4 rounded-lg shadow-sm hover:shadow-lg transition border border-gray-100">
-                <img src="${product.img}" alt="${product.name}" class="w-full h-64 object-cover rounded-md group-hover:scale-105 transition duration-300">
-                <h3 class="mt-4 font-semibold text-gray-800 text-sm md:text-base">${product.name}</h3>
-                <p class="text-gray-500 font-bold mt-1">৳ ${product.price}</p>
-                <button onclick="addToCart('${product.name}', ${product.price})" class="mt-3 w-full bg-black text-white py-2 rounded text-xs uppercase hover:bg-gray-800 transition">Add to Cart</button>
+            <div class="group bg-white p-4 border border-gray-100 hover:shadow-xl transition cursor-pointer" onclick="openModal(${p.id})">
+                <img src="${p.images[0]}" class="w-full h-72 object-cover rounded">
+                <h3 class="mt-4 font-bold text-gray-800">${p.name}</h3>
+                <p class="text-gray-600">৳ ${p.price}</p>
+                <button class="mt-3 w-full bg-black text-white py-2 text-xs uppercase tracking-widest hover:bg-gray-800">View Details</button>
             </div>
         `;
     });
 }
 
-function filterCategory(catName) {
-    const filtered = allProducts.filter(p => p.category === catName);
+// ৩. পপ-আপ (Modal) ফাংশন
+function openModal(id) {
+    const p = allProducts.find(item => item.id === id);
+    const content = document.getElementById('modal-content');
+    
+    content.innerHTML = `
+        <div class="space-y-4">
+            <img id="main-img" src="${p.images[0]}" class="w-full h-96 object-cover rounded shadow">
+            <div class="flex gap-2">
+                ${p.images.map(img => `<img src="${img}" onclick="document.getElementById('main-img').src='${img}'" class="w-20 h-20 object-cover cursor-pointer border hover:border-black">`).join('')}
+            </div>
+        </div>
+        <div class="flex flex-col justify-center">
+            <h2 class="text-2xl font-bold mb-2">${p.name}</h2>
+            <p class="text-xl font-bold text-gray-700 mb-6">Price: ৳ ${p.price}</p>
+            <p class="text-sm text-gray-500 uppercase mb-8 tracking-tighter">Category: ${p.category}</p>
+            <button onclick="addToCart('${p.name}', ${p.price})" class="w-full bg-black text-white py-4 font-bold hover:bg-gray-800">ADD TO CART</button>
+        </div>
+    `;
+    document.getElementById('product-modal').classList.remove('hidden');
+    document.getElementById('product-modal').classList.add('flex');
+}
+
+function closeModal() {
+    document.getElementById('product-modal').classList.add('hidden');
+    document.getElementById('product-modal').classList.remove('flex');
+}
+
+// ৪. ক্যাটাগরি ফিল্টার
+function filterCategory(cat) {
+    const filtered = (cat === 'all') ? allProducts : allProducts.filter(p => p.category === cat);
     displayProducts(filtered);
     document.getElementById('product-grid').scrollIntoView({ behavior: 'smooth' });
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-    displayProducts(allProducts);
-});
+// ৫. পেজ লোড হলে ফাংশনটি চালু হবে
+window.onload = loadProducts;
