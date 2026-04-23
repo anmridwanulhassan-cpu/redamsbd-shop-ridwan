@@ -1,23 +1,3 @@
-
-// পপআপ বন্ধ করার ফাংশন
-function closePopup() {
-    document.getElementById('event-popup').classList.add('hidden');
-}
-
-// ওয়েবসাইট লোড হওয়ার ১০ সেকেন্ড পর পপআপ দেখানোর লজিক (একবার দেখাবে)
-window.addEventListener('load', function() {
-    // চেক করা হচ্ছে কাস্টমার কি আগে পপআপ দেখেছে কি না
-    const hasSeenPopup = localStorage.getItem('hasSeenSpecialOffer');
-
-    if (!hasSeenPopup) {
-        setTimeout(function() {
-            document.getElementById('event-popup').classList.remove('hidden');
-            
-            // পপআপ একবার দেখানোর পর লোকাল স্টোরেজে সেভ করে রাখা
-            localStorage.setItem('hasSeenSpecialOffer', 'true');
-        }, 10000); // ১০ সেকেন্ড দেরি
-    }
-});
 let allProducts = [];
 let cart = [];
 let selectedSize = null;
@@ -160,3 +140,4 @@ function sendOrderToWhatsApp() {
 function closeModal() { document.getElementById('product-modal').classList.replace('flex', 'hidden'); }
 function filterCategory(c) { displayProducts(c==='all' ? allProducts : allProducts.filter(p => p.category === c)); }
 window.onload = loadProducts;
+      
