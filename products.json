@@ -5,9 +5,9 @@
     "price": 850,
     "category": "drop-shoulder",
     "images": [
-      "images/p1-front.jpg",
-      "images/p1-back.jpg",
-      "images/p1-detail.jpg"
+      "images/cosmic front.png",
+      "images/cosmic back.png",
+      "images/cosmic lady front.jpg"
     ],
     "colors": ["Black", "Charcoal", "Navy"],
     "sizes": ["S", "M", "L", "XL"]
