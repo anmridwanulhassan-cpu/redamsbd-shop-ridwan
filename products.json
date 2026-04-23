@@ -4,19 +4,38 @@
     "name": "Premium Drop Shoulder Black",
     "price": 850,
     "category": "drop-shoulder",
-    "images": ["images/p1-f.jpg", "images/p1-b.jpg", "images/p1-s.jpg"],
-    // নতুন যোগ করা হলো:
-    "sizes": ["S", "M", "L", "XL"],
-    "colors": ["Black", "White", "Navy"]
+    "images": [
+      "images/p1-front.jpg",
+      "images/p1-back.jpg",
+      "images/p1-detail.jpg"
+    ],
+    "colors": ["Black", "Charcoal", "Navy"],
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "id": 2,
-    "name": "Classic Hoodie",
+    "name": "Classic Hoodie Navy",
     "price": 1200,
     "category": "hoodie",
-    "images": ["images/h1-f.jpg", "images/h1-b.jpg", "images/h1-s.jpg"],
-    // নতুন যোগ করা হলো:
-    "sizes": ["M", "L", "XL"],
-    "colors": ["Red", "Maroon"]
+    "images": [
+      "images/h1-front.jpg",
+      "images/h1-back.jpg",
+      "images/h1-detail.jpg"
+    ],
+    "colors": ["Navy Blue", "Black"],
+    "sizes": ["M", "L", "XL", "XXL"]
+  },
+  {
+    "id": 3,
+    "name": "Regular Fit White Tee",
+    "price": 550,
+    "category": "regular-tshirt",
+    "images": [
+      "images/w1-front.jpg",
+      "images/w1-back.jpg",
+      "images/w1-side.jpg"
+    ],
+    "colors": ["White", "Off-White"],
+    "sizes": ["S", "M", "L"]
   }
 ]
