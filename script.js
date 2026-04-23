@@ -165,49 +165,45 @@ function toggleCart(forceOpen = false) {
     else drawer.classList.toggle('translate-x-full');
 }
 
-// ৬. Send To WhatsApp (FIXED)
 function sendOrderToWhatsApp() {
-    // Value gulo direct trim kore neya hocche
-    const nameInput = document.getElementById('cust-name');
-    const phoneInput = document.getElementById('cust-phone');
-    const addressInput = document.getElementById('cust-address');
+    // HTML এর ID গুলোর সাথে মিলিয়ে ভ্যালু নেওয়া
+    const name = document.getElementById('cust-name').value.trim();
+    const phone = document.getElementById('cust-phone').value.trim();
+    const address = document.getElementById('cust-address').value.trim();
 
-    const name = nameInput.value.trim();
-    const phone = phoneInput.value.trim();
-    const address = addressInput.value.trim();
-
+    // চেক করা হচ্ছে সব তথ্য দেওয়া হয়েছে কি না
     if (!name || !phone || !address) {
-        alert("Doya kore Delivery Details puron korun!");
+        alert("দয়া করে নাম, ফোন নম্বর এবং সম্পূর্ণ ঠিকানা লিখুন!");
         return;
     }
 
     if (cart.length === 0) {
-        alert("Apnar bag khali!");
+        alert("আপনার কার্ট খালি!");
         return;
     }
 
-    let msg = `*NEW ORDER - REDAMS*%0A`;
-    msg += `---------------------------%0A`;
-    msg += `*Customer:* ${name}%0A`;
-    msg += `*Phone:* ${phone}%0A`;
-    msg += `*Address:* ${address}%0A`;
-    msg += `---------------------------%0A`;
-    msg += `*Items:*%0A`;
+    let message = `*NEW ORDER - REDAMS*%0A`;
+    message += `---------------------------%0A`;
+    message += `*Customer Details:*%0A`;
+    message += `Name: ${name}%0A`;
+    message += `Phone: ${phone}%0A`;
+    message += `Address: ${address}%0A`;
+    message += `---------------------------%0A`;
+    message += `*Order Items:*%0A`;
 
-    let totalAmount = 0;
+    let total = 0;
     cart.forEach((item, index) => {
-        msg += `${index + 1}. ${item.name}%0A   (${item.selectedColor}, ${item.selectedSize}) x ${item.qty} = ৳${item.price * item.qty}%0A`;
-        totalAmount += (item.price * item.qty);
+        message += `${index + 1}. ${item.name} (${item.selectedColor}, ${item.selectedSize}) x ${item.qty} = ৳${item.price * item.qty}%0A`;
+        total += (item.price * item.qty);
     });
 
-    msg += `---------------------------%0A`;
-    msg += `*TOTAL: ৳${totalAmount}*%0A`;
-    msg += `*(Cash on Delivery)*%0A%0A`;
-    msg += `Confirm my order please!`;
+    message += `---------------------------%0A`;
+    message += `*Total Amount: ৳${total}*%0A`;
+    message += `*Payment: Cash on Delivery*%0A`;
 
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+    window.open(url, '_blank');
 }
-
 function closeModal() {
     document.getElementById('product-modal').classList.replace('flex', 'hidden');
 }
