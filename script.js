@@ -81,104 +81,149 @@ window.addEventListener('load', function() {
 let allProducts = [];
 let selectedSize = null;
 let selectedColor = null;
+let modalQty = 1; // কোয়ান্টিটি ট্র্যাকিং
 
-// ১. ডাটা লোড করা
+const WHATSAPP_NUMBER = "8801894357549"; // আপনার নম্বর
+
 async function loadProducts() {
-    try {
-        const response = await fetch('products.json');
-        allProducts = await response.json();
-        displayProducts(allProducts);
-    } catch (error) {
-        console.error("প্রোডাক্ট লোড হয়নি:", error);
-    }
+    const res = await fetch('products.json');
+    allProducts = await res.json();
+    displayProducts(allProducts);
 }
 
-// ২. মেইন পেজে প্রোডাক্ট কার্ড দেখানো
+// ১. মেইন গ্রিডে প্রোডাক্ট দেখানো
 function displayProducts(products) {
     const grid = document.getElementById('product-grid');
-    if (!grid) return;
-    grid.innerHTML = "";
-
-    products.forEach(p => {
-        grid.innerHTML += `
-            <div class="group bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-2xl transition duration-500">
-                <div class="relative overflow-hidden aspect-[3/4]">
-                    <img src="${p.images[0]}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700" 
-                         onerror="this.src='https://via.placeholder.com/400x600?text=Image+Missing'">
-                </div>
-                <div class="p-5 text-center">
-                    <h3 class="font-bold text-gray-900 text-sm md:text-base uppercase tracking-tight">${p.name}</h3>
-                    <p class="text-black font-black mt-2 text-lg">৳ ${p.price}</p>
-                    <button onclick="openModal(${p.id})" 
-                            class="mt-4 w-full bg-black text-white py-3 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-gray-800 transition shadow-lg">
-                        View Details
-                    </button>
-                </div>
+    grid.innerHTML = products.map(p => `
+        <div class="bg-white rounded-xl border border-gray-100 p-3 hover:shadow-xl transition cursor-pointer" onclick="openModal(${p.id})">
+            <img src="${p.images[0]}" class="w-full h-64 object-cover rounded-lg">
+            <div class="p-3 text-center">
+                <h3 class="font-bold text-gray-800 text-[12px] uppercase">${p.name}</h3>
+                <p class="font-black text-black mt-1">৳ ${p.price}</p>
+                <button class="mt-3 w-full bg-black text-white py-2 rounded text-[10px] font-black uppercase tracking-widest">Order Now</button>
             </div>
-        `;
-    });
+        </div>
+    `).join('');
 }
 
-// ৩. পপ-আপে সব ডিটেইলস দেখানো
+// ২. পপ-আপে কোয়ান্টিটি এবং ডিজাইন আপডেট
 function openModal(id) {
     const p = allProducts.find(item => item.id === id);
     const content = document.getElementById('modal-content');
-    selectedSize = null; selectedColor = null; // রিসেট
+    selectedSize = null; selectedColor = null; modalQty = 1; // রিসেট
 
     content.innerHTML = `
         <div class="space-y-4">
-            <img id="main-view" src="${p.images[0]}" class="w-full h-[400px] md:h-[500px] object-cover rounded-xl shadow-lg">
-            <div class="flex gap-3 pb-2 overflow-x-auto">
-                ${p.images.map(img => `
-                    <img src="${img}" onclick="document.getElementById('main-view').src='${img}'" 
-                         class="w-20 h-24 object-cover rounded-lg cursor-pointer border-2 border-transparent hover:border-black transition">
-                `).join('')}
+            <img id="main-view" src="${p.images[0]}" class="w-full h-[400px] object-cover rounded-xl shadow-md">
+            <div class="flex gap-2 overflow-x-auto">
+                ${p.images.map(img => `<img src="${img}" onclick="document.getElementById('main-view').src='${img}'" class="w-20 h-20 object-cover rounded cursor-pointer border hover:border-black">`).join('')}
+            </div>
+        </div>
+        <div class="flex flex-col">
+            <h2 class="text-2xl font-black mb-2 uppercase tracking-tighter">${p.name}</h2>
+            <p class="text-xl font-bold mb-6 text-gray-700">৳ ${p.price}</p>
+            
+            <div class="mb-4">
+                <p class="text-[10px] font-black uppercase mb-2">Select Color</p>
+                <div class="flex gap-2" id="color-opts">
+                    ${p.colors.map(c => `<button onclick="selectFeature('color','${c}',this)" class="px-4 py-2 border rounded-full text-[10px] font-black uppercase hover:border-black">${c}</button>`).join('')}
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <p class="text-[10px] font-black uppercase mb-2">Select Size</p>
+                <div class="flex gap-2" id="size-opts">
+                    ${p.sizes.map(s => `<button onclick="selectFeature('size','${s}',this)" class="w-10 h-10 border rounded-full text-[10px] font-black uppercase hover:border-black flex items-center justify-center">${s}</button>`).join('')}
+                </div>
+            </div>
+
+            <div class="mb-8 flex items-center gap-4">
+                <p class="text-[10px] font-black uppercase">Quantity</p>
+                <div class="flex items-center border border-black rounded-lg overflow-hidden">
+                    <button onclick="updateQty(-1)" class="px-3 py-1 bg-gray-100 hover:bg-black hover:text-white transition font-bold border-r border-black">-</button>
+                    <span id="modal-qty" class="px-5 font-black text-lg">1</span>
+                    <button onclick="updateQty(1)" class="px-3 py-1 bg-gray-100 hover:bg-black hover:text-white transition font-bold border-l border-black">+</button>
+                </div>
+            </div>
+
+            <button onclick="goToCheckout(${p.id})" class="w-full bg-black text-white py-4 rounded-xl font-black uppercase tracking-widest hover:bg-gray-800 transition shadow-lg">Confirm Order Details</button>
+        </div>
+    `;
+    document.getElementById('product-modal').classList.replace('hidden', 'flex');
+}
+
+// ৩. কোয়ান্টিটি আপডেট ফাংশন
+function updateQty(val) {
+    modalQty = Math.max(1, modalQty + val);
+    document.getElementById('modal-qty').innerText = modalQty;
+}
+
+function selectFeature(type, val, el) {
+    const btns = el.parentElement.getElementsByTagName('button');
+    for (let b of btns) b.classList.remove('bg-black', 'text-white');
+    el.classList.add('bg-black', 'text-white');
+    if(type === 'size') selectedSize = val; else selectedColor = val;
+}
+
+// ৪. কাস্টমার ডিটেইলস পেজে যাওয়ার ফাংশন
+function goToCheckout(id) {
+    if(!selectedSize || !selectedColor) return alert("দয়া করে সাইজ এবং কালার সিলেক্ট করুন!");
+    const p = allProducts.find(item => item.id === id);
+    
+    // পপ-আপের কন্টেন্ট বদলে চেকআউট ফর্ম আনা
+    const content = document.getElementById('modal-content');
+    content.innerHTML = `
+        <div class="col-span-full md:col-span-1 bg-gray-50 p-6 rounded-xl border border-dashed border-gray-300">
+            <h3 class="text-sm font-black uppercase mb-4 text-center tracking-widest">Order Summary</h3>
+            <div class="flex items-center gap-4">
+                <img src="${p.images[0]}" class="w-20 h-24 object-cover rounded-lg border">
+                <div>
+                    <h4 class="font-bold text-sm uppercase">${p.name}</h4>
+                    <p class="text-[10px] text-gray-500 font-bold uppercase mt-1">Color: ${selectedColor} | Size: ${selectedSize}</p>
+                    <p class="font-black text-lg mt-1 text-black">৳ ${p.price * modalQty}</p>
+                    <p class="text-[10px] text-gray-400 font-bold italic">(Qty: ${modalQty} x ৳${p.price})</p>
+                </div>
             </div>
         </div>
 
-        <div class="flex flex-col justify-center">
-            <h2 class="text-3xl font-black text-gray-900 mb-2 leading-none uppercase tracking-tighter">${p.name}</h2>
-            <p class="text-2xl font-bold text-black mb-8">৳ ${p.price}</p>
+        <div class="flex flex-col space-y-4">
+            <h3 class="text-lg font-black uppercase tracking-tighter">Shipping Information</h3>
+            <input type="text" id="cust-name" placeholder="আপনার পূর্ণ নাম" class="w-full p-4 border border-gray-200 rounded-xl outline-none focus:border-black transition">
+            <input type="text" id="cust-phone" placeholder="ফোন নম্বর" class="w-full p-4 border border-gray-200 rounded-xl outline-none focus:border-black transition">
+            <textarea id="cust-address" placeholder="সম্পূর্ণ ঠিকানা (গ্রাম/শহর, জেলা)" class="w-full p-4 border border-gray-200 rounded-xl outline-none h-24 focus:border-black transition"></textarea>
             
-            <div class="mb-6">
-                <p class="text-xs font-black uppercase mb-3 tracking-widest">Select Color</p>
-                <div class="flex flex-wrap gap-2" id="color-options">
-                    ${p.colors.map(c => `<button onclick="selectItem('color', '${c}', this)" class="px-5 py-2 border-2 border-gray-100 rounded-full text-xs font-bold uppercase hover:border-black transition">${c}</button>`).join('')}
-                </div>
+            <div class="bg-black text-white p-4 rounded-xl text-center">
+                <p class="text-xs uppercase font-bold opacity-70">Total Amount (Cash on Delivery)</p>
+                <p class="text-2xl font-black">৳ ${p.price * modalQty}</p>
             </div>
 
-            <div class="mb-10">
-                <p class="text-xs font-black uppercase mb-3 tracking-widest">Select Size</p>
-                <div class="flex flex-wrap gap-2" id="size-options">
-                    ${p.sizes.map(s => `<button onclick="selectItem('size', '${s}', this)" class="w-12 h-12 border-2 border-gray-100 rounded-full flex items-center justify-center text-xs font-bold uppercase hover:border-black transition">${s}</button>`).join('')}
-                </div>
-            </div>
-
-            <button onclick="handleOrder('${p.name}', ${p.price})" class="w-full bg-black text-white py-5 rounded-full font-black text-sm uppercase tracking-[0.2em] hover:bg-gray-800 transition-all shadow-xl">
-                Order Now
+            <button onclick="finalWhatsAppOrder('${p.name}', ${p.price})" class="w-full bg-[#25D366] text-white py-5 rounded-xl font-black uppercase tracking-widest hover:bg-green-600 transition shadow-xl flex items-center justify-center gap-2">
+                <i class="fa-brands fa-whatsapp text-2xl"></i> Place Order on WhatsApp
             </button>
         </div>
     `;
-    
-    document.getElementById('product-modal').classList.remove('hidden');
-    document.getElementById('product-modal').classList.add('flex');
 }
 
-function selectItem(type, val, el) {
-    const btns = document.getElementById(type === 'size' ? 'size-options' : 'color-options').getElementsByTagName('button');
-    for (let b of btns) b.classList.remove('bg-black', 'text-white', 'border-black');
-    el.classList.add('bg-black', 'text-white', 'border-black');
-    if(type==='size') selectedSize = val; else selectedColor = val;
+// ৫. ফাইনাল হোয়াটসঅ্যাপ মেসেজ
+function finalWhatsAppOrder(name, price) {
+    const n = document.getElementById('cust-name').value;
+    const ph = document.getElementById('cust-phone').value;
+    const ad = document.getElementById('cust-address').value;
+
+    if(!n || !ph || !ad) return alert("দয়া করে সব তথ্য পূরণ করুন!");
+
+    let msg = `*NEW ORDER - REDAMS*%0A`;
+    msg += `---------------------------%0A`;
+    msg += `*Customer Details:*%0AName: ${n}%0APhone: ${ph}%0AAddress: ${ad}%0A`;
+    msg += `---------------------------%0A`;
+    msg += `*Product Info:*%0AProduct: ${name}%0AColor: ${selectedColor}%0ASize: ${selectedSize}%0AQty: ${modalQty}%0APrice: ৳${price * modalQty}%0A`;
+    msg += `---------------------------%0A`;
+    msg += `*Payment: Cash on Delivery*%0A`;
+    msg += `Please confirm my order!`;
+
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
 }
 
-function handleOrder(name, price) {
-    if(!selectedSize || !selectedColor) return alert("দয়া করে সাইজ এবং কালার সিলেক্ট করুন!");
-    alert(`Order Placed: ${name}\nColor: ${selectedColor}\nSize: ${selectedSize}\nPrice: ৳ ${price}`);
-}
-
-function closeModal() {
-    document.getElementById('product-modal').classList.add('hidden');
-    document.getElementById('product-modal').classList.remove('flex');
-}
-
+function closeModal() { document.getElementById('product-modal').classList.replace('flex', 'hidden'); }
+function filterCategory(c) { displayProducts(c==='all' ? allProducts : allProducts.filter(p => p.category === c)); }
 window.onload = loadProducts;
