@@ -1,23 +1,22 @@
 [
-    {
-        "id": 1,
-        "name": "Premium Drop Shoulder Black",
-        "price": 850,
-        "category": "drop-shoulder",
-        "images": ["images/p1-f.jpg", "images/p1-b.jpg", "images/p1-s.jpg"]
-    },
-    {
-        "id": 2,
-        "name": "Hoodie Navy Blue",
-        "price": 1200,
-        "category": "hoodie",
-        "images": ["images/h1-f.jpg", "images/h1-b.jpg", "images/h1-s.jpg"]
-    },
-    {
-        "id": 3,
-        "name": "Regular Fit Tee",
-        "price": 550,
-        "category": "regular-tshirt",
-        "images": ["images/r1-f.jpg", "images/r1-b.jpg", "images/r1-s.jpg"]
-    }
+  {
+    "id": 1,
+    "name": "Premium Drop Shoulder Black",
+    "price": 850,
+    "category": "drop-shoulder",
+    "images": ["images/p1-f.jpg", "images/p1-b.jpg", "images/p1-s.jpg"],
+    // নতুন যোগ করা হলো:
+    "sizes": ["S", "M", "L", "XL"],
+    "colors": ["Black", "White", "Navy"]
+  },
+  {
+    "id": 2,
+    "name": "Classic Hoodie",
+    "price": 1200,
+    "category": "hoodie",
+    "images": ["images/h1-f.jpg", "images/h1-b.jpg", "images/h1-s.jpg"],
+    // নতুন যোগ করা হলো:
+    "sizes": ["M", "L", "XL"],
+    "colors": ["Red", "Maroon"]
+  }
 ]
