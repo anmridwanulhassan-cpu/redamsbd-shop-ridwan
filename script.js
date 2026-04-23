@@ -121,19 +121,44 @@ function toggleCart(open = false) {
 }
 
 function sendOrderToWhatsApp() {
-    const n = document.getElementById('cust-name').value, ph = document.getElementById('cust-phone').value, ad = document.getElementById('cust-address').value;
-    if(!n || !ph || !ad || cart.length === 0) return alert("Please fill all info!");
-    
-    let msg = `*NEW ORDER - REDAMS*%0A*Customer:* ${n}%0A*Phone:* ${ph}%0A*Address:* ${ad}%0A-----------------%0A`;
+    // Input field gulo theke value neya
+    const n = document.getElementById('cust-name').value.trim();
+    const ph = document.getElementById('cust-phone').value.trim();
+    const ad = document.getElementById('cust-address').value.trim();
+
+    // Jodi kono field khali thake
+    if (!n || !ph || !ad) {
+        alert("Doya kore Name, Phone ebong Address sob gulo puron korun!");
+        return;
+    }
+
+    // Jodi cart khali thake
+    if (cart.length === 0) {
+        alert("Apnar cart khali! Age product add korun.");
+        return;
+    }
+
+    let msg = `*NEW ORDER - REDAMS*%0A`;
+    msg += `*Customer:* ${n}%0A`;
+    msg += `*Phone:* ${ph}%0A`;
+    msg += `*Address:* ${ad}%0A`;
+    msg += `---------------------------%0A`;
+
     let total = 0;
-    cart.forEach(item => {
-        msg += `- ${item.name} (${item.selectedColor}, ${item.selectedSize}) x ${item.qty} = ৳${item.price * item.qty}%0A`;
+    cart.forEach((item, index) => {
+        msg += `${index + 1}. ${item.name} (${item.selectedColor}, ${item.selectedSize}) x ${item.qty} = ৳${item.price * item.qty}%0A`;
         total += (item.price * item.qty);
     });
-    msg += `-----------------%0A*TOTAL: ৳${total}*%0A(COD Order)`;
-    window.open(`https://wa.me/${8801894357549}?text=${msg}`, '_blank');
-}
 
+    msg += `---------------------------%0A`;
+    msg += `*TOTAL AMOUNT: ৳${total}*%0A`;
+    msg += `*(Cash on Delivery)*%0A%0A`;
+    msg += `Please confirm my order!`;
+
+    // WhatsApp-e niye jaoa
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
+    window.open(url, '_blank');
+}
 function closeModal() { document.getElementById('product-modal').classList.replace('flex', 'hidden'); }
 function filterCategory(c) { displayProducts(c==='all' ? allProducts : allProducts.filter(p => p.category === c)); }
 window.onload = loadProducts;
