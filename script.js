@@ -164,16 +164,22 @@ function toggleCart(forceOpen = false) {
     if (forceOpen === true) drawer.classList.remove('translate-x-full');
     else drawer.classList.toggle('translate-x-full');
 }
-
 function sendOrderToWhatsApp() {
-    // HTML এর ID গুলোর সাথে মিলিয়ে ভ্যালু নেওয়া
-    const name = document.getElementById('cust-name').value.trim();
-    const phone = document.getElementById('cust-phone').value.trim();
-    const address = document.getElementById('cust-address').value.trim();
+    // ID gulo thikmoto dhaka hocche ki na check kora
+    const nameField = document.getElementById('cust-name');
+    const phoneField = document.getElementById('cust-phone');
+    const addressField = document.getElementById('cust-address');
 
-    // চেক করা হচ্ছে সব তথ্য দেওয়া হয়েছে কি না
-    if (!name || !phone || !address) {
-        alert("দয়া করে নাম, ফোন নম্বর এবং সম্পূর্ণ ঠিকানা লিখুন!");
+    // Value gulo neya
+    const n = nameField ? nameField.value.trim() : "";
+    const ph = phoneField ? phoneField.value.trim() : "";
+    const ad = addressField ? addressField.value.trim() : "";
+
+    console.log("Customer Data:", { n, ph, ad }); // Debugging er jonno
+
+    // Field check (Jodi kono ekti khali thake)
+    if (!n || !ph || !ad) {
+        alert("দয়া করে নাম, ফোন নম্বর এবং সম্পূর্ণ ঠিকানা সঠিকভাবে লিখুন!");
         return;
     }
 
@@ -184,10 +190,7 @@ function sendOrderToWhatsApp() {
 
     let message = `*NEW ORDER - REDAMS*%0A`;
     message += `---------------------------%0A`;
-    message += `*Customer Details:*%0A`;
-    message += `Name: ${name}%0A`;
-    message += `Phone: ${phone}%0A`;
-    message += `Address: ${address}%0A`;
+    message += `*Customer Details:*%0AName: ${n}%0APhone: ${ph}%0AAddress: ${ad}%0A`;
     message += `---------------------------%0A`;
     message += `*Order Items:*%0A`;
 
@@ -202,6 +205,8 @@ function sendOrderToWhatsApp() {
     message += `*Payment: Cash on Delivery*%0A`;
 
     const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+    
+    // Browser e WhatsApp open kora
     window.open(url, '_blank');
 }
 function closeModal() {
