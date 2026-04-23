@@ -4,154 +4,125 @@ let selectedSize = null;
 let selectedColor = null;
 let modalQty = 1;
 
-const WHATSAPP_NUMBER = "8801894357549"; // Apnar WhatsApp number
+const WHATSAPP_NUMBER = "8801894357549"; // আপনার নম্বর
 
-// ১. Data Load
+// ১. প্রোডাক্ট লোড করা
 async function loadProducts() {
     try {
-        const response = await fetch('products.json');
-        allProducts = await response.json();
+        const res = await fetch('products.json');
+        allProducts = await res.json();
         displayProducts(allProducts);
-    } catch (e) {
-        console.error("Data error", e);
+    } catch (err) {
+        console.error("JSON লোড করতে সমস্যা:", err);
     }
 }
 
-// ২. Display Products
+// ২. গ্রিডে প্রোডাক্ট দেখানো
 function displayProducts(products) {
     const grid = document.getElementById('product-grid');
-    if(!grid) return;
+    if (!grid) return;
     grid.innerHTML = products.map(p => `
-        <div class="bg-white rounded-3xl border border-gray-50 p-4 hover:shadow-2xl transition duration-500 cursor-pointer group" onclick="openModal(${p.id})">
-            <div class="overflow-hidden rounded-2xl">
-                <img src="${p.images[0]}" class="w-full h-72 object-cover group-hover:scale-110 transition duration-700">
-            </div>
-            <div class="pt-4 text-center">
-                <h3 class="font-bold text-gray-800 text-[13px] uppercase tracking-tight">${p.name}</h3>
-                <p class="font-black text-black mt-1 text-lg">৳ ${p.price}</p>
-                <button class="mt-4 w-full bg-black text-white py-3 rounded-xl text-[10px] font-black uppercase tracking-widest group-hover:bg-gray-800">Order Now</button>
+        <div class="bg-white rounded-xl border border-gray-100 p-3 hover:shadow-xl transition cursor-pointer" onclick="openModal(${p.id})">
+            <img src="${p.images[0]}" class="w-full h-64 object-cover rounded-lg">
+            <div class="p-3 text-center">
+                <h3 class="font-bold text-gray-800 text-[12px] uppercase">${p.name}</h3>
+                <p class="font-black text-black mt-1">৳ ${p.price}</p>
+                <button class="mt-3 w-full bg-black text-white py-2 rounded text-[10px] font-black uppercase">Order Now</button>
             </div>
         </div>
     `).join('');
 }
 
-// ৩. Open Product Details
+// ৩. পপ-আপ ওপেন
 function openModal(id) {
     const p = allProducts.find(item => item.id === id);
-    const modal = document.getElementById('product-modal');
     const content = document.getElementById('modal-content');
-    
-    selectedSize = null; 
-    selectedColor = null; 
-    modalQty = 1;
+    selectedSize = null; selectedColor = null; modalQty = 1;
 
     content.innerHTML = `
         <div class="space-y-4">
-            <img id="main-view" src="${p.images[0]}" class="w-full h-[450px] object-cover rounded-3xl shadow-xl">
-            <div class="flex gap-3 overflow-x-auto p-1 no-scrollbar">
-                ${p.images.map(img => `
-                    <img src="${img}" onclick="document.getElementById('main-view').src='${img}'" 
-                    class="w-20 h-24 object-cover rounded-xl cursor-pointer border-2 border-transparent hover:border-black transition shadow-sm">
-                `).join('')}
+            <img id="main-view" src="${p.images[0]}" class="w-full h-[400px] object-cover rounded-xl shadow-md">
+            <div class="flex gap-2 overflow-x-auto p-1">
+                ${p.images.map(img => `<img src="${img}" onclick="document.getElementById('main-view').src='${img}'" class="w-20 h-20 object-cover rounded cursor-pointer border hover:border-black transition">`).join('')}
             </div>
         </div>
-        <div class="flex flex-col justify-center py-4">
-            <span class="text-xs font-black uppercase text-gray-400 mb-2">${p.category}</span>
-            <h2 class="text-3xl font-black mb-2 uppercase leading-none tracking-tighter text-gray-900">${p.name}</h2>
-            <p class="text-2xl font-bold mb-8 text-black">৳ ${p.price}</p>
-            
+        <div class="flex flex-col">
+            <h2 class="text-2xl font-black mb-2 uppercase">${p.name}</h2>
+            <p class="text-xl font-bold mb-6 text-gray-700">৳ ${p.price}</p>
+            <div class="mb-4">
+                <p class="text-[10px] font-black uppercase mb-2 text-gray-400">Color</p>
+                <div class="flex gap-2">
+                    ${p.colors.map(c => `<button onclick="selectFeature('color','${c}',this)" class="px-4 py-2 border rounded-full text-[10px] font-black uppercase hover:border-black transition">${c}</button>`).join('')}
+                </div>
+            </div>
             <div class="mb-6">
-                <p class="text-[10px] font-black uppercase mb-3 text-gray-400 tracking-widest">Select Color</p>
-                <div class="flex flex-wrap gap-2">
-                    ${p.colors.map(c => `<button onclick="selectFeature('color','${c}',this)" class="px-5 py-2 border-2 border-gray-100 rounded-full text-[10px] font-black uppercase hover:border-black transition-all">${c}</button>`).join('')}
+                <p class="text-[10px] font-black uppercase mb-2 text-gray-400">Size</p>
+                <div class="flex gap-2">
+                    ${p.sizes.map(s => `<button onclick="selectFeature('size','${s}',this)" class="w-10 h-10 border rounded-full text-[10px] font-black uppercase flex items-center justify-center hover:border-black transition">${s}</button>`).join('')}
                 </div>
             </div>
-
-            <div class="mb-8">
-                <p class="text-[10px] font-black uppercase mb-3 text-gray-400 tracking-widest">Select Size</p>
-                <div class="flex flex-wrap gap-2">
-                    ${p.sizes.map(s => `<button onclick="selectFeature('size','${s}',this)" class="w-12 h-12 border-2 border-gray-100 rounded-2xl text-[12px] font-black uppercase flex items-center justify-center hover:border-black transition-all">${s}</button>`).join('')}
+            <div class="mb-8 flex items-center gap-4">
+                <div class="flex items-center border border-black rounded-lg overflow-hidden">
+                    <button onclick="updateQty(-1)" class="px-3 py-1 bg-gray-50 hover:bg-black hover:text-white transition font-bold border-r border-black">-</button>
+                    <span id="modal-qty" class="px-5 font-black">1</span>
+                    <button onclick="updateQty(1)" class="px-3 py-1 bg-gray-50 hover:bg-black hover:text-white transition font-bold border-l border-black">+</button>
                 </div>
             </div>
-
-            <div class="mb-8 flex items-center gap-6">
-                <p class="text-[10px] font-black uppercase text-gray-400 tracking-widest">Quantity</p>
-                <div class="flex items-center bg-gray-100 rounded-2xl p-1">
-                    <button onclick="updateQty(-1)" class="w-10 h-10 flex items-center justify-center font-bold text-xl hover:bg-white rounded-xl transition">-</button>
-                    <span id="modal-qty" class="px-6 font-black text-lg">1</span>
-                    <button onclick="updateQty(1)" class="w-10 h-10 flex items-center justify-center font-bold text-xl hover:bg-white rounded-xl transition">+</button>
-                </div>
-            </div>
-
-            <button onclick="addToCart(${p.id})" class="w-full bg-black text-white py-5 rounded-2xl font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10">
-                Add To Bag
-            </button>
+            <button onclick="addToCart(${p.id})" class="w-full bg-black text-white py-4 rounded-xl font-black uppercase tracking-widest shadow-lg">Add To Cart</button>
         </div>
     `;
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
+    document.getElementById('product-modal').classList.replace('hidden', 'flex');
 }
 
 function updateQty(val) {
     modalQty = Math.max(1, modalQty + val);
-    const qtyEl = document.getElementById('modal-qty');
-    if(qtyEl) qtyEl.innerText = modalQty;
+    document.getElementById('modal-qty').innerText = modalQty;
 }
 
 function selectFeature(type, val, el) {
     const btns = el.parentElement.getElementsByTagName('button');
-    for (let b of btns) {
-        b.classList.remove('bg-black', 'text-white', 'border-black');
-        b.classList.add('border-gray-100');
-    }
-    el.classList.add('bg-black', 'text-white', 'border-black');
-    el.classList.remove('border-gray-100');
-    if(type === 'size') selectedSize = val; else selectedColor = val;
+    for (let b of btns) b.classList.remove('bg-black', 'text-white');
+    el.classList.add('bg-black', 'text-white');
+    if (type === 'size') selectedSize = val; else selectedColor = val;
 }
 
-// ৪. Add To Cart
+// ৪. কার্টে প্রোডাক্ট যোগ করা
 function addToCart(id) {
-    if(!selectedSize || !selectedColor) {
-        alert("Please select Color and Size!");
-        return;
-    }
+    if (!selectedSize || !selectedColor) return alert("দয়া করে সাইজ এবং কালার সিলেক্ট করুন!");
     const p = allProducts.find(item => item.id === id);
     cart.push({ ...p, selectedSize, selectedColor, qty: modalQty });
     
     updateCartUI();
     closeModal();
-    toggleCart(true); // Cart drawer open hobe
+    toggleCart(true); // ড্রয়ার সরাসরি ওপেন হবে
 }
 
-// ৫. Update Cart Sidebar
+// ৫. কার্ট ড্রয়ার আপডেট
 function updateCartUI() {
     const itemsEl = document.getElementById('cart-items');
     const totalEl = document.getElementById('cart-total');
-    const countNav = document.getElementById('cart-count');
-    const countDrawer = document.getElementById('cart-count-drawer');
+    const navCount = document.getElementById('cart-count');
+    const drawerCount = document.getElementById('cart-count-drawer');
     
     let total = 0;
     itemsEl.innerHTML = cart.map((item, index) => {
         total += (item.price * item.qty);
         return `
-            <div class="flex gap-4 bg-white p-4 rounded-3xl border border-gray-100 relative group">
-                <img src="${item.images[0]}" class="w-20 h-24 object-cover rounded-2xl shadow-sm">
-                <div class="flex-1 flex flex-col justify-center">
-                    <h4 class="font-black text-[11px] uppercase tracking-tight leading-tight">${item.name}</h4>
-                    <p class="text-[9px] text-gray-400 font-bold uppercase mt-1">${item.selectedColor} / Size ${item.selectedSize}</p>
-                    <div class="flex justify-between items-end mt-2">
-                        <p class="font-black text-black">৳ ${item.price * item.qty}</p>
-                        <p class="text-[10px] font-bold text-gray-300">QTY: ${item.qty}</p>
-                    </div>
+            <div class="flex gap-4 bg-white p-3 rounded-lg border border-gray-100 relative shadow-sm">
+                <img src="${item.images[0]}" class="w-16 h-20 object-cover rounded shadow-xs">
+                <div class="flex-1">
+                    <h4 class="font-bold text-[10px] uppercase">${item.name}</h4>
+                    <p class="text-[8px] text-gray-400 font-bold uppercase">${item.selectedColor} | ${item.selectedSize}</p>
+                    <p class="font-black text-xs mt-1 text-black">৳ ${item.price * item.qty} (x${item.qty})</p>
                 </div>
-                <button onclick="removeFromCart(${index})" class="absolute top-2 right-2 w-7 h-7 bg-gray-50 text-gray-400 rounded-full flex items-center justify-center text-[10px] hover:bg-red-50 hover:text-red-500 transition-all">✕</button>
+                <button onclick="removeFromCart(${index})" class="text-red-400 text-xs font-bold p-1">✕</button>
             </div>
         `;
     }).join('');
 
     totalEl.innerText = `৳ ${total}`;
-    countNav.innerText = cart.length;
-    countDrawer.innerText = cart.length;
+    if (navCount) navCount.innerText = cart.length;
+    if (drawerCount) drawerCount.innerText = cart.length;
 }
 
 function removeFromCart(index) {
@@ -161,36 +132,36 @@ function removeFromCart(index) {
 
 function toggleCart(forceOpen = false) {
     const drawer = document.getElementById('cart-drawer');
-    if (forceOpen === true) drawer.classList.remove('translate-x-full');
-    else drawer.classList.toggle('translate-x-full');
+    if (!drawer) return;
+    if (forceOpen === true) {
+        drawer.classList.remove('translate-x-full');
+    } else {
+        drawer.classList.toggle('translate-x-full');
+    }
 }
+
+// ৬. হোয়াটসঅ্যাপ অর্ডার ফাংশন (সবচেয়ে গুরুত্বপূর্ণ)
 function sendOrderToWhatsApp() {
-    // ID gulo thikmoto dhaka hocche ki na check kora
-    const nameField = document.getElementById('cust-name');
-    const phoneField = document.getElementById('cust-phone');
-    const addressField = document.getElementById('cust-address');
+    // ID চেক করার জন্য কনসোল লগ (Debug)
+    console.log("চেকিং ইনপুট ফিল্ড...");
 
-    // Value gulo neya
-    const n = nameField ? nameField.value.trim() : "";
-    const ph = phoneField ? phoneField.value.trim() : "";
-    const ad = addressField ? addressField.value.trim() : "";
+    const name = document.getElementById('cust-name').value.trim();
+    const phone = document.getElementById('cust-phone').value.trim();
+    const address = document.getElementById('cust-address').value.trim();
 
-    console.log("Customer Data:", { n, ph, ad }); // Debugging er jonno
-
-    // Field check (Jodi kono ekti khali thake)
-    if (!n || !ph || !ad) {
-        alert("দয়া করে নাম, ফোন নম্বর এবং সম্পূর্ণ ঠিকানা সঠিকভাবে লিখুন!");
+    if (!name || !phone || !address) {
+        alert("দয়া করে আপনার নাম, ফোন নম্বর এবং সম্পূর্ণ ঠিকানা লিখুন!");
         return;
     }
 
     if (cart.length === 0) {
-        alert("আপনার কার্ট খালি!");
+        alert("আপনার কার্ট খালি! অনুগ্রহ করে প্রোডাক্ট যোগ করুন।");
         return;
     }
 
     let message = `*NEW ORDER - REDAMS*%0A`;
     message += `---------------------------%0A`;
-    message += `*Customer Details:*%0AName: ${n}%0APhone: ${ph}%0AAddress: ${ad}%0A`;
+    message += `*Customer Details:*%0AName: ${name}%0APhone: ${phone}%0AAddress: ${address}%0A`;
     message += `---------------------------%0A`;
     message += `*Order Items:*%0A`;
 
@@ -205,10 +176,9 @@ function sendOrderToWhatsApp() {
     message += `*Payment: Cash on Delivery*%0A`;
 
     const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
-    
-    // Browser e WhatsApp open kora
     window.open(url, '_blank');
 }
+
 function closeModal() {
     document.getElementById('product-modal').classList.replace('flex', 'hidden');
 }
