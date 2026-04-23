@@ -6,155 +6,255 @@
     <title>Redams - Premium Lifestyle</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <style>
-        .swiper { width: 100%; height: auto; aspect-ratio: 16/9; } 
-        @media (min-width: 768px) { .swiper { height: 450px; } }
-        .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
-        .swiper-button-next, .swiper-button-prev { color: #000 !important; }
-        .swiper-pagination-bullet-active { background: #000 !important; }
-        /* Cart Drawer Animation */
-        #cart-drawer { transition: transform 0.5s ease-in-out; }
-    </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<style>
+    .swiper { width: 100%; height: auto; aspect-ratio: 16/9; } 
+    @media (min-width: 768px) { .swiper { height: 450px; } }
+    .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
+    .swiper-button-next, .swiper-button-prev { color: #000 !important; }
+    .swiper-pagination-bullet-active { background: #000 !important; }
+</style>
 </head>
-<body class="bg-gray-50 font-sans">
+<body class="bg-gray-50">
 
-    <nav class="fixed top-0 left-0 right-0 bg-black text-white shadow-lg z-[1000] border-b border-gray-800">
-        <div class="container mx-auto px-4 h-20 flex items-center justify-between">
-            <a href="index.html">
-                <img src="images/RedAmS logo main png.png" alt="REDAMS" class="h-10 md:h-12 w-auto object-contain brightness-110">
-            </a>
+  <nav class="fixed top-0 left-0 right-0 bg-black text-white shadow-lg z-[1000] border-b border-gray-800">
+    <div class="container mx-auto px-4 h-20 flex items-center justify-between">
+        
+        <a href="index.html" class="flex items-center">
+            <img src="images/RedAmS logo main png.png" alt="REDAMS" class="h-10 md:h-12 w-auto object-contain brightness-110">
+        </a>
 
-            <div class="hidden md:flex items-center space-x-8">
-                <a href="index.html" class="text-xs font-bold uppercase tracking-widest hover:text-gray-400">Home</a>
-                <a href="#product-grid" onclick="filterCategory('all')" class="text-xs font-bold uppercase tracking-widest hover:text-gray-400">All Products</a>
-                <div class="relative group">
-                    <button class="text-xs font-bold uppercase tracking-widest hover:text-gray-400 flex items-center">
-                        Collections <i class="fa-solid fa-chevron-down ml-1 text-[10px]"></i>
-                    </button>
-                    <div class="absolute left-0 mt-2 w-48 bg-white text-black rounded-sm shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                        <div class="py-2">
-                            <a href="#product-grid" onclick="filterCategory('drop-shoulder')" class="block px-4 py-2 text-xs font-bold hover:bg-gray-100 uppercase">Drop Shoulder</a>
-                            <a href="#product-grid" onclick="filterCategory('half-sleeve')" class="block px-4 py-2 text-xs font-bold hover:bg-gray-100 uppercase">Half Sleeve</a>
-                            <a href="#product-grid" onclick="filterCategory('regular-tshirt')" class="block px-4 py-2 text-xs font-bold hover:bg-gray-100 uppercase">Regular T-Shirt</a>
-                            <a href="#product-grid" onclick="filterCategory('hoodie')" class="block px-4 py-2 text-xs font-bold hover:bg-gray-100 uppercase">Hoodie</a>
-                            <a href="#product-grid" onclick="filterCategory('couple-tshirt')" class="block px-4 py-2 text-xs font-bold hover:bg-gray-100 uppercase">Couple T-Shirt</a>
-                        </div>
+        <div class="hidden md:flex items-center space-x-8">
+            <a href="index.html" class="text-xs font-bold uppercase tracking-widest hover:text-gray-400 transition">Home</a>
+            
+            <a href="#product-grid" onclick="displayProducts(allProducts)" class="text-xs font-bold uppercase tracking-widest hover:text-gray-400 transition">All Products</a>
+
+            <div class="relative group">
+                <button class="text-xs font-bold uppercase tracking-widest hover:text-gray-400 transition flex items-center">
+                    Collections <i class="fa-solid fa-chevron-down ml-1 text-[10px]"></i>
+                </button>
+                <div class="absolute left-0 mt-2 w-48 bg-white text-black rounded-sm shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                    <div class="py-2">
+                        <a href="#product-grid" onclick="filterCategory('drop-shoulder')" class="block px-4 py-2 text-xs font-bold hover:bg-gray-100 transition uppercase">Drop Shoulder</a>
+                        <a href="#product-grid" onclick="filterCategory('half-sleeve')" class="block px-4 py-2 text-xs font-bold hover:bg-gray-100 transition uppercase">Half Sleeve</a>
+                        <a href="#product-grid" onclick="filterCategory('regular-tshirt')" class="block px-4 py-2 text-xs font-bold hover:bg-gray-100 transition uppercase">Regular T-Shirt</a>
+                        <a href="#product-grid" onclick="filterCategory('hoodie')" class="block px-4 py-2 text-xs font-bold hover:bg-gray-100 transition uppercase">Hoodie</a>
+                        <a href="#product-grid" onclick="filterCategory('couple-tshirt')" class="block px-4 py-2 text-xs font-bold hover:bg-gray-100 transition uppercase">Couple T-Shirt</a>
                     </div>
                 </div>
             </div>
-
-            <div class="flex items-center space-x-6">
-                <button onclick="toggleCart()" class="relative text-lg hover:text-gray-400 transition">
-                    <i class="fa-solid fa-bag-shopping"></i>
-                    <span id="cart-count" class="absolute -top-2 -right-2 bg-white text-black text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-black">0</span>
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <div class="h-20"></div>
-
-    <div class="swiper mySwiper">
-        <div class="swiper-wrapper">
-            <div class="swiper-slide"><img src="images/cover photo.jpg" alt="Slide 1"></div>
-            <div class="swiper-slide"><img src="images/2nd cover.png" alt="Slide 2"></div>
-        </div>
-        <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-pagination"></div>
-    </div>
-
-    <div class="container mx-auto px-4 py-12">
-        <h2 class="text-2xl font-bold text-center mb-10 uppercase tracking-widest text-gray-800">Featured Categories</h2>
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            <div onclick="filterCategory('drop-shoulder')" class="cursor-pointer group relative overflow-hidden rounded-lg shadow-sm aspect-[2/3]">
-                <img src="images/drop shoulder- Pirates Tee.jpg" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-4"><span class="text-white font-bold text-[10px] uppercase tracking-wider bg-black/40 px-2 py-1 rounded">Drop Shoulder</span></div>
-            </div>
-            <div onclick="filterCategory('half-sleeve')" class="cursor-pointer group relative overflow-hidden rounded-lg shadow-sm aspect-[2/3]">
-                <img src="images/redams red.jpg" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-4"><span class="text-white font-bold text-[10px] uppercase tracking-wider bg-black/40 px-2 py-1 rounded">Half Sleeve</span></div>
-            </div>
-            <div onclick="filterCategory('regular-tshirt')" class="cursor-pointer group relative overflow-hidden rounded-lg shadow-sm aspect-[2/3]">
-                <img src="images/regular t shirt.jpg" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-4"><span class="text-white font-bold text-[10px] uppercase tracking-wider bg-black/40 px-2 py-1 rounded">Regular T-Shirt</span></div>
-            </div>
-            <div onclick="filterCategory('hoodie')" class="cursor-pointer group relative overflow-hidden rounded-lg shadow-sm aspect-[2/3]">
-                <img src="images/hoodie.jpeg" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-4"><span class="text-white font-bold text-[10px] uppercase tracking-wider bg-black/40 px-2 py-1 rounded">Hoodie</span></div>
-            </div>
-            <div onclick="filterCategory('couple-tshirt')" class="cursor-pointer group relative overflow-hidden rounded-lg shadow-sm aspect-[2/3]">
-                <img src="images/couple tee.jpg" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 flex items-end justify-center pb-4"><span class="text-white font-bold text-[10px] uppercase tracking-wider bg-black/40 px-2 py-1 rounded">Couple T-Shirt</span></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container mx-auto px-4 py-16 border-t border-gray-100">
-        <h2 class="text-3xl font-black text-center mb-12 text-gray-900 uppercase tracking-tighter">Featured Products</h2>
-        <div id="product-grid" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
-    </div>
-
-    <div id="product-modal" class="fixed inset-0 z-[2000] hidden items-center justify-center bg-black/90 p-4 backdrop-blur-sm">
-        <div class="relative bg-white w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl p-6 md:p-10 shadow-2xl">
-            <button onclick="closeModal()" class="absolute top-4 right-6 text-4xl text-gray-400 hover:text-black transition">&times;</button>
-            <div id="modal-content" class="grid grid-cols-1 md:grid-cols-2 gap-10"></div>
-        </div>
-    </div>
-
-    <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full md:w-96 bg-white shadow-2xl z-[3000] transform translate-x-full border-l flex flex-col transition-transform duration-500">
-        <div class="p-5 bg-black text-white flex justify-between items-center">
-            <h2 class="text-sm font-black uppercase tracking-widest">Your Bag (<span id="cart-count-drawer">0</span>)</h2>
-            <button onclick="toggleCart()" class="text-3xl">&times;</button>
         </div>
 
-        <div id="cart-items" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50"></div>
-
-        <div class="p-5 border-t bg-white space-y-3">
-            <h3 class="text-[10px] font-black uppercase text-gray-400 tracking-widest">Shipping Details (Cash on Delivery)</h3>
-            <input type="text" id="cust-name" placeholder="আপনার নাম" class="w-full p-3 text-sm border rounded-lg outline-none focus:border-black">
-            <input type="text" id="cust-phone" placeholder="ফোন নম্বর" class="w-full p-3 text-sm border rounded-lg outline-none focus:border-black">
-            <textarea id="cust-address" placeholder="সম্পূর্ণ ঠিকানা" class="w-full p-3 text-sm border rounded-lg outline-none h-16 focus:border-black"></textarea>
+        <div class="flex items-center space-x-6">
+            <button class="text-lg hover:text-gray-400 transition">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
             
-            <div class="flex justify-between font-black text-lg pt-2 border-t border-gray-100">
-                <span>Total:</span> <span id="cart-total">৳ 0</span>
-            </div>
-            
-            <button onclick="sendOrderToWhatsApp()" class="w-full bg-[#25D366] text-white py-4 rounded-xl font-black uppercase hover:bg-green-600 transition flex items-center justify-center gap-2">
-                <i class="fa-brands fa-whatsapp text-xl"></i> Confirm via WhatsApp
+            <button class="relative text-lg hover:text-gray-400 transition" onclick="toggleCart()">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-white text-black text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-black">0</span>
             </button>
         </div>
     </div>
+</nav>
 
-    <footer class="bg-white border-t border-gray-200 pt-16 pb-8 mt-20">
-        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12 text-gray-700">
-            <div class="space-y-4">
-                <h1 class="text-2xl font-bold text-black tracking-tighter uppercase">REDAMS</h1>
-                <p class="text-sm">Premium lifestyle apparel brand from Bangladesh. We focus on quality and comfort in every stitch.</p>
-                <div class="flex space-x-4 text-xl">
-                    <a href="https://www.facebook.com/profile.php?id=61559665337072" target="_blank" class="hover:text-blue-600 transition"><i class="fa-brands fa-facebook"></i></a>
-                    <a href="https://www.instagram.com/redams_bd?igsh=dXc1cnFxNmMzenI4" target="_blank" class="hover:text-pink-600 transition"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="https://wa.me/8801894357549" target="_blank" class="hover:text-green-600 transition"><i class="fa-brands fa-whatsapp"></i></a>
-                </div>
+<div class="h-20"></div>
+    <div class="swiper mySwiper">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide">
+    <img src="images/cover photo.jpg" alt="New Collection" class="w-full h-auto">
+</div>
+<div class="swiper-slide">
+    <img src="images/2nd cover.png" alt="Sale" class="w-full h-auto">
+</div>
+    </div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-pagination"></div>
+</div>
+<div class="container mx-auto px-4 py-12">
+    <h2 class="text-2xl font-bold text-center mb-10 uppercase tracking-widest text-gray-800">Featured Categories</h2>
+    
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        
+        <div onclick="filterCategory('drop-shoulder')" class="cursor-pointer group relative overflow-hidden rounded-lg shadow-sm aspect-[2/3]">
+            <img src="images/drop shoulder- Pirates Tee.jpg" alt="Drop Shoulder" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent flex items-end justify-center pb-4">
+                <span class="text-white font-bold text-[10px] uppercase tracking-wider bg-black/40 px-2 py-1 rounded">Drop Shoulder</span>
             </div>
-            </div>
-        <div class="border-t border-gray-100 mt-16 pt-8 text-center text-[10px] text-gray-400 tracking-widest">
-            &copy; 2026 REDAMS - DEVELOPED BY RIDWAN.
         </div>
-    </footer>
+
+        <div onclick="filterCategory('half-sleeve')" class="cursor-pointer group relative overflow-hidden rounded-lg shadow-sm aspect-[2/3]">
+            <img src="images/redams red.jpg" alt="Half Sleeve" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent flex items-end justify-center pb-4">
+                <span class="text-white font-bold text-[10px] uppercase tracking-wider bg-black/40 px-2 py-1 rounded">Half Sleeve</span>
+            </div>
+        </div>
+
+        <div onclick="filterCategory('regular-tshirt')" class="cursor-pointer group relative overflow-hidden rounded-lg shadow-sm aspect-[2/3]">
+            <img src="images/regular t shirt.jpg" alt="Regular T-Shirt" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent flex items-end justify-center pb-4">
+                <span class="text-white font-bold text-[10px] uppercase tracking-wider bg-black/40 px-2 py-1 rounded">Regular T-Shirt</span>
+            </div>
+        </div>
+
+        <div onclick="filterCategory('hoodie')" class="cursor-pointer group relative overflow-hidden rounded-lg shadow-sm aspect-[2/3]">
+            <img src="images/hoodie.jpeg" alt="Hoodie" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent flex items-end justify-center pb-4">
+                <span class="text-white font-bold text-[10px] uppercase tracking-wider bg-black/40 px-2 py-1 rounded">Hoodie</span>
+            </div>
+        </div>
+
+        <div onclick="filterCategory('couple-tshirt')" class="cursor-pointer group relative overflow-hidden rounded-lg shadow-sm aspect-[2/3]">
+            <img src="images/couple tee.jpg" alt="Couple T-Shirt" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent flex items-end justify-center pb-4">
+                <span class="text-white font-bold text-[10px] uppercase tracking-wider bg-black/40 px-2 py-1 rounded">Couple T-Shirt</span>
+            </div>
+        </div>
+    </div> </div> </div> <div class="container mx-auto px-4 py-16 border-t border-gray-100">
+    <h2 class="text-3xl font-black text-center mb-12 text-gray-900 uppercase tracking-tighter">Featured Products</h2>
+    
+    <div id="product-grid" class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        </div>
+</div>
+
+<div id="product-modal" class="fixed inset-0 z-[2000] hidden items-center justify-center bg-black/90 p-4 backdrop-blur-sm">
+    <div class="relative bg-white w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl p-6 md:p-10 shadow-2xl">
+        <button onclick="closeModal()" class="absolute top-4 right-6 text-4xl text-gray-400 hover:text-black transition">&times;</button>
+        <div id="modal-content" class="grid grid-cols-1 md:grid-cols-2 gap-10">
+            </div>
+    </div>
+</div>
+
+    <div id="checkout-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div class="bg-white w-full max-w-md p-6 rounded-lg">
+            <h2 class="text-xl font-bold mb-4">Complete Your Order (COD)</h2>
+            <div class="space-y-4">
+                <input type="text" id="cust-name" placeholder="Full Name" class="w-full border p-2 rounded">
+                <input type="text" id="cust-address" placeholder="Delivery Address" class="w-full border p-2 rounded">
+                <input type="text" id="cust-phone" placeholder="WhatsApp Number" class="w-full border p-2 rounded">
+                <button onclick="sendToWhatsApp()" class="w-full bg-green-600 text-white py-3 rounded font-bold hover:bg-green-700">
+                    <i class="fa-brands fa-whatsapp"></i> Confirm via WhatsApp
+                </button>
+                <button onclick="toggleModal()" class="w-full text-gray-500 mt-2">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <button onclick="toggleModal()" class="fixed bottom-6 right-6 bg-black text-white px-6 py-3 rounded-full shadow-2xl flex items-center space-x-2">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span>Checkout Now</span>
+    </button>
 
     <script src="script.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            new Swiper(".mySwiper", {
-                loop: true,
-                autoplay: { delay: 3500, disableOnInteraction: false },
-                pagination: { el: ".swiper-pagination", clickable: true },
-                navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
-            });
-        });
-    </script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<script>
+  // এটি নিশ্চিত করবে যে পুরো পেজ লোড হওয়ার পর স্লাইডার চালু হবে
+  document.addEventListener('DOMContentLoaded', function () {
+    var swiper = new Swiper(".mySwiper", {
+      loop: true,
+      autoplay: {
+        delay: 3500,
+        disableOnInteraction: false,
+      },
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+    });
+  });
+</script>
+ <script> var swiper = new Swiper(".mySwiper", {
+    loop: true,
+    autoplay: {
+      delay: 3500, // ৩.৫ সেকেন্ড পর পর স্লাইড পরিবর্তন হবে
+      disableOnInteraction: false,
+    },
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+  });
+ </script>
+</script>
+ <div id="event-popup" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-70 px-4">
+    <div class="relative max-w-lg w-full bg-white rounded-lg overflow-hidden shadow-2xl">
+        <button onclick="closePopup()" class="absolute top-2 right-2 text-white bg-black bg-opacity-50 hover:bg-opacity-80 rounded-full w-8 h-8 flex items-center justify-center z-10">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        
+        <a href="#shop-now">
+            <img src="https://via.placeholder.com/600x800?text=Special+Eid+Offer+Redams" alt="Special Event" class="w-full h-auto">
+        </a>
+        
+        <div class="p-4 text-center">
+            <button onclick="closePopup()" class="bg-black text-white px-6 py-2 rounded uppercase font-bold text-sm tracking-widest hover:bg-gray-800">Shop Now</button>
+        </div>
+    </div>
+</div>   
+<footer class="bg-white border-t border-gray-200 pt-16 pb-8 mt-20">
+    <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12 text-gray-700">
+        
+        <div class="space-y-4">
+            <h1 class="text-2xl font-bold text-black tracking-tighter">REDAMS</h1>
+            <p class="text-sm leading-relaxed">Premium lifestyle apparel brand from Bangladesh. We focus on quality and comfort in every stitch.</p>
+            <div class="flex space-x-4 text-xl">
+                <a href="https://www.facebook.com/profile.php?id=61559665337072" target="_blank" class="hover:text-blue-600 transition"><i class="fa-brands fa-facebook"></i></a>
+                <a href="https://www.instagram.com/redams_bd?igsh=dXc1cnFxNmMzenI4" target="_blank" class="hover:text-pink-600 transition"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://wa.me/8801894357549" target="_blank" class="hover:text-green-600 transition"><i class="fa-brands fa-whatsapp"></i></a>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="font-bold text-black uppercase mb-4 text-sm tracking-widest">Shop Categories</h3>
+            <ul class="space-y-2 text-sm">
+                <li><a href="#" class="hover:underline">Drop Shoulder</a></li>
+                <li><a href="#" class="hover:underline">New Arrivals</a></li>
+                <li><a href="#" class="hover:underline">Best Sellers</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h3 class="font-bold text-black uppercase mb-4 text-sm tracking-widest">Policy</h3>
+            <ul class="space-y-2 text-sm">
+                <li><a href="#" class="hover:underline">Privacy Policy</a></li>
+                <li><a href="#" class="hover:underline">Terms & Conditions</a></li>
+                <li><a href="#" class="hover:underline">Return & Refund Policy</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h3 class="font-bold text-black uppercase mb-4 text-sm tracking-widest">Contact Us</h3>
+            <ul class="space-y-3 text-sm">
+                <li class="flex items-start space-x-3">
+                    <i class="fa-solid fa-location-dot mt-1 text-black"></i>
+                    <span>Saidpur, Bangladesh</span>
+                </li>
+                <li class="flex items-center space-x-3">
+                    <i class="fa-solid fa-phone text-black"></i>
+                    <span>+880 1894 357549</span>
+                </li>
+                <li class="flex items-center space-x-3">
+                    <i class="fa-solid fa-envelope text-black"></i>
+                    <span>redamsbd@gmail.com</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="border-t border-gray-100 mt-16 pt-8 text-center text-xs text-gray-500 uppercase tracking-widest">
+        &copy; 2026 REDAMS - ALL RIGHTS RESERVED. DEVELOPED BY RIDWAN.
+    </div>
+</footer>
 </body>
 </html>
+               
