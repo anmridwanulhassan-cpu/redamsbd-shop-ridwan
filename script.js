@@ -131,7 +131,7 @@ function sendOrderToWhatsApp() {
         total += (item.price * item.qty);
     });
     msg += `-----------------%0A*TOTAL: ৳${total}*%0A(COD Order)`;
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
+    window.open(`https://wa.me/${8801894357549}?text=${msg}`, '_blank');
 }
 
 function closeModal() { document.getElementById('product-modal').classList.replace('flex', 'hidden'); }
