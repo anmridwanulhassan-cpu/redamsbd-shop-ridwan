@@ -124,51 +124,38 @@ function toggleCart(forceOpen = false) {
     if (forceOpen === true) drawer.classList.remove('translate-x-full');
     else drawer.classList.toggle('translate-x-full');
 }
-// এই ফাংশনটি অটোমেটিক কাজ করবে যখনই আপনি কোনো ফিল্ডে লিখবেন
-document.addEventListener('input', function(e) {
-    // ইনপুট ফিল্ড থেকে তথ্য নেওয়া
-    const name = document.getElementById('final-name')?.value.trim() || "";
-    const phone = document.getElementById('final-phone')?.value.trim() || "";
-    const address = document.getElementById('final-address')?.value.trim() || "";
-    
-    // কার্ট থেকে আইটেমগুলো সাজানো
-    let orderDetails = "";
-    let grandTotal = 0;
-    
-    if (cart && cart.length > 0) {
-        cart.forEach((item, index) => {
-            orderDetails += `${index + 1}. ${item.name} (${item.selectedColor}, ${item.selectedSize}) x ${item.qty}%0A`;
-            grandTotal += (item.price * item.qty);
-        });
+// ১২৭ নম্বর লাইনে এখান থেকে পেস্ট শুরু করুন
+function confirmOrderWhatsApp() {
+    const name = document.getElementById('final-name').value.trim();
+    const phone = document.getElementById('final-phone').value.trim();
+    const address = document.getElementById('final-address').value.trim();
+
+    if (!name || !phone || !address) {
+        alert("দয়া করে নাম, ফোন নম্বর এবং ঠিকানা সঠিকভাবে লিখুন!");
+        return;
     }
 
-    // মেসেজ তৈরি করা
-    let message = `*NEW ORDER - REDAMS*%0A`;
-    message += `*Customer:* ${name}%0A`;
-    message += `*Phone:* ${phone}%0A`;
-    message += `*Address:* ${address}%0A`;
-    message += `---------------------------%0A`;
-    message += `*Items:*%0A${orderDetails}`;
-    message += `---------------------------%0A`;
-    message += `*Total: ৳${grandTotal}*`;
-
-    // লিঙ্কে মেসেজটি পুশ করা
-    const confirmBtn = document.getElementById('confirm-link');
-    if (confirmBtn) {
-        confirmBtn.href = `https://wa.me/8801894357549?text=${message}`;
+    if (cart.length === 0) {
+        alert("আপনার কার্ট খালি!");
+        return;
     }
-});
 
-// বাটন ক্লিক করার সময় চেক করা (নিরাপত্তার জন্য)
-document.addEventListener('click', function(e) {
-    if (e.target && (e.target.id === 'confirm-link' || e.target.closest('#confirm-link'))) {
-        const name = document.getElementById('final-name')?.value.trim();
-        if (!name || name === "") {
-            e.preventDefault(); // লিঙ্কটি ওপেন হতে বাধা দেবে
-            alert("দয়া করে আপনার নাম, ফোন এবং ঠিকানা আগে লিখুন!");
-        }
-    }
-});
+    let message = `*NEW ORDER - REDAMS*%0A---------------------------%0A`;
+    message += `*Customer:* ${name}%0A*Phone:* ${phone}%0A*Address:* ${address}%0A---------------------------%0A*Order Items:*%0A`;
+
+    let total = 0;
+    cart.forEach((item, index) => {
+        message += `${index + 1}. ${item.name} (${item.selectedColor}, ${item.selectedSize}) x ${item.qty} = ৳${item.price * item.qty}%0A`;
+        total += (item.price * item.qty);
+    });
+
+    message += `---------------------------%0A*Total Amount: ৳${total}*%0A*Payment: Cash on Delivery*`;
+
+    // WhatsApp ওপেন করার জন্য
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${message}`;
+    window.open(whatsappUrl, '_blank');
+}
+// পেস্ট শেষ
 function closeModal() { document.getElementById('product-modal').classList.replace('flex', 'hidden'); }
 function filterCategory(c) { displayProducts(c==='all' ? allProducts : allProducts.filter(p => p.category === c)); }
 
