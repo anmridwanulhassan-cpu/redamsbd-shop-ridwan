@@ -309,6 +309,40 @@
     </div>
 </div>
 </div>
+<script>
+// সরাসরি HTML এর ভেতরেই ফাংশনটি দিয়ে দিচ্ছি যাতে কোনো কনফ্লিক্ট না হয়
+function sendOrderToWhatsApp() {
+    const WHATSAPP_NUMBER = "8801894357549";
+    
+    const name = document.getElementById('cust-name').value.trim();
+    const phone = document.getElementById('cust-phone').value.trim();
+    const address = document.getElementById('cust-address').value.trim();
+
+    if (!name || !phone || !address) {
+        alert("দয়া করে নাম, ফোন নম্বর এবং সম্পূর্ণ ঠিকানা সঠিকভাবে লিখুন!");
+        return;
+    }
+
+    if (!cart || cart.length === 0) {
+        alert("আপনার কার্ট খালি!");
+        return;
+    }
+
+    let message = `*NEW ORDER - REDAMS*%0A---------------------------%0A`;
+    message += `*Customer Details:*%0AName: ${name}%0APhone: ${phone}%0AAddress: ${address}%0A---------------------------%0A*Order Items:*%0A`;
+
+    let total = 0;
+    cart.forEach((item, index) => {
+        message += `${index + 1}. ${item.name} (${item.selectedColor}, ${item.selectedSize}) x ${item.qty} = ৳${item.price * item.qty}%0A`;
+        total += (item.price * item.qty);
+    });
+
+    message += `---------------------------%0A*Total Amount: ৳${total}*%0A*Payment: Cash on Delivery*`;
+
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+    window.open(url, '_blank');
+}
+</script>
 </body>
 </html>
                
