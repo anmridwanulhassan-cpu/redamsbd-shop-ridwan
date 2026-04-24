@@ -125,11 +125,19 @@ function toggleCart(forceOpen = false) {
     else drawer.classList.toggle('translate-x-full');
 }
 
-// ৬. ফাইনাল হোয়াটসঅ্যাপ অর্ডার ফাংশন
 function confirmOrderWhatsApp() {
-    const n = document.getElementById('final-name').value.trim();
-    const ph = document.getElementById('final-phone').value.trim();
-    const ad = document.getElementById('final-address').value.trim();
+    const nameInput = document.getElementById('final-name');
+    const phoneInput = document.getElementById('final-phone');
+    const addressInput = document.getElementById('final-address');
+
+    if (!nameInput || !phoneInput || !addressInput) {
+        alert("Error: Input fields not found. Please refresh.");
+        return;
+    }
+
+    const n = nameInput.value.trim();
+    const ph = phoneInput.value.trim();
+    const ad = addressInput.value.trim();
 
     if (!n || !ph || !ad) {
         alert("দয়া করে নাম, ফোন নম্বর এবং সম্পূর্ণ ঠিকানা সঠিকভাবে লিখুন!");
@@ -152,7 +160,16 @@ function confirmOrderWhatsApp() {
 
     message += `---------------------------%0A*Total Amount: ৳${total}*%0A*Payment: Cash on Delivery*`;
 
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${message}`;
+
+    // Mobile ebong PC uboy jaygay kaj korar jonno eibhabe open kora bhalo
+    const link = document.createElement('a');
+    link.href = whatsappUrl;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 function closeModal() { document.getElementById('product-modal').classList.replace('flex', 'hidden'); }
