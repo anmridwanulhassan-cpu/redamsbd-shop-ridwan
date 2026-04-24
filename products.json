@@ -1,8 +1,8 @@
 [
   {
     "id": 1,
-    "name": "Premium Drop Shoulder Black",
-    "price": 850,
+    "name": "Cosmic Wonder",
+    "price": 399,
     "category": "drop-shoulder",
     "images": [
       "images/cosmic front.png",
@@ -10,32 +10,44 @@
       "images/cosmic lady front.jpg"
     ],
     "colors": ["Black", "Charcoal", "Navy"],
-    "sizes": ["S", "M", "L", "XL"]
+    "sizes": ["S", "M", "L", "XL","XXL"]
   },
   {
     "id": 2,
-    "name": "Classic Hoodie Navy",
-    "price": 1200,
-    "category": "hoodie",
+    "name": "Pirates Tee",
+    "price": 399,
+    "category": "drop-shoulder",
     "images": [
-      "images/h1-front.jpg",
-      "images/h1-back.jpg",
-      "images/h1-detail.jpg"
+      "images/drop shoulder- Pirates Tee.jpg"
     ],
-    "colors": ["Navy Blue", "Black"],
-    "sizes": ["M", "L", "XL", "XXL"]
+    "colors": ["Black"],
+    "sizes": ["M", "L", "XL","XXL"]
   },
-  {
+   {
     "id": 3,
-    "name": "Regular Fit White Tee",
-    "price": 550,
+    "name": "Spider Man",
+    "price": 399,
+    "category": "drop-shoulder",
+    "images": [
+      "images/Spider man 01.jpg"
+      
+    ],
+    "colors": ["White","Black"],
+    "sizes": ["S", "M", "L", "XL"]
+  },
+
+
+  {
+    "id": 4,
+    "name": "Regular Solid",
+    "price": 299,
     "category": "regular-tshirt",
     "images": [
-      "images/w1-front.jpg",
-      "images/w1-back.jpg",
-      "images/w1-side.jpg"
+      "images/regular t shirt.jpg",
+      "images/regular solid white.jpg",
+      "images/regular solid sky blue.jpg"
     ],
-    "colors": ["White", "Off-White"],
-    "sizes": ["S", "M", "L"]
+    "colors": ["Red", "White", "Sky Blue"],
+    "sizes": ["S", "M", "L", "XL"]
   }
 ]
