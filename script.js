@@ -125,10 +125,12 @@ function toggleCart(forceOpen = false) {
     else drawer.classList.toggle('translate-x-full');
 }
 
+// ৬. হোয়াটসঅ্যাপ অর্ডার ফাংশন (উন্নত লজিকসহ)
 function confirmOrderWhatsApp() {
-    const nameInput = document.getElementById('final-name');
-    const phoneInput = document.getElementById('final-phone');
-    const addressInput = document.getElementById('final-address');
+    // ID ব্যাকআপসহ চেক করা
+    const nameInput = document.getElementById('final-name') || document.getElementById('cust-name');
+    const phoneInput = document.getElementById('final-phone') || document.getElementById('cust-phone');
+    const addressInput = document.getElementById('final-address') || document.getElementById('cust-address');
 
     if (!nameInput || !phoneInput || !addressInput) {
         alert("Error: Input fields not found. Please refresh.");
@@ -140,7 +142,7 @@ function confirmOrderWhatsApp() {
     const ad = addressInput.value.trim();
 
     if (!n || !ph || !ad) {
-        alert("দয়া করে নাম, ফোন নম্বর এবং সম্পূর্ণ ঠিকানা সঠিকভাবে লিখুন!");
+        alert("দয়া করে নাম, ফোন নম্বর এবং সম্পূর্ণ ঠিকানা সঠিকভাবে লিখুন!");
         return;
     }
 
@@ -160,18 +162,20 @@ function confirmOrderWhatsApp() {
 
     message += `---------------------------%0A*Total Amount: ৳${total}*%0A*Payment: Cash on Delivery*`;
 
+    // সরাসরি লিঙ্ক ওপেন করার সিস্টেম
     const whatsappUrl = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${message}`;
-
-    // Mobile ebong PC uboy jaygay kaj korar jonno eibhabe open kora bhalo
-    const link = document.createElement('a');
-    link.href = whatsappUrl;
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    window.location.href = whatsappUrl; 
 }
 
 function closeModal() { document.getElementById('product-modal').classList.replace('flex', 'hidden'); }
 function filterCategory(c) { displayProducts(c==='all' ? allProducts : allProducts.filter(p => p.category === c)); }
+
+// ৭. বাটন লিসেনার (এটিই আসল কাজ করবে)
+document.addEventListener('click', function(e) {
+    // যদি কনফার্ম বাটনে বা বাটনের ভেতরের আইকনে ক্লিক লাগে
+    if (e.target.closest('button') && e.target.closest('button').innerText.includes('Confirm Order')) {
+        confirmOrderWhatsApp();
+    }
+});
+
 window.onload = loadProducts;
