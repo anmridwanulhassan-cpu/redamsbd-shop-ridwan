@@ -49,5 +49,57 @@
     ],
     "colors": ["Red", "White", "Sky Blue"],
     "sizes": ["S", "M", "L", "XL"]
+  },
+  {
+    "id": 5,
+    "name": "DROP BLACK",
+    "price": 299,
+    "category": "drop-shoulder",
+    "images": [
+      "images/DROP BLACK.jpg"
+    ],
+    "colors": ["Black"],
+    "sizes": ["S", "M", "L", "XL","XXL"]
+  },
+{
+    "id": 6,
+    "name": "Born Live Ride",
+    "price": 399,
+    "category": "drop-shoulder",
+    "images": [
+      "images/born live ride.jpg"
+      
+    ],
+    "colors": ["Black"],
+    "sizes": ["S", "M", "L", "XL","XXL"]
+  },
+{
+    "id": 7,
+    "name": "DRAGON BALL Z",
+    "price": 399,
+    "category": "drop-shoulder",
+    "images": [
+      "images/dragon ball z.jpg"
+    ],
+    "colors": ["Black", "White"],
+    "sizes": ["S", "M", "L", "XL","XXL"]
+  },
+{
+    "id": 8,
+    "name": "LIBERAL",
+    "price": 850,
+    "category": "drop-shoulder",
+    "images": [
+      "images/❝LIBERAL❞ bottle green.jpg",
+      "images/❝LIBERAL❞ black.jpg"
+      
+    ],
+    "colors": ["Bottle Green","Black"],
+    "sizes": ["S", "M", "L", "XL","XXL"]
   }
+
+
+
+
+
 ]
