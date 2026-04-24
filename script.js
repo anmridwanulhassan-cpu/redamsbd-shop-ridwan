@@ -140,30 +140,34 @@ function toggleCart(forceOpen = false) {
     }
 }
 
-// ৬. হোয়াটসঅ্যাপ অর্ডার ফাংশন (সবচেয়ে গুরুত্বপূর্ণ)
 function sendOrderToWhatsApp() {
-    // ID চেক করার জন্য কনসোল লগ (Debug)
-    console.log("চেকিং ইনপুট ফিল্ড...");
+    // Prothome check kori field gulo screen-e ache ki na
+    const nameInput = document.querySelector('#cust-name');
+    const phoneInput = document.getElementById('cust-phone');
+    const addressInput = document.querySelector('textarea#cust-address') || document.getElementById('cust-address');
 
-    const name = document.getElementById('cust-name').value.trim();
-    const phone = document.getElementById('cust-phone').value.trim();
-    const address = document.getElementById('cust-address').value.trim();
+    if (!nameInput || !phoneInput || !addressInput) {
+        alert("System error: Input fields not found! Please refresh page.");
+        return;
+    }
 
-    if (!name || !phone || !address) {
-        alert("দয়া করে আপনার নাম, ফোন নম্বর এবং সম্পূর্ণ ঠিকানা লিখুন!");
+    const n = nameInput.value.trim();
+    const ph = phoneInput.value.trim();
+    const ad = addressInput.value.trim();
+
+    // Data check
+    if (n === "" || ph === "" || ad === "") {
+        alert("দয়া করে আপনার নাম, ফোন নম্বর এবং সম্পূর্ণ ঠিকানা সঠিকভাবে লিখুন!");
         return;
     }
 
     if (cart.length === 0) {
-        alert("আপনার কার্ট খালি! অনুগ্রহ করে প্রোডাক্ট যোগ করুন।");
+        alert("আপনার কার্ট খালি!");
         return;
     }
 
-    let message = `*NEW ORDER - REDAMS*%0A`;
-    message += `---------------------------%0A`;
-    message += `*Customer Details:*%0AName: ${name}%0APhone: ${phone}%0AAddress: ${address}%0A`;
-    message += `---------------------------%0A`;
-    message += `*Order Items:*%0A`;
+    let message = `*NEW ORDER - REDAMS*%0A---------------------------%0A`;
+    message += `*Customer Details:*%0AName: ${n}%0APhone: ${ph}%0AAddress: ${ad}%0A---------------------------%0A*Order Items:*%0A`;
 
     let total = 0;
     cart.forEach((item, index) => {
@@ -171,9 +175,7 @@ function sendOrderToWhatsApp() {
         total += (item.price * item.qty);
     });
 
-    message += `---------------------------%0A`;
-    message += `*Total Amount: ৳${total}*%0A`;
-    message += `*Payment: Cash on Delivery*%0A`;
+    message += `---------------------------%0A*Total Amount: ৳${total}*%0A*Payment: Cash on Delivery*`;
 
     const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
     window.open(url, '_blank');
