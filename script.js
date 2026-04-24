@@ -15,11 +15,16 @@ async function loadProducts() {
     } catch (err) { console.error("JSON Error:", err); }
 }
 
-// ২. গ্রিডে প্রোডাক্ট দেখানো
-function displayProducts(products) {
+// ১. প্রোডাক্ট দেখানোর মেইন ফাংশন
+function displayProducts(products, showAll = false) {
     const grid = document.getElementById('product-grid');
+    const viewAllBtn = document.getElementById('view-all-container');
     if (!grid) return;
-    grid.innerHTML = products.map(p => `
+
+    // যদি showAll false থাকে, তবে শুধু প্রথম ৮টি প্রোডাক্ট দেখাবে
+    let productsToShow = showAll ? products : products.slice(0, 8);
+
+    grid.innerHTML = productsToShow.map(p => `
         <div class="bg-white rounded-xl border border-gray-100 p-3 hover:shadow-xl transition cursor-pointer group" onclick="openModal(${p.id})">
             <div class="overflow-hidden rounded-lg">
                 <img src="${p.images[0]}" class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
@@ -27,10 +32,25 @@ function displayProducts(products) {
             <div class="p-3 text-center">
                 <h3 class="font-bold text-gray-800 text-[12px] uppercase">${p.name}</h3>
                 <p class="font-black text-black mt-1">৳ ${p.price}</p>
-                <button class="mt-3 w-full bg-black text-white py-2 rounded text-[10px] font-black uppercase tracking-widest">View Details</button>
+                <button class="mt-3 w-full bg-black text-white py-2 rounded text-[10px] font-black uppercase tracking-widest">Order Now</button>
             </div>
         </div>
     `).join('');
+
+    // যদি প্রোডাক্ট ৮টার বেশি হয় এবং আমরা 'showAll' মোডে না থাকি, তবেই বাটন দেখাবে
+    if (products.length > 8 && !showAll) {
+        viewAllBtn.style.display = 'block';
+    } else {
+        viewAllBtn.style.display = 'none';
+    }
+}
+
+// ২. 'View All Items' বাটনে ক্লিক করলে যা হবে
+function showAllProducts() {
+    displayProducts(allProducts, true); // true মানে এখন সব প্রোডাক্ট দেখাবে
+    
+    // কাস্টমারকে স্মুথলি প্রোডাক্টের দিকে নিয়ে যাওয়ার জন্য স্ক্রল (Optional)
+    document.getElementById('product-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // ৩. পপ-আপ (Modal) ওপেন
