@@ -125,21 +125,11 @@ function toggleCart(forceOpen = false) {
     else drawer.classList.toggle('translate-x-full');
 }
 
-// ৬. হোয়াটসঅ্যাপ অর্ডার ফাংশন (উন্নত লজিকসহ)
+// ৬. হোয়াটসঅ্যাপ অর্ডার ফাংশন
 function confirmOrderWhatsApp() {
-    // ID ব্যাকআপসহ চেক করা
-    const nameInput = document.getElementById('final-name') || document.getElementById('cust-name');
-    const phoneInput = document.getElementById('final-phone') || document.getElementById('cust-phone');
-    const addressInput = document.getElementById('final-address') || document.getElementById('cust-address');
-
-    if (!nameInput || !phoneInput || !addressInput) {
-        alert("Error: Input fields not found. Please refresh.");
-        return;
-    }
-
-    const n = nameInput.value.trim();
-    const ph = phoneInput.value.trim();
-    const ad = addressInput.value.trim();
+    const n = document.getElementById('final-name').value.trim();
+    const ph = document.getElementById('final-phone').value.trim();
+    const ad = document.getElementById('final-address').value.trim();
 
     if (!n || !ph || !ad) {
         alert("দয়া করে নাম, ফোন নম্বর এবং সম্পূর্ণ ঠিকানা সঠিকভাবে লিখুন!");
@@ -164,18 +154,10 @@ function confirmOrderWhatsApp() {
 
     // সরাসরি লিঙ্ক ওপেন করার সিস্টেম
     const whatsappUrl = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${message}`;
-    window.location.href = whatsappUrl; 
+    window.open(whatsappUrl, '_blank'); 
 }
 
 function closeModal() { document.getElementById('product-modal').classList.replace('flex', 'hidden'); }
 function filterCategory(c) { displayProducts(c==='all' ? allProducts : allProducts.filter(p => p.category === c)); }
-
-// ৭. বাটন লিসেনার (এটিই আসল কাজ করবে)
-document.addEventListener('click', function(e) {
-    // যদি কনফার্ম বাটনে বা বাটনের ভেতরের আইকনে ক্লিক লাগে
-    if (e.target.closest('button') && e.target.closest('button').innerText.includes('Confirm Order')) {
-        confirmOrderWhatsApp();
-    }
-});
 
 window.onload = loadProducts;
