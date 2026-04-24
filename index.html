@@ -104,88 +104,86 @@
                 <span class="text-white font-bold text-[10px] uppercase tracking-wider bg-black/40 px-2 py-1 rounded">Hoodie</span>
             </div>
         </div>
-
-        <div onclick="filterCategory('couple-tshirt')" class="cursor-pointer group relative overflow-hidden rounded-lg shadow-sm aspect-[2/3]">
+<div onclick="filterCategory('couple-tshirt')" class="cursor-pointer group relative overflow-hidden rounded-lg shadow-sm aspect-[2/3]">
             <img src="images/couple tee.jpg" alt="Couple T-Shirt" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
             <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent flex items-end justify-center pb-4">
-              <span class="text-white font-bold text-[10px] uppercase tracking-wider bg-black/40 px-2 py-1 rounded">Couple T-Shirt</span>
-        </div>
-    </div> 
-<div class="container mx-auto px-4 py-16 border-t border-gray-100">
-        <h2 class="text-3xl font-black text-center mb-12 text-gray-900 uppercase tracking-tighter">Featured Products</h2>
-        
-        <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <span class="text-white font-bold text-[10px] uppercase tracking-wider bg-black/40 px-2 py-1 rounded">Couple T-Shirt</span>
             </div>
-
-        <div id="view-all-container" class="mt-12 text-center" style="display: none;">
-            <button onclick="showAllProducts()" class="px-10 py-4 bg-black text-white text-xs font-black uppercase tracking-widest rounded-full hover:bg-gray-800 transition shadow-lg">
-                View All Items
-            </button>
+        </div> 
+    </div> </div> <div class="container mx-auto px-4 py-16 border-t border-gray-100">
+    <h2 class="text-3xl font-black text-center mb-12 text-gray-900 uppercase tracking-tighter">Featured Products</h2>
+    
+    <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         </div>
-    </div>
 
-    <div id="product-modal" class="fixed inset-0 z-[2000] hidden items-center justify-center bg-black/90 p-4 backdrop-blur-sm">
-        <div class="relative bg-white w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl p-6 md:p-10 shadow-2xl">
-            <button onclick="closeModal()" class="absolute top-4 right-6 text-4xl text-gray-400 hover:text-black transition">&times;</button>
-            <div id="modal-content" class="grid grid-cols-1 md:grid-cols-2 gap-10"></div>
-        </div>
-    </div>
-
-    <div id="floating-checkout" class="fixed bottom-6 right-6 hidden z-[1000]">
-        <button onclick="toggleCart()" class="bg-black text-white px-8 py-4 rounded-full shadow-2xl flex items-center space-x-3 hover:scale-105 transition duration-300">
-            <div class="relative">
-                <i class="fa-solid fa-cart-shopping text-xl"></i>
-                <span id="cart-count-float" class="absolute -top-3 -right-3 bg-red-600 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold">0</span>
-            </div>
-            <span class="font-black uppercase text-xs tracking-widest">Cart Details</span>
+    <div id="view-all-container" class="mt-12 text-center" style="display: none;">
+        <button onclick="showAllProducts()" class="px-10 py-4 bg-black text-white text-xs font-black uppercase tracking-widest rounded-full hover:bg-gray-800 transition shadow-lg">
+            View All Items
         </button>
     </div>
+</div>
 
-    <footer class="bg-black text-white border-t border-gray-800 pt-16 pb-8 mt-20">
-        <div class="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
-            
-            <div class="space-y-4">
-                <h1 class="text-2xl font-bold tracking-tighter text-white">REDAMS</h1>
-                <p class="text-sm leading-relaxed text-gray-400">Premium lifestyle apparel brand from Bangladesh. We focus on quality and comfort in every stitch.</p>
-                <div class="flex space-x-4 text-xl">
-                    <a href="https://www.facebook.com/profile.php?id=61559665337072" target="_blank" class="text-gray-400 hover:text-blue-500 transition"><i class="fa-brands fa-facebook"></i></a>
-                    <a href="https://www.instagram.com/redams_bd?igsh=dXc1cnFxNmMzenI4" target="_blank" class="text-gray-400 hover:text-pink-500 transition"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="https://wa.me/8801894357549" target="_blank" class="text-gray-400 hover:text-green-500 transition"><i class="fa-brands fa-whatsapp"></i></a>
-                </div>
-            </div>
+<div id="product-modal" class="fixed inset-0 z-[2000] hidden items-center justify-center bg-black/90 p-4 backdrop-blur-sm">
+    <div class="relative bg-white w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl p-6 md:p-10 shadow-2xl">
+        <button onclick="closeModal()" class="absolute top-4 right-6 text-4xl text-gray-400 hover:text-black transition">&times;</button>
+        <div id="modal-content" class="grid grid-cols-1 md:grid-cols-2 gap-10"></div>
+    </div>
+</div>
 
-            <div>
-                <h3 class="font-bold uppercase mb-4 text-sm tracking-widest text-white border-b border-gray-800 pb-2">Categories</h3>
-                <ul class="space-y-2 text-sm text-gray-400">
-                    <li><a href="#" onclick="filterCategory('drop-shoulder')" class="hover:text-white transition">Drop Shoulder</a></li>
-                    <li><a href="#" onclick="displayProducts(allProducts)" class="hover:text-white transition">New Arrivals</a></li>
-                    <li><a href="#" class="hover:text-white transition">Best Sellers</a></li>
-                </ul>
-            </div>
+<div id="floating-checkout" class="fixed bottom-6 right-6 hidden z-[1000]">
+    <button onclick="toggleCart()" class="bg-black text-white px-8 py-4 rounded-full shadow-2xl flex items-center space-x-3 hover:scale-105 transition duration-300">
+        <div class="relative">
+            <i class="fa-solid fa-cart-shopping text-xl"></i>
+            <span id="cart-count-float" class="absolute -top-3 -right-3 bg-red-600 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold">0</span>
+        </div>
+        <span class="font-black uppercase text-xs tracking-widest">Cart Details</span>
+    </button>
+</div>
 
-            <div>
-                <h3 class="font-bold uppercase mb-4 text-sm tracking-widest text-white border-b border-gray-800 pb-2">Policy</h3>
-                <ul class="space-y-2 text-sm text-gray-400">
-                    <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
-                    <li><a href="#" class="hover:text-white transition">Terms & Conditions</a></li>
-                    <li><a href="#" class="hover:text-white transition">Return Policy</a></li>
-                </ul>
-            </div>
-
-            <div>
-                <h3 class="font-bold uppercase mb-4 text-sm tracking-widest text-white border-b border-gray-800 pb-2">Contact Us</h3>
-                <ul class="space-y-3 text-sm text-gray-400">
-                    <li class="flex items-start space-x-3"><i class="fa-solid fa-location-dot mt-1 text-white"></i><span>Savar, Dhaka, Bangladesh</span></li>
-                    <li class="flex items-center space-x-3"><i class="fa-solid fa-phone text-white"></i><span>+880 1894 357549</span></li>
-                    <li class="flex items-center space-x-3"><i class="fa-solid fa-envelope text-white"></i><span>redamsbd16@gmail.com</span></li>
-                </ul>
+<footer class="bg-black text-white border-t border-gray-800 pt-16 pb-8 mt-20 text-left">
+    <div class="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+        <div class="space-y-4">
+            <h1 class="text-2xl font-bold tracking-tighter text-white">REDAMS</h1>
+            <p class="text-sm leading-relaxed text-gray-400">Premium lifestyle apparel brand from Bangladesh. We focus on quality and comfort in every stitch.</p>
+            <div class="flex space-x-4 text-xl">
+                <a href="https://www.facebook.com/profile.php?id=61559665337072" target="_blank" class="text-gray-400 hover:text-blue-500 transition"><i class="fa-brands fa-facebook"></i></a>
+                <a href="https://www.instagram.com/redams_bd?igsh=dXc1cnFxNmMzenI4" target="_blank" class="text-gray-400 hover:text-pink-500 transition"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://wa.me/8801894357549" target="_blank" class="text-gray-400 hover:text-green-500 transition"><i class="fa-brands fa-whatsapp"></i></a>
             </div>
         </div>
 
-        <div class="border-t border-gray-800 mt-16 pt-8 text-center text-[10px] text-gray-500 uppercase tracking-widest">
-            &copy; 2026 REDAMS - ALL RIGHTS RESERVED. DEVELOPED BY RIDWAN.
+        <div>
+            <h3 class="font-bold uppercase mb-4 text-sm tracking-widest text-white border-b border-gray-800 pb-2">Categories</h3>
+            <ul class="space-y-2 text-sm text-gray-400">
+                <li><a href="#" onclick="filterCategory('drop-shoulder')" class="hover:text-white transition">Drop Shoulder</a></li>
+                <li><a href="#" onclick="displayProducts(allProducts)" class="hover:text-white transition">New Arrivals</a></li>
+                <li><a href="#" class="hover:text-white transition">Best Sellers</a></li>
+            </ul>
         </div>
-    </footer>
+
+        <div>
+            <h3 class="font-bold uppercase mb-4 text-sm tracking-widest text-white border-b border-gray-800 pb-2">Policy</h3>
+            <ul class="space-y-2 text-sm text-gray-400">
+                <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                <li><a href="#" class="hover:text-white transition">Terms & Conditions</a></li>
+                <li><a href="#" class="hover:text-white transition">Return Policy</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h3 class="font-bold uppercase mb-4 text-sm tracking-widest text-white border-b border-gray-800 pb-2">Contact Us</h3>
+            <ul class="space-y-3 text-sm text-gray-400">
+                <li class="flex items-start space-x-3"><i class="fa-solid fa-location-dot mt-1 text-white"></i><span>Savar, Dhaka, Bangladesh</span></li>
+                <li class="flex items-center space-x-3"><i class="fa-solid fa-phone text-white"></i><span>+880 1894 357549</span></li>
+                <li class="flex items-center space-x-3"><i class="fa-solid fa-envelope text-white"></i><span>redamsbd16@gmail.com</span></li>
+            </ul>
+        </div>
+    </div>
+    <div class="border-t border-gray-800 mt-16 pt-8 text-center text-[10px] text-gray-500 uppercase tracking-widest">
+        &copy; 2026 REDAMS - ALL RIGHTS RESERVED. DEVELOPED BY RIDWAN.
+    </div>
+</footer>
+
 <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full md:w-96 bg-white shadow-2xl z-[5000] transform translate-x-full transition-transform duration-500 flex flex-col border-l border-gray-100">
     <div class="p-5 bg-black text-white flex justify-between items-center">
         <h2 class="font-black uppercase tracking-widest text-sm">Shopping Bag (<span id="cart-count-drawer">0</span>)</h2>
@@ -227,3 +225,4 @@
 </script>
 </body>
 </html>
+       
