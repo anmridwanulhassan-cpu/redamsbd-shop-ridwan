@@ -1,1 +1,175 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redams - Premium Lifestyle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<style>
+    .swiper { width: 100%; height: auto; aspect-ratio: 16/9; } 
+    @media (min-width: 768px) { .swiper { height: 450px; } }
+    .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
+    .swiper-button-next, .swiper-button-prev { color: #000 !important; }
+    .swiper-pagination-bullet-active { background: #000 !important; }
+</style>
+</head>
+<body class="bg-gray-50">
 
+  <nav class="fixed top-0 left-0 right-0 bg-black text-white shadow-lg z-[1000] border-b border-gray-800">
+    <div class="container mx-auto px-4 h-20 flex items-center justify-between">
+        
+        <a href="index.html" class="flex items-center">
+            <img src="images/RedAmS logo main png.png" alt="REDAMS" class="h-10 md:h-12 w-auto object-contain brightness-110">
+        </a>
+
+        <div class="hidden md:flex items-center space-x-8">
+            <a href="index.html" class="text-xs font-bold uppercase tracking-widest hover:text-gray-400 transition">Home</a>
+            
+            <a href="#product-grid" onclick="displayProducts(allProducts)" class="text-xs font-bold uppercase tracking-widest hover:text-gray-400 transition">All Products</a>
+
+            <div class="relative group">
+                <button class="text-xs font-bold uppercase tracking-widest hover:text-gray-400 transition flex items-center">
+                    Collections <i class="fa-solid fa-chevron-down ml-1 text-[10px]"></i>
+                </button>
+                <div class="absolute left-0 mt-2 w-48 bg-white text-black rounded-sm shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                    <div class="py-2">
+                        <a href="#product-grid" onclick="filterCategory('drop-shoulder')" class="block px-4 py-2 text-xs font-bold hover:bg-gray-100 transition uppercase">Drop Shoulder</a>
+                        <a href="#product-grid" onclick="filterCategory('half-sleeve')" class="block px-4 py-2 text-xs font-bold hover:bg-gray-100 transition uppercase">Half Sleeve</a>
+                        <a href="#product-grid" onclick="filterCategory('regular-tshirt')" class="block px-4 py-2 text-xs font-bold hover:bg-gray-100 transition uppercase">Regular T-Shirt</a>
+                        <a href="#product-grid" onclick="filterCategory('hoodie')" class="block px-4 py-2 text-xs font-bold hover:bg-gray-100 transition uppercase">Hoodie</a>
+                        <a href="#product-grid" onclick="filterCategory('couple-tshirt')" class="block px-4 py-2 text-xs font-bold hover:bg-gray-100 transition uppercase">Couple T-Shirt</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-6">
+            <button class="text-lg hover:text-gray-400 transition">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+            
+            <button class="relative text-lg hover:text-gray-400 transition" onclick="toggleCart()">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-white text-black text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-black">0</span>
+            </button>
+        </div>
+    </div>
+</nav>
+    </div> </div> <div class="container mx-auto px-4 py-16 border-t border-gray-100">
+    <h2 class="text-3xl font-black text-center mb-12 text-gray-900 uppercase tracking-tighter">REDAMS ALL COLLECCTION </h2>
+    
+    <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        </div>
+
+    <div id="view-all-container" class="mt-12 text-center" style="display: none;">
+        <button onclick="showAllProducts()" class="px-10 py-4 bg-black text-white text-xs font-black uppercase tracking-widest rounded-full hover:bg-gray-800 transition shadow-lg">
+            View All Items
+        </button>
+    </div>
+</div>
+
+<div id="product-modal" class="fixed inset-0 z-[2000] hidden items-center justify-center bg-black/90 p-4 backdrop-blur-sm">
+    <div class="relative bg-white w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl p-6 md:p-10 shadow-2xl">
+        <button onclick="closeModal()" class="absolute top-4 right-6 text-4xl text-gray-400 hover:text-black transition">&times;</button>
+        <div id="modal-content" class="grid grid-cols-1 md:grid-cols-2 gap-10"></div>
+    </div>
+</div>
+
+<div id="floating-checkout" class="fixed bottom-6 right-6 hidden z-[1000]">
+    <button onclick="toggleCart()" class="bg-black text-white px-8 py-4 rounded-full shadow-2xl flex items-center space-x-3 hover:scale-105 transition duration-300">
+        <div class="relative">
+            <i class="fa-solid fa-cart-shopping text-xl"></i>
+            <span id="cart-count-float" class="absolute -top-3 -right-3 bg-red-600 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold">0</span>
+        </div>
+        <span class="font-black uppercase text-xs tracking-widest">Cart Details</span>
+    </button>
+</div>
+
+<footer class="bg-black text-white border-t border-gray-800 pt-16 pb-8 mt-20 text-left">
+    <div class="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+        <div class="space-y-4">
+            <h1 class="text-2xl font-bold tracking-tighter text-white">REDAMS</h1>
+            <p class="text-sm leading-relaxed text-gray-400">Premium lifestyle apparel brand from Bangladesh. We focus on quality and comfort in every stitch.</p>
+            <div class="flex space-x-4 text-xl">
+                <a href="https://www.facebook.com/profile.php?id=61559665337072" target="_blank" class="text-gray-400 hover:text-blue-500 transition"><i class="fa-brands fa-facebook"></i></a>
+                <a href="https://www.instagram.com/redams_bd?igsh=dXc1cnFxNmMzenI4" target="_blank" class="text-gray-400 hover:text-pink-500 transition"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://wa.me/8801894357549" target="_blank" class="text-gray-400 hover:text-green-500 transition"><i class="fa-brands fa-whatsapp"></i></a>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="font-bold uppercase mb-4 text-sm tracking-widest text-white border-b border-gray-800 pb-2">Categories</h3>
+            <ul class="space-y-2 text-sm text-gray-400">
+                <li><a href="#" onclick="filterCategory('drop-shoulder')" class="hover:text-white transition">Drop Shoulder</a></li>
+                <li><a href="#" onclick="displayProducts(allProducts)" class="hover:text-white transition">New Arrivals</a></li>
+                <li><a href="#" class="hover:text-white transition">Best Sellers</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h3 class="font-bold uppercase mb-4 text-sm tracking-widest text-white border-b border-gray-800 pb-2">Policy</h3>
+            <ul class="space-y-2 text-sm text-gray-400">
+                <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                <li><a href="#" class="hover:text-white transition">Terms & Conditions</a></li>
+                <li><a href="#" class="hover:text-white transition">Return Policy</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h3 class="font-bold uppercase mb-4 text-sm tracking-widest text-white border-b border-gray-800 pb-2">Contact Us</h3>
+            <ul class="space-y-3 text-sm text-gray-400">
+                <li class="flex items-start space-x-3"><i class="fa-solid fa-location-dot mt-1 text-white"></i><span>Savar, Dhaka, Bangladesh</span></li>
+                <li class="flex items-center space-x-3"><i class="fa-solid fa-phone text-white"></i><span>+880 1894 357549</span></li>
+                <li class="flex items-center space-x-3"><i class="fa-solid fa-envelope text-white"></i><span>redamsbd16@gmail.com</span></li>
+            </ul>
+        </div>
+    </div>
+    <div class="border-t border-gray-800 mt-16 pt-8 text-center text-[10px] text-gray-500 uppercase tracking-widest">
+        &copy; 2026 REDAMS - ALL RIGHTS RESERVED. DEVELOPED BY RIDWAN.
+    </div>
+</footer>
+
+<div id="cart-drawer" class="fixed inset-y-0 right-0 w-full md:w-96 bg-white shadow-2xl z-[5000] transform translate-x-full transition-transform duration-500 flex flex-col border-l border-gray-100">
+    <div class="p-5 bg-black text-white flex justify-between items-center">
+        <h2 class="font-black uppercase tracking-widest text-sm">Shopping Bag (<span id="cart-count-drawer">0</span>)</h2>
+        <button onclick="toggleCart()" class="text-3xl hover:text-gray-400">&times;</button>
+    </div>
+    
+    <div id="cart-items" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50"></div>
+
+    <div class="p-5 border-t space-y-3 bg-white shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
+        <h3 class="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-2">Delivery Information (COD)</h3>
+        <div class="space-y-2">
+            <input type="text" id="final-name" placeholder="আপনার নাম লিখুন" class="w-full p-3 text-sm border border-gray-200 rounded-lg outline-none focus:border-black transition">
+            <input type="text" id="final-phone" placeholder="ফোন নম্বর" class="w-full p-3 text-sm border border-gray-200 rounded-lg outline-none focus:border-black transition">
+            <textarea id="final-address" placeholder="সম্পূর্ণ ঠিকানা (গ্রাম/শহর, জেলা)" class="w-full p-3 text-sm border border-gray-200 rounded-lg outline-none h-20 focus:border-black transition"></textarea>
+        </div>
+        
+        <div class="flex justify-between font-black text-xl pt-2 border-t border-gray-100 mt-2">
+            <span class="text-gray-500 uppercase text-xs self-center">Total Amount:</span>
+            <span id="cart-total" class="text-black">৳ 0</span>
+        </div>
+        
+        <button type="button" onclick="confirmOrderWhatsApp()" class="w-full bg-[#25D366] text-white py-4 rounded-xl font-black uppercase tracking-widest hover:bg-green-600 transition shadow-lg flex items-center justify-center gap-2">
+            <i class="fa-brands fa-whatsapp text-xl"></i> Confirm Order
+        </button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var swiper = new Swiper(".mySwiper", {
+            loop: true,
+            autoplay: { delay: 3500, disableOnInteraction: false },
+            pagination: { el: ".swiper-pagination", clickable: true },
+            navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
+        });
+    });
+</script>
+</body>
+</html>
+       
