@@ -49,8 +49,7 @@
             <button class="text-lg hover:text-gray-400 transition">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
-            
-            <button class="relative text-lg hover:text-gray-400 transition" onclick="toggleCart()">
+<button class="relative text-lg hover:text-gray-400 transition" onclick="toggleCart()">
                 <i class="fa-solid fa-bag-shopping"></i>
                 <span id="cart-count" class="absolute -top-2 -right-2 bg-white text-black text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-black">0</span>
             </button>
@@ -59,19 +58,43 @@
 </nav>
 
 <div class="h-20"></div>
-    <div class="swiper mySwiper">
+
+<div class="swiper mySwiper">
     <div class="swiper-wrapper">
         <div class="swiper-slide">
-    <img src="images/cover photo.jpg" alt="New Collection" class="w-full h-auto">
-</div>
-<div class="swiper-slide">
-    <img src="images/2nd cover.png" alt="Sale" class="w-full h-auto">
-</div>
+            <img src="images/cover photo.jpg" alt="New Collection" class="w-full h-auto">
+        </div>
+        <div class="swiper-slide">
+            <img src="images/2nd cover.png" alt="Sale" class="w-full h-auto">
+        </div>
     </div>
     <div class="swiper-button-next"></div>
     <div class="swiper-button-prev"></div>
     <div class="swiper-pagination"></div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var swiper = new Swiper(".mySwiper", {
+            loop: true,
+            autoplay: {
+                delay: 3500,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+        });
+    });
+</script>            
+          
 <div class="container mx-auto px-4 py-12">
    <h2 class="text-2xl font-bold text-center mb-10 uppercase tracking-widest text-gray-800">Featured Categories</h2>
     
