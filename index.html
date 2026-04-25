@@ -186,49 +186,49 @@
 </footer>
 
 <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full md:w-96 bg-white shadow-2xl z-[5000] transform translate-x-full transition-transform duration-500 flex flex-col border-l border-gray-100">
-    <div class="p-5 bg-black text-white flex justify-between items-center">
+    
+    <div class="p-5 bg-black text-white flex justify-between items-center shrink-0">
         <h2 class="font-black uppercase tracking-widest text-sm">Shopping Bag (<span id="cart-count-drawer">0</span>)</h2>
-        <button onclick="toggleCart()" class="text-3xl hover:text-gray-400">&times;</button>
+        <button onclick="toggleCart()" class="text-3xl hover:text-gray-400 transition">&times;</button>
     </div>
     
-    <div id="cart-items" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50"></div>
-
-    <div class="p-5 border-t space-y-3 bg-white shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
-        <h3 class="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-2">Delivery Information (COD)</h3>
-        <div class="space-y-2">
-            <input type="text" id="final-name" placeholder="আপনার নাম লিখুন" class="w-full p-3 text-sm border border-gray-200 rounded-lg outline-none focus:border-black transition">
-            <input type="text" id="final-phone" placeholder="ফোন নম্বর" class="w-full p-3 text-sm border border-gray-200 rounded-lg outline-none focus:border-black transition">
-            <textarea id="final-address" placeholder="সম্পূর্ণ ঠিকানা (গ্রাম/শহর, জেলা)" class="w-full p-3 text-sm border border-gray-200 rounded-lg outline-none h-20 focus:border-black transition"></textarea>
+    <div id="cart-items" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 custom-scrollbar">
         </div>
 
+    <div class="p-5 border-t space-y-4 bg-white shadow-[0_-15px_30px_rgba(0,0,0,0.08)] shrink-0">
+        
         <div class="bg-gray-50 p-4 rounded-xl border border-gray-100 space-y-3">
-    <p class="text-[10px] font-black uppercase text-gray-400 tracking-widest">Select Delivery Area:</p>
-    
-    <div class="flex gap-4">
-        <label class="flex items-center gap-2 text-xs font-bold cursor-pointer">
-            <input type="radio" name="delivery" value="80" checked onclick="updateCartUI()" class="accent-black"> Inside Dhaka (৳80)
-        </label>
-        <label class="flex items-center gap-2 text-xs font-bold cursor-pointer">
-            <input type="radio" name="delivery" value="130" onclick="updateCartUI()" class="accent-black"> Outside Dhaka (৳130)
-        </label>
-    </div>
-
-    <p id="free-delivery-msg" class="text-[9px] font-bold uppercase tracking-wider opacity-60 transition-all duration-300">
-        Buy 3 or more items to get FREE DELIVERY 🚚
-    </p>
-</div>
-        
-        <div class="flex justify-between font-black text-xl pt-2 border-t border-gray-100 mt-2">
-            <span class="text-gray-500 uppercase text-xs self-center">Total Amount:</span>
-            <span id="cart-total" class="text-black">৳ 0</span>
+            <p class="text-[10px] font-black uppercase text-gray-400 tracking-widest">Delivery Area:</p>
+            <div class="flex gap-4">
+                <label class="flex items-center gap-2 text-xs font-bold cursor-pointer group">
+                    <input type="radio" name="delivery" value="80" checked onclick="updateCartUI()" class="w-4 h-4 accent-black"> 
+                    <span class="group-hover:text-black transition">Inside Dhaka</span>
+                </label>
+                <label class="flex items-center gap-2 text-xs font-bold cursor-pointer group">
+                    <input type="radio" name="delivery" value="130" onclick="updateCartUI()" class="w-4 h-4 accent-black"> 
+                    <span class="group-hover:text-black transition">Outside Dhaka</span>
+                </label>
+            </div>
+            <div id="free-delivery-msg" class="text-[9px] font-black uppercase tracking-tighter opacity-60 py-1 px-2 rounded bg-white border border-dashed border-gray-200 inline-block transition-all">
+                Buy 3 or more items to get FREE DELIVERY 🚚
+            </div>
         </div>
+
+        <div class="space-y-2">
+            <input type="text" id="final-name" placeholder="আপনার নাম" class="w-full p-3 text-sm border border-gray-200 rounded-xl outline-none focus:border-black transition-all bg-gray-50 focus:bg-white">
+            <input type="text" id="final-phone" placeholder="ফোন নম্বর" class="w-full p-3 text-sm border border-gray-200 rounded-xl outline-none focus:border-black transition-all bg-gray-50 focus:bg-white">
+            <textarea id="final-address" placeholder="সম্পূর্ণ ঠিকানা (গ্রাম/শহর, জেলা)" class="w-full p-3 text-sm border border-gray-200 rounded-xl outline-none h-16 focus:border-black transition-all bg-gray-50 focus:bg-white resize-none"></textarea>
+        </div>
+
+        <div id="cart-total" class="pt-2">
+            </div>
         
-        <button type="button" onclick="confirmOrderWhatsApp()" class="w-full bg-[#25D366] text-white py-4 rounded-xl font-black uppercase tracking-widest hover:bg-green-600 transition shadow-lg flex items-center justify-center gap-2">
-            <i class="fa-brands fa-whatsapp text-xl"></i> Confirm Order
+        <button type="button" onclick="confirmOrderWhatsApp()" class="w-full bg-[#25D366] text-white py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-green-600 active:scale-95 transition-all shadow-lg flex items-center justify-center gap-3">
+            <i class="fa-brands fa-whatsapp text-2xl"></i>
+            <span>Confirm Order</span>
         </button>
     </div>
 </div>
-
 <script src="script.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
