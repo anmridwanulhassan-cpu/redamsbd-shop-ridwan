@@ -6,7 +6,7 @@ let modalQty = 1;
 
 const WHATSAPP_NUMBER = "8801894357549"; 
 
-// ১. ইউআরএল থেকে ক্যাটাগরি নাম বের করার নিয়ম
+// ১. ইউআরএল থেকে ক্যাটাগরি নাম বের করার নিয়ম
 function getCategoryFromURL() {
     const params = new URLSearchParams(window.location.search);
     return params.get('cat'); 
@@ -24,7 +24,6 @@ function loadProducts() {
 
             if (isShopPage) {
                 if (selectedCat) {
-                    // ক্যাটাগরি ফিল্টার: বানান বা স্পেস থাকলেও যেন কাজ করে
                     const filtered = allProducts.filter(p => 
                         p.category.trim().toLowerCase() === selectedCat.trim().toLowerCase()
                     );
@@ -132,7 +131,7 @@ function selectFeature(type, val, el) {
 function addToCart(id) {
     if (!selectedSize || !selectedColor) return alert("Select Color & Size!");
     const p = allProducts.find(item => item.id === id);
-    cart.push({ ...p, selectedSize, selectedColor, qty: modalQty });
+    cart.push({ ...p, selectedSize, selectedColor, qty: modalQty, image: p.images[0] });
     updateCartUI();
     closeModal();
     toggleCart(true);
@@ -146,7 +145,6 @@ function updateCartUI() {
     let subtotal = 0;
     let itemCount = 0;
 
-    // কার্ট আইটেম লিস্ট জেনারেট করা
     cartContainer.innerHTML = cart.map((item, index) => {
         subtotal += item.price * item.qty;
         itemCount += item.qty;
@@ -165,19 +163,15 @@ function updateCartUI() {
         `;
     }).join('');
 
-    // ডেলিভারি চার্জ লজিক
     const deliveryOption = document.querySelector('input[name="delivery"]:checked');
     let deliveryCharge = parseInt(deliveryOption ? deliveryOption.value : 80);
 
-    // ৩টি বা তার বেশি হলে ফ্রি ডেলিভারি লজিক
     if (itemCount >= 3) {
         deliveryCharge = 0;
-        // টেক্সট গ্রিন এবং হাইলাইট করা
         freeDeliveryMsg.classList.remove('opacity-60', 'text-gray-500');
         freeDeliveryMsg.classList.add('opacity-100', 'text-green-600', 'scale-105');
         freeDeliveryMsg.innerHTML = "You've unlocked FREE DELIVERY! 🚚✅";
     } else {
-        // আগের অবস্থায় ফিরিয়ে নেওয়া
         freeDeliveryMsg.classList.add('opacity-60', 'text-gray-500');
         freeDeliveryMsg.classList.remove('opacity-100', 'text-green-600', 'scale-105');
         freeDeliveryMsg.innerHTML = "Buy 3 or more items to get FREE DELIVERY 🚚";
@@ -185,25 +179,23 @@ function updateCartUI() {
 
     const finalTotal = subtotal + deliveryCharge;
 
-    // টোটাল সেকশন আপডেট
     totalElement.innerHTML = `
-        <div class="space-y-1 text-right border-t pt-4">
-            <div class="flex justify-between text-[10px] text-gray-500 uppercase font-bold">
-                <span>Subtotal:</span>
+        <div class="space-y-1 mb-3">
+            <div class="flex justify-between text-[10px] text-gray-400 uppercase font-bold tracking-widest">
+                <span>Subtotal</span>
                 <span>৳${subtotal}</span>
             </div>
-            <div class="flex justify-between text-[10px] uppercase font-bold ${deliveryCharge === 0 ? 'text-green-600' : 'text-gray-500'}">
-                <span>Delivery:</span>
+            <div class="flex justify-between text-[10px] uppercase font-bold ${deliveryCharge === 0 ? 'text-green-600' : 'text-gray-400'} tracking-widest">
+                <span>Delivery</span>
                 <span>${deliveryCharge === 0 ? 'FREE' : '৳' + deliveryCharge}</span>
             </div>
-            <div class="flex justify-between text-xl font-black text-black pt-2">
-                <span>Total:</span>
-                <span>৳${finalTotal}</span>
+            <div class="flex justify-between items-center border-t border-gray-100 pt-2 mt-2">
+                <span class="text-xs font-black uppercase">Final Total</span>
+                <span class="text-2xl font-black text-black tracking-tighter">৳${finalTotal}</span>
             </div>
         </div>
     `;
 
-    // ফ্লোটিং কার্ট কাউন্ট আপডেট
     document.getElementById('cart-count-drawer').innerText = itemCount;
     document.getElementById('cart-count-float').innerText = itemCount;
 }
@@ -226,7 +218,7 @@ function confirmOrderWhatsApp() {
     const deliveryOption = document.querySelector('input[name="delivery"]:checked');
 
     if (!name || !phone || !address) {
-        alert("দয়া করে নাম, ফোন নম্বর এবং ঠিকানা সম্পূর্ণ লিখুন!");
+        alert("দয়া করে নাম, ফোন নম্বর এবং ঠিকানা সম্পূর্ণ লিখুন!");
         return;
     }
 
@@ -234,57 +226,22 @@ function confirmOrderWhatsApp() {
     let itemCount = 0;
     let itemsText = "";
 
-    // কার্টের আইটেমগুলো প্রসেস করা
     cart.forEach((item, index) => {
         itemsText += `${index + 1}. ${item.name} (${item.selectedSize}/${item.selectedColor}) x ${item.qty} = ৳${item.price * item.qty}%0A`;
         subtotal += item.price * item.qty;
         itemCount += item.qty;
     });
 
-    // ডেলিভারি লজিক (মেসেজের জন্য)
     let deliveryCharge = parseInt(deliveryOption ? deliveryOption.value : 80);
     let area = (deliveryCharge === 80) ? "Inside Dhaka" : "Outside Dhaka";
-    let deliveryStatus = "";
+    let deliveryStatus = (itemCount >= 3) ? "FREE (Offer Applied 🚚)" : `৳${deliveryCharge}`;
 
-    if (itemCount >= 3) {
-        deliveryCharge = 0;
-        deliveryStatus = "FREE (Offer Applied 🚚)";
-    } else {
-        deliveryStatus = `৳${deliveryCharge}`;
-    }
+    const finalTotal = subtotal + (itemCount >= 3 ? 0 : deliveryCharge);
 
-    const finalTotal = subtotal + deliveryCharge;
+    let message = `*NEW ORDER - REDAMS*%0A---------------------------%0A*Customer:* ${name}%0A*Phone:* ${phone}%0A*Address:* ${address}%0A*Area:* ${area}%0A---------------------------%0A*Items:*%0A${itemsText}---------------------------%0A*Subtotal:* ৳${subtotal}%0A*Delivery:* ${deliveryStatus}%0A*Final Total: ৳${finalTotal}*%0A---------------------------%0A_Order from Redams Website_`;
 
-   // হোয়াটসঅ্যাপ মেসেজ ফরম্যাট
-    let message = `*NEW ORDER - REDAMS*%0A`;
-    message += `---------------------------%0A`;
-    message += `*Customer:* ${name}%0A`;
-    message += `*Phone:* ${phone}%0A`;
-    message += `*Address:* ${address}%0A`;
-    message += `*Area:* ${area}%0A`;
-    message += `---------------------------%0A`;
-    message += `*Items:*%0A${itemsText}`;
-    message += `---------------------------%0A`;
-    message += `*Subtotal:* ৳${subtotal}%0A`;
-    message += `*Delivery:* ${deliveryStatus}%0A`;
-    message += `*Final Total: ৳${finalTotal}*%0A`;
-    message += `---------------------------%0A`;
-    message += `_Order from Redams Website_`;
-
-    const whatsappUrl = `https://wa.me/8801894357549?text=${message}`;
-    window.open(whatsappUrl, '_blank');
-} // confirmOrderWhatsApp শেষ হলো
-
-// ৬. কার্ট ফাংশনালিটি (এই অংশটুকু ঠিক করুন)
-function addToCart(id) {
-    if (!selectedSize || !selectedColor) return alert("Select Color & Size!");
-    const p = allProducts.find(item => item.id === id);
-    // ইমেজটি কার্টে সঠিকভাবে পাঠানোর জন্য p.images[0] ব্যবহার করুন
-    cart.push({ ...p, selectedSize, selectedColor, qty: modalQty, image: p.images[0] });
-    updateCartUI();
-    closeModal();
-    toggleCart(true);
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
 }
 
-// পেজ লোড হলেই প্রোডাক্ট লোড করার জন্য এই লাইনটি অবশ্যই থাকতে হবে
+// গুরুত্বপূর্ণ: পেজ লোড হলে ফাংশনটি রান করানোর জন্য এই লাইনটি থাকতে হবে
 window.onload = loadProducts;
