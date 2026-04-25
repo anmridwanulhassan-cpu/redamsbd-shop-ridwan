@@ -24,6 +24,7 @@ function loadProducts() {
 
             if (isShopPage) {
                 if (selectedCat) {
+                    // ক্যাটাগরি ফিল্টার: বানান বা স্পেস থাকলেও যেন কাজ করে
                     const filtered = allProducts.filter(p => 
                         p.category.trim().toLowerCase() === selectedCat.trim().toLowerCase()
                     );
@@ -74,19 +75,23 @@ function displayProducts(products, showAll = false) {
 // ৪. 'View All' বাটন ফাংশন
 function showAllProducts() {
     displayProducts(allProducts, true);
-    document.getElementById('product-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const gridElement = document.getElementById('product-grid');
+    if(gridElement) gridElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // ৫. পপ-আপ (Modal) ওপেন
 function openModal(id) {
-    const p = allProducts.find(item => item.id === id);
+    // ক্যাটাগরি পেজের জন্য parseInt যোগ করা হলো
+    const p = allProducts.find(item => item.id === parseInt(id));
+    if(!p) return;
+
     const content = document.getElementById('modal-content');
     selectedSize = null; selectedColor = null; modalQty = 1;
 
     content.innerHTML = `
         <div class="space-y-4">
             <img id="main-view" src="${p.images[0]}" class="w-full h-[400px] object-cover rounded-xl shadow-md">
-            <div class="flex gap-2 overflow-x-auto p-1">
+            <div class="flex gap-2 overflow-x-auto p-1 scrollbar-hide">
                 ${p.images.map(img => `<img src="${img}" onclick="document.getElementById('main-view').src='${img}'" class="w-20 h-20 object-cover rounded cursor-pointer border hover:border-black transition">`).join('')}
             </div>
         </div>
@@ -95,30 +100,34 @@ function openModal(id) {
             <p class="text-xl font-bold mb-6 text-gray-800">৳ ${p.price}</p>
             <div class="mb-4">
                 <p class="text-[10px] font-black uppercase mb-2 text-gray-400">Color</p>
-                <div class="flex gap-2">
-                    ${p.colors.map(c => `<button onclick="selectFeature('color','${c}',this)" class="px-4 py-2 border rounded-full text-[10px] font-black uppercase hover:bg-black hover:text-white transition">${c}</button>`).join('')}
+                <div class="flex gap-2 flex-wrap">
+                    ${p.colors.map(c => `<button onclick="selectFeature('color','${c}',this)" class="px-4 py-2 border border-gray-200 rounded-full text-[10px] font-black uppercase hover:bg-black hover:text-white transition">${c}</button>`).join('')}
                 </div>
             </div>
             <div class="mb-6">
                 <p class="text-[10px] font-black uppercase mb-2 text-gray-400">Size</p>
-                <div class="flex gap-2">
-                    ${p.sizes.map(s => `<button onclick="selectFeature('size','${s}',this)" class="w-10 h-10 border rounded-full text-[10px] font-black uppercase flex items-center justify-center hover:bg-black hover:text-white transition">${s}</button>`).join('')}
+                <div class="flex gap-2 flex-wrap">
+                    ${p.sizes.map(s => `<button onclick="selectFeature('size','${s}',this)" class="w-10 h-10 border border-gray-200 rounded-full text-[10px] font-black uppercase flex items-center justify-center hover:bg-black hover:text-white transition">${s}</button>`).join('')}
                 </div>
             </div>
             <div class="mb-8 flex items-center gap-4">
                 <div class="flex items-center border border-black rounded-lg overflow-hidden">
-                    <button onclick="updateQty(-1)" class="px-3 py-1 bg-gray-50 hover:bg-black hover:text-white transition font-bold">-</button>
-                    <span id="modal-qty" class="px-5 font-black">1</span>
-                    <button onclick="updateQty(1)" class="px-3 py-1 bg-gray-50 hover:bg-black hover:text-white transition font-bold">+</button>
+                    <button onclick="updateQty(-1)" class="px-3 py-1 bg-gray-50 hover:bg-black hover:text-white transition font-bold text-lg">-</button>
+                    <span id="modal-qty" class="px-5 font-black text-lg">1</span>
+                    <button onclick="updateQty(1)" class="px-3 py-1 bg-gray-50 hover:bg-black hover:text-white transition font-bold text-lg">+</button>
                 </div>
             </div>
-            <button onclick="addToCart(${p.id})" class="w-full bg-black text-white py-4 rounded-xl font-black uppercase tracking-widest shadow-lg hover:bg-gray-800 transition">Add To Cart</button>
+            <button onclick="addToCart(${p.id})" class="w-full bg-black text-white py-4 rounded-xl font-black uppercase tracking-widest shadow-lg hover:bg-gray-800 active:scale-95 transition">Add To Cart</button>
         </div>
     `;
     document.getElementById('product-modal').classList.replace('hidden', 'flex');
 }
 
-function updateQty(val) { modalQty = Math.max(1, modalQty + val); document.getElementById('modal-qty').innerText = modalQty; }
+function updateQty(val) { 
+    modalQty = Math.max(1, modalQty + val); 
+    const qtyDisplay = document.getElementById('modal-qty');
+    if(qtyDisplay) qtyDisplay.innerText = modalQty; 
+}
 
 function selectFeature(type, val, el) {
     const btns = el.parentElement.getElementsByTagName('button');
@@ -129,8 +138,10 @@ function selectFeature(type, val, el) {
 
 // ৬. কার্ট ফাংশনালিটি
 function addToCart(id) {
-    if (!selectedSize || !selectedColor) return alert("Select Color & Size!");
-    const p = allProducts.find(item => item.id === id);
+    if (!selectedSize || !selectedColor) return alert("Please Select Color & Size first!");
+    const p = allProducts.find(item => item.id === parseInt(id));
+    if(!p) return;
+
     cart.push({ ...p, selectedSize, selectedColor, qty: modalQty, image: p.images[0] });
     updateCartUI();
     closeModal();
@@ -142,6 +153,8 @@ function updateCartUI() {
     const totalElement = document.getElementById('cart-total');
     const freeDeliveryMsg = document.getElementById('free-delivery-msg');
     
+    if(!cartContainer || !totalElement) return;
+
     let subtotal = 0;
     let itemCount = 0;
 
@@ -166,15 +179,17 @@ function updateCartUI() {
     const deliveryOption = document.querySelector('input[name="delivery"]:checked');
     let deliveryCharge = parseInt(deliveryOption ? deliveryOption.value : 80);
 
-    if (itemCount >= 3) {
-        deliveryCharge = 0;
-        freeDeliveryMsg.classList.remove('opacity-60', 'text-gray-500');
-        freeDeliveryMsg.classList.add('opacity-100', 'text-green-600', 'scale-105');
-        freeDeliveryMsg.innerHTML = "You've unlocked FREE DELIVERY! 🚚✅";
-    } else {
-        freeDeliveryMsg.classList.add('opacity-60', 'text-gray-500');
-        freeDeliveryMsg.classList.remove('opacity-100', 'text-green-600', 'scale-105');
-        freeDeliveryMsg.innerHTML = "Buy 3 or more items to get FREE DELIVERY 🚚";
+    if (freeDeliveryMsg) {
+        if (itemCount >= 3) {
+            deliveryCharge = 0;
+            freeDeliveryMsg.classList.remove('opacity-60', 'text-gray-500');
+            freeDeliveryMsg.classList.add('opacity-100', 'text-green-600', 'scale-105');
+            freeDeliveryMsg.innerHTML = "You've unlocked FREE DELIVERY! 🚚✅";
+        } else {
+            freeDeliveryMsg.classList.add('opacity-60', 'text-gray-500');
+            freeDeliveryMsg.classList.remove('opacity-100', 'text-green-600', 'scale-105');
+            freeDeliveryMsg.innerHTML = "Buy 3 or more items to get FREE DELIVERY 🚚";
+        }
     }
 
     const finalTotal = subtotal + deliveryCharge;
@@ -196,8 +211,10 @@ function updateCartUI() {
         </div>
     `;
 
-    document.getElementById('cart-count-drawer').innerText = itemCount;
-    document.getElementById('cart-count-float').innerText = itemCount;
+    const countDrawer = document.getElementById('cart-count-drawer');
+    const countFloat = document.getElementById('cart-count-float');
+    if(countDrawer) countDrawer.innerText = itemCount;
+    if(countFloat) countFloat.innerText = itemCount;
 }
 
 function removeFromCart(index) { cart.splice(index, 1); updateCartUI(); }
@@ -209,22 +226,23 @@ function toggleCart(forceOpen = false) {
     else drawer.classList.toggle('translate-x-full');
 }
 
-function closeModal() { document.getElementById('product-modal').classList.replace('flex', 'hidden'); }
+function closeModal() { 
+    const modal = document.getElementById('product-modal');
+    if(modal) modal.classList.replace('flex', 'hidden'); 
+}
 
 function confirmOrderWhatsApp() {
-    const name = document.getElementById('final-name').value.trim();
-    const phone = document.getElementById('final-phone').value.trim();
-    const address = document.getElementById('final-address').value.trim();
+    const nameInput = document.getElementById('final-name');
+    const phoneInput = document.getElementById('final-phone');
+    const addressInput = document.getElementById('final-address');
     const deliveryOption = document.querySelector('input[name="delivery"]:checked');
 
-    if (!name || !phone || !address) {
+    if (!nameInput?.value.trim() || !phoneInput?.value.trim() || !addressInput?.value.trim()) {
         alert("দয়া করে নাম, ফোন নম্বর এবং ঠিকানা সম্পূর্ণ লিখুন!");
         return;
     }
 
-    let subtotal = 0;
-    let itemCount = 0;
-    let itemsText = "";
+    let subtotal = 0, itemCount = 0, itemsText = "";
 
     cart.forEach((item, index) => {
         itemsText += `${index + 1}. ${item.name} (${item.selectedSize}/${item.selectedColor}) x ${item.qty} = ৳${item.price * item.qty}%0A`;
@@ -232,13 +250,27 @@ function confirmOrderWhatsApp() {
         itemCount += item.qty;
     });
 
+    if(itemCount === 0) return alert("Your cart is empty!");
+
     let deliveryCharge = parseInt(deliveryOption ? deliveryOption.value : 80);
     let area = (deliveryCharge === 80) ? "Inside Dhaka" : "Outside Dhaka";
     let deliveryStatus = (itemCount >= 3) ? "FREE (Offer Applied 🚚)" : `৳${deliveryCharge}`;
-
     const finalTotal = subtotal + (itemCount >= 3 ? 0 : deliveryCharge);
 
-    let message = `*NEW ORDER - REDAMS*%0A---------------------------%0A*Customer:* ${name}%0A*Phone:* ${phone}%0A*Address:* ${address}%0A*Area:* ${area}%0A---------------------------%0A*Items:*%0A${itemsText}---------------------------%0A*Subtotal:* ৳${subtotal}%0A*Delivery:* ${deliveryStatus}%0A*Final Total: ৳${finalTotal}*%0A---------------------------%0A_Order from Redams Website_`;
+    let message = `*NEW ORDER - REDAMS*%0A`;
+    message += `---------------------------%0A`;
+    message += `*Customer:* ${nameInput.value}%0A`;
+    message += `*Phone:* ${phoneInput.value}%0A`;
+    message += `*Address:* ${addressInput.value}%0A`;
+    message += `*Area:* ${area}%0A`;
+    message += `---------------------------%0A`;
+    message += `*Items:*%0A${itemsText}`;
+    message += `---------------------------%0A`;
+    message += `*Subtotal:* ৳${subtotal}%0A`;
+    message += `*Delivery:* ${deliveryStatus}%0A`;
+    message += `*Final Total: ৳${finalTotal}*%0A`;
+    message += `---------------------------%0A`;
+    message += `_Order from Redams Website_`;
 
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
 }
