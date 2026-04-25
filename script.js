@@ -6,41 +6,37 @@ let modalQty = 1;
 
 const WHATSAPP_NUMBER = "8801894357549"; 
 
-// ১. ইউআরএল থেকে ক্যাটাগরি নাম বের করার উন্নত নিয়ম
+// ১. ইউআরএল থেকে ক্যাটাগরি নাম বের করার নিয়ম
 function getCategoryFromURL() {
     const params = new URLSearchParams(window.location.search);
     return params.get('cat'); 
 }
 
-// ২. প্রোডাক্ট লোড এবং পেজ অনুযায়ী ফিল্টার করা
+// ২. প্রোডাক্ট লোড এবং পেজ অনুযায়ী ফিল্টার করা
 function loadProducts() {
     fetch('products.json')
         .then(res => res.json())
         .then(data => {
             allProducts = data;
             
-            // চেক করা হচ্ছে কাস্টমার কোন পেজে আছে
             const isShopPage = window.location.pathname.toLowerCase().includes('shop.html');
             const selectedCat = getCategoryFromURL();
 
             if (isShopPage) {
                 if (selectedCat) {
-                    // ক্যাটাগরি অনুযায়ী নিখুঁত ফিল্টার
+                    // ক্যাটাগরি ফিল্টার: বানান বা স্পেস থাকলেও যেন কাজ করে
                     const filtered = allProducts.filter(p => 
                         p.category.trim().toLowerCase() === selectedCat.trim().toLowerCase()
                     );
                     displayProducts(filtered, true); 
                     
-                    // পেজের টাইটেল আপডেট করা (যেমন: Hoodie)
                     const title = document.querySelector('h2');
                     if(title) title.innerText = selectedCat.replace('-', ' ').toUpperCase();
                 } else {
-                    // যদি shop.html-এ কোনো ক্যাটাগরি না থাকে, সব দেখাবে
                     displayProducts(allProducts, true);
                 }
             } else {
-                // হোমপেজে (index.html) শুধু প্রথম ৮টি প্রোডাক্ট
-                displayProducts(allProducts, false);
+                displayProducts(allProducts, false); // হোমপেজে ৮টি
             }
         })
         .catch(err => console.error("Error loading products:", err));
@@ -51,11 +47,10 @@ function displayProducts(products, showAll = false) {
     const grid = document.getElementById('product-grid');
     if (!grid) return;
 
-    // লিমিট হ্যান্ডেল করা
     const productsToShow = showAll ? products : products.slice(0, 8);
 
     if (productsToShow.length === 0) {
-        grid.innerHTML = `<div class="col-span-full py-20 text-center"><p class="text-gray-400 font-bold uppercase tracking-widest text-sm">No items found in this category</p></div>`;
+        grid.innerHTML = `<div class="col-span-full py-20 text-center"><p class="text-gray-400 font-bold uppercase tracking-widest text-sm">No items found</p></div>`;
     } else {
         grid.innerHTML = productsToShow.map(p => `
             <div class="bg-white rounded-xl border border-gray-100 p-3 hover:shadow-2xl transition-all cursor-pointer group" onclick="openModal(${p.id})">
@@ -71,26 +66,19 @@ function displayProducts(products, showAll = false) {
         `).join('');
     }
 
-    // View All বাটন হ্যান্ডেল করা (Home Page-এর জন্য)
     const viewAllBtn = document.getElementById('view-all-container');
     if (viewAllBtn) {
-        // যদি শপ পেজে থাকে অথবা প্রোডাক্ট ৮টির কম হয়, তবে বাটন হাইড থাকবে
         viewAllBtn.style.display = (showAll || products.length <= 8) ? 'none' : 'block';
     }
 }
 
-// পেজ লোড হলেই কল হবে
-window.onload = loadProducts;
-
-// ২. 'View All Items' বাটনে ক্লিক করলে যা হবে
+// ৪. 'View All' বাটন ফাংশন
 function showAllProducts() {
-    displayProducts(allProducts, true); // true মানে এখন সব প্রোডাক্ট দেখাবে
-    
-    // কাস্টমারকে স্মুথলি প্রোডাক্টের দিকে নিয়ে যাওয়ার জন্য স্ক্রল (Optional)
+    displayProducts(allProducts, true);
     document.getElementById('product-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// ৩. পপ-আপ (Modal) ওপেন
+// ৫. পপ-আপ (Modal) ওপেন
 function openModal(id) {
     const p = allProducts.find(item => item.id === id);
     const content = document.getElementById('modal-content');
@@ -140,7 +128,7 @@ function selectFeature(type, val, el) {
     if (type === 'size') selectedSize = val; else selectedColor = val;
 }
 
-// ৪. কার্টে আইটেম যোগ করা
+// ৬. কার্ট ফাংশনালিটি
 function addToCart(id) {
     if (!selectedSize || !selectedColor) return alert("Select Color & Size!");
     const p = allProducts.find(item => item.id === id);
@@ -150,7 +138,6 @@ function addToCart(id) {
     toggleCart(true);
 }
 
-// ৫. কার্ট আপডেট
 function updateCartUI() {
     const itemsEl = document.getElementById('cart-items');
     let total = 0;
@@ -169,8 +156,6 @@ function updateCartUI() {
 
     document.getElementById('cart-total').innerText = `৳ ${total}`;
     document.getElementById('cart-count-drawer').innerText = cart.length;
-    const navCount = document.getElementById('cart-count');
-    if(navCount) navCount.innerText = cart.length;
 }
 
 function removeFromCart(index) { cart.splice(index, 1); updateCartUI(); }
@@ -181,14 +166,17 @@ function toggleCart(forceOpen = false) {
     if (forceOpen === true) drawer.classList.remove('translate-x-full');
     else drawer.classList.toggle('translate-x-full');
 }
-// ১২৭ নম্বর লাইনে এখান থেকে পেস্ট শুরু করুন
+
+function closeModal() { document.getElementById('product-modal').classList.replace('flex', 'hidden'); }
+
+// ৭. হোয়াটসঅ্যাপ অর্ডার
 function confirmOrderWhatsApp() {
     const name = document.getElementById('final-name').value.trim();
     const phone = document.getElementById('final-phone').value.trim();
     const address = document.getElementById('final-address').value.trim();
 
     if (!name || !phone || !address) {
-        alert("দয়া করে নাম, ফোন নম্বর এবং ঠিকানা সঠিকভাবে লিখুন!");
+        alert("দয়া করে নাম, ফোন নম্বর এবং ঠিকানা সঠিকভাবে লিখুন!");
         return;
     }
 
@@ -208,12 +196,9 @@ function confirmOrderWhatsApp() {
 
     message += `---------------------------%0A*Total Amount: ৳${total}*%0A*Payment: Cash on Delivery*`;
 
-    // WhatsApp ওপেন করার জন্য
     const whatsappUrl = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${message}`;
     window.open(whatsappUrl, '_blank');
 }
-// পেস্ট শেষ
-function closeModal() { document.getElementById('product-modal').classList.replace('flex', 'hidden'); }
-function filterCategory(c) { displayProducts(c==='all' ? allProducts : allProducts.filter(p => p.category === c)); }
 
+// পেজ লোড হলেই কল হবে
 window.onload = loadProducts;
