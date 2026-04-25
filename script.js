@@ -127,15 +127,14 @@ function selectFeature(type, val, el) {
     if (type === 'size') selectedSize = val; else selectedColor = val;
 }
 
-// ৬. কার্ট ফাংশনালিটি
 function addToCart(id) {
-    // SweetAlert for validation
     if (!selectedSize || !selectedColor) {
         Swal.fire({
+            title: 'Selection Required!',
+            text: 'Please select both Color and Size.',
             icon: 'warning',
-            title: 'Wait!',
-            text: 'Please select Color and Size.',
-            confirmButtonColor: '#000'
+            confirmButtonColor: '#000',
+            target: 'body' // এটি নিশ্চিত করবে যে মেসেজটি সবার উপরে আসবে
         });
         return;
     }
@@ -143,25 +142,28 @@ function addToCart(id) {
     const p = allProducts.find(item => item.id === id);
     cart.push({ ...p, selectedSize, selectedColor, qty: modalQty, image: p.images[0] });
     
-    // Toast notification for Success
+    updateCartUI();
+    closeModal();
+    toggleCart(true);
+
+    // সাকসেস টোস্ট নোটিফিকেশন
     const Toast = Swal.mixin({
         toast: true,
         position: 'top-end',
         showConfirmButton: false,
-        timer: 1500,
-        timerProgressBar: true
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
     });
 
     Toast.fire({
         icon: 'success',
-        title: 'Added to Bag'
+        title: 'Added to your shopping bag!'
     });
-
-    updateCartUI();
-    closeModal();
-    toggleCart(true);
 }
-
 function updateCartUI() {
     const cartContainer = document.getElementById('cart-items');
     const totalElement = document.getElementById('cart-total');
