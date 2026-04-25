@@ -9,7 +9,7 @@
       "images/cosmic back.png",
       "images/cosmic lady front.jpg"
     ],
-    "colors": ["Black", "Charcoal", "Navy"],
+    "colors": ["White"],
     "sizes": ["S", "M", "L", "XL","XXL"]
   },
   {
@@ -96,7 +96,21 @@
     ],
     "colors": ["Bottle Green","Black"],
     "sizes": ["S", "M", "L", "XL","XXL"]
-  }
+  },
+  {
+    "id": 9,
+    "name": "Regular Tee",
+    "price": 299,
+    "category": "regular-tshirt",
+    "images": [
+      "images/regular solid baby pink.jpg",
+      "images/w1-side.jpg"
+    ],
+    "colors": [ "Baby Pink"],
+    "sizes": ["S", "M", "L", "XL","XXL"]
+  },
+
+
 
 
 
