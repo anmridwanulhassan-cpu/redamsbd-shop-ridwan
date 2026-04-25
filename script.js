@@ -219,36 +219,58 @@ function toggleCart(forceOpen = false) {
 
 function closeModal() { document.getElementById('product-modal').classList.replace('flex', 'hidden'); }
 
-// ৭. হোয়াটসঅ্যাপ অর্ডার
 function confirmOrderWhatsApp() {
     const name = document.getElementById('final-name').value.trim();
     const phone = document.getElementById('final-phone').value.trim();
     const address = document.getElementById('final-address').value.trim();
+    const deliveryOption = document.querySelector('input[name="delivery"]:checked');
 
     if (!name || !phone || !address) {
-        alert("দয়া করে নাম, ফোন নম্বর এবং ঠিকানা সঠিকভাবে লিখুন!");
+        alert("দয়া করে নাম, ফোন নম্বর এবং ঠিকানা সম্পূর্ণ লিখুন!");
         return;
     }
 
-    if (cart.length === 0) {
-        alert("আপনার কার্ট খালি!");
-        return;
-    }
+    let subtotal = 0;
+    let itemCount = 0;
+    let itemsText = "";
 
-    let message = `*NEW ORDER - REDAMS*%0A---------------------------%0A`;
-    message += `*Customer:* ${name}%0A*Phone:* ${phone}%0A*Address:* ${address}%0A---------------------------%0A*Order Items:*%0A`;
-
-    let total = 0;
+    // কার্টের আইটেমগুলো প্রসেস করা
     cart.forEach((item, index) => {
-        message += `${index + 1}. ${item.name} (${item.selectedColor}, ${item.selectedSize}) x ${item.qty} = ৳${item.price * item.qty}%0A`;
-        total += (item.price * item.qty);
+        itemsText += `${index + 1}. ${item.name} (${item.selectedSize}/${item.selectedColor}) x ${item.qty} = ৳${item.price * item.qty}%0A`;
+        subtotal += item.price * item.qty;
+        itemCount += item.qty;
     });
 
-    message += `---------------------------%0A*Total Amount: ৳${total}*%0A*Payment: Cash on Delivery*`;
+    // ডেলিভারি লজিক (মেসেজের জন্য)
+    let deliveryCharge = parseInt(deliveryOption ? deliveryOption.value : 80);
+    let area = (deliveryCharge === 80) ? "Inside Dhaka" : "Outside Dhaka";
+    let deliveryStatus = "";
 
-    const whatsappUrl = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${message}`;
+    if (itemCount >= 3) {
+        deliveryCharge = 0;
+        deliveryStatus = "FREE (Offer Applied 🚚)";
+    } else {
+        deliveryStatus = `৳${deliveryCharge}`;
+    }
+
+    const finalTotal = subtotal + deliveryCharge;
+
+    // হোয়াটসঅ্যাপ মেসেজ ফরম্যাট
+    let message = `*NEW ORDER - REDAMS*%0A`;
+    message += `---------------------------%0A`;
+    message += `*Customer:* ${name}%0A`;
+    message += `*Phone:* ${phone}%0A`;
+    message += `*Address:* ${address}%0A`;
+    message += `*Area:* ${area}%0A`;
+    message += `---------------------------%0A`;
+    message += `*Items:*%0A${itemsText}`;
+    message += `---------------------------%0A`;
+    message += `*Subtotal:* ৳${subtotal}%0A`;
+    message += `*Delivery:* ${deliveryStatus}%0A`;
+    message += `*Final Total: ৳${finalTotal}*%0A`;
+    message += `---------------------------%0A`;
+    message += `_Order from Redams Website_`;
+
+    const whatsappUrl = `https://wa.me/8801894357549?text=${message}`;
     window.open(whatsappUrl, '_blank');
 }
-
-// পেজ লোড হলেই কল হবে
-window.onload = loadProducts;
