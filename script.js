@@ -15,33 +15,35 @@ async function loadProducts() {
     } catch (err) { console.error("JSON Error:", err); }
 }
 
-// ১. প্রোডাক্ট দেখানোর মেইন ফাংশন
-function displayProducts(products, showAll = false) {
+function displayProducts(products) {
     const grid = document.getElementById('product-grid');
-    const viewAllBtn = document.getElementById('view-all-container');
     if (!grid) return;
 
-    // যদি showAll false থাকে, তবে শুধু প্রথম ৮টি প্রোডাক্ট দেখাবে
-    let productsToShow = showAll ? products : products.slice(0, 8);
+    // ১. চেক করা হচ্ছে এটা কি হোমপেজ নাকি শপ পেজ
+    const isShopPage = window.location.pathname.includes('shop.html');
+
+    // ২. হোমপেজে থাকলে শুধু ৮টি প্রোডাক্ট দেখাবে, শপ পেজে থাকলে সব
+    let productsToShow = isShopPage ? products : products.slice(0, 8);
 
     grid.innerHTML = productsToShow.map(p => `
-        <div class="bg-white rounded-xl border border-gray-100 p-3 hover:shadow-xl transition cursor-pointer group" onclick="openModal(${p.id})">
-            <div class="overflow-hidden rounded-lg">
-                <img src="${p.images[0]}" class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
+        <div class="bg-white rounded-xl border border-gray-100 p-3 hover:shadow-2xl transition-all cursor-pointer group" onclick="openModal(${p.id})">
+            <div class="relative overflow-hidden rounded-lg aspect-[3/4]">
+                <img src="${p.images[0]}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                <div class="absolute top-2 right-2 bg-black text-white text-[8px] font-bold px-2 py-1 rounded-sm opacity-0 group-hover:opacity-100 transition">VIEW</div>
             </div>
             <div class="p-3 text-center">
-                <h3 class="font-bold text-gray-800 text-[12px] uppercase">${p.name}</h3>
-                <p class="font-black text-black mt-1">৳ ${p.price}</p>
-                <button class="mt-3 w-full bg-black text-white py-2 rounded text-[10px] font-black uppercase tracking-widest">Order Now</button>
+                <h3 class="font-bold text-gray-800 text-[11px] uppercase tracking-tighter">${p.name}</h3>
+                <p class="font-black text-black mt-1 text-sm">৳ ${p.price}</p>
+                <button class="mt-3 w-full bg-black text-white py-2.5 rounded-lg text-[9px] font-black uppercase tracking-widest group-hover:bg-green-600 transition">Quick Order</button>
             </div>
         </div>
     `).join('');
 
-    // যদি প্রোডাক্ট ৮টার বেশি হয় এবং আমরা 'showAll' মোডে না থাকি, তবেই বাটন দেখাবে
-    if (products.length > 8 && !showAll) {
-        viewAllBtn.style.display = 'block';
-    } else {
-        viewAllBtn.style.display = 'none';
+    // ৩. বাটন হ্যান্ডেল করা
+    const viewAllBtn = document.getElementById('view-all-container');
+    if (viewAllBtn) {
+        // শপ পেজে বাটন লুকানো থাকবে, হোমপেজে ৮টার বেশি প্রোডাক্ট থাকলে দেখাবে
+        viewAllBtn.style.display = isShopPage ? 'none' : (products.length > 8 ? 'block' : 'none');
     }
 }
 
