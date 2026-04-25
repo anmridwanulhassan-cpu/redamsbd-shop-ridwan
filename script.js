@@ -139,23 +139,73 @@ function addToCart(id) {
 }
 
 function updateCartUI() {
-    const itemsEl = document.getElementById('cart-items');
-    let total = 0;
-    itemsEl.innerHTML = cart.map((item, index) => {
-        total += (item.price * item.qty);
-        return `<div class="flex gap-4 bg-white p-3 rounded-lg border border-gray-100 relative shadow-sm">
-            <img src="${item.images[0]}" class="w-16 h-20 object-cover rounded shadow-xs">
-            <div class="flex-1">
-                <h4 class="font-bold text-[10px] uppercase">${item.name}</h4>
-                <p class="text-[8px] text-gray-400 font-bold uppercase">${item.selectedColor} | ${item.selectedSize} (x${item.qty})</p>
-                <p class="font-black text-xs mt-1">৳ ${item.price * item.qty}</p>
+    const cartContainer = document.getElementById('cart-items');
+    const totalElement = document.getElementById('cart-total');
+    const freeDeliveryMsg = document.getElementById('free-delivery-msg');
+    
+    let subtotal = 0;
+    let itemCount = 0;
+
+    // কার্ট আইটেম লিস্ট জেনারেট করা
+    cartContainer.innerHTML = cart.map((item, index) => {
+        subtotal += item.price * item.qty;
+        itemCount += item.qty;
+        return `
+            <div class="flex items-center justify-between bg-white p-3 rounded-lg shadow-sm border border-gray-100">
+                <div class="flex items-center gap-3">
+                    <img src="${item.image}" class="w-12 h-12 object-cover rounded">
+                    <div>
+                        <h4 class="text-[10px] font-bold uppercase text-gray-800">${item.name}</h4>
+                        <p class="text-[9px] text-gray-500">${item.selectedSize} | ${item.selectedColor}</p>
+                        <p class="text-xs font-black">৳${item.price} x ${item.qty}</p>
+                    </div>
+                </div>
+                <button onclick="removeFromCart(${index})" class="text-red-500 hover:scale-110 transition">&times;</button>
             </div>
-            <button onclick="removeFromCart(${index})" class="text-red-400 text-xs font-bold p-1">✕</button>
-        </div>`;
+        `;
     }).join('');
 
-    document.getElementById('cart-total').innerText = `৳ ${total}`;
-    document.getElementById('cart-count-drawer').innerText = cart.length;
+    // ডেলিভারি চার্জ লজিক
+    const deliveryOption = document.querySelector('input[name="delivery"]:checked');
+    let deliveryCharge = parseInt(deliveryOption ? deliveryOption.value : 80);
+
+    // ৩টি বা তার বেশি হলে ফ্রি ডেলিভারি লজিক
+    if (itemCount >= 3) {
+        deliveryCharge = 0;
+        // টেক্সট গ্রিন এবং হাইলাইট করা
+        freeDeliveryMsg.classList.remove('opacity-60', 'text-gray-500');
+        freeDeliveryMsg.classList.add('opacity-100', 'text-green-600', 'scale-105');
+        freeDeliveryMsg.innerHTML = "You've unlocked FREE DELIVERY! 🚚✅";
+    } else {
+        // আগের অবস্থায় ফিরিয়ে নেওয়া
+        freeDeliveryMsg.classList.add('opacity-60', 'text-gray-500');
+        freeDeliveryMsg.classList.remove('opacity-100', 'text-green-600', 'scale-105');
+        freeDeliveryMsg.innerHTML = "Buy 3 or more items to get FREE DELIVERY 🚚";
+    }
+
+    const finalTotal = subtotal + deliveryCharge;
+
+    // টোটাল সেকশন আপডেট
+    totalElement.innerHTML = `
+        <div class="space-y-1 text-right border-t pt-4">
+            <div class="flex justify-between text-[10px] text-gray-500 uppercase font-bold">
+                <span>Subtotal:</span>
+                <span>৳${subtotal}</span>
+            </div>
+            <div class="flex justify-between text-[10px] uppercase font-bold ${deliveryCharge === 0 ? 'text-green-600' : 'text-gray-500'}">
+                <span>Delivery:</span>
+                <span>${deliveryCharge === 0 ? 'FREE' : '৳' + deliveryCharge}</span>
+            </div>
+            <div class="flex justify-between text-xl font-black text-black pt-2">
+                <span>Total:</span>
+                <span>৳${finalTotal}</span>
+            </div>
+        </div>
+    `;
+
+    // ফ্লোটিং কার্ট কাউন্ট আপডেট
+    document.getElementById('cart-count-drawer').innerText = itemCount;
+    document.getElementById('cart-count-float').innerText = itemCount;
 }
 
 function removeFromCart(index) { cart.splice(index, 1); updateCartUI(); }
