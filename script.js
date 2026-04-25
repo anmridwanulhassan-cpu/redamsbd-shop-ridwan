@@ -255,7 +255,7 @@ function confirmOrderWhatsApp() {
 
     const finalTotal = subtotal + deliveryCharge;
 
-    // হোয়াটসঅ্যাপ মেসেজ ফরম্যাট
+   // হোয়াটসঅ্যাপ মেসেজ ফরম্যাট
     let message = `*NEW ORDER - REDAMS*%0A`;
     message += `---------------------------%0A`;
     message += `*Customer:* ${name}%0A`;
@@ -273,4 +273,18 @@ function confirmOrderWhatsApp() {
 
     const whatsappUrl = `https://wa.me/8801894357549?text=${message}`;
     window.open(whatsappUrl, '_blank');
+} // confirmOrderWhatsApp শেষ হলো
+
+// ৬. কার্ট ফাংশনালিটি (এই অংশটুকু ঠিক করুন)
+function addToCart(id) {
+    if (!selectedSize || !selectedColor) return alert("Select Color & Size!");
+    const p = allProducts.find(item => item.id === id);
+    // ইমেজটি কার্টে সঠিকভাবে পাঠানোর জন্য p.images[0] ব্যবহার করুন
+    cart.push({ ...p, selectedSize, selectedColor, qty: modalQty, image: p.images[0] });
+    updateCartUI();
+    closeModal();
+    toggleCart(true);
 }
+
+// পেজ লোড হলেই প্রোডাক্ট লোড করার জন্য এই লাইনটি অবশ্যই থাকতে হবে
+window.onload = loadProducts;
