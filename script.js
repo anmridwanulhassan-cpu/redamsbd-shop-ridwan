@@ -75,9 +75,6 @@ function displayProducts(products, showAll = false) {
     }
 }
 
-window.onload = loadProducts;
-}
-
 // ২. 'View All Items' বাটনে ক্লিক করলে যা হবে
 function showAllProducts() {
     displayProducts(allProducts, true); // true মানে এখন সব প্রোডাক্ট দেখাবে
