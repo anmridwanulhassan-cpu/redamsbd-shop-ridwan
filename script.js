@@ -6,45 +6,76 @@ let modalQty = 1;
 
 const WHATSAPP_NUMBER = "8801894357549"; 
 
-// ১. প্রোডাক্ট লোড করা
-async function loadProducts() {
-    try {
-        const res = await fetch('products.json');
-        allProducts = await res.json();
-        displayProducts(allProducts);
-    } catch (err) { console.error("JSON Error:", err); }
+// ১. লিঙ্ক থেকে ক্যাটাগরি আইডি খুঁজে বের করা
+function getCategoryFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('cat'); 
 }
 
-function displayProducts(products) {
+// ২. মেইন লোড ফাংশন (এটি ফিক্স করা হয়েছে)
+function loadProducts() {
+    fetch('products.json')
+        .then(res => res.json())
+        .then(data => {
+            allProducts = data;
+            
+            const isShopPage = window.location.pathname.includes('shop.html');
+            const selectedCat = getCategoryFromURL();
+
+            if (isShopPage) {
+                if (selectedCat) {
+                    // যদি ইউআরএল-এ ?cat=acid-wash থাকে, তবে ফিল্টার হবে
+                    const filtered = allProducts.filter(p => p.category.toLowerCase() === selectedCat.toLowerCase());
+                    displayProducts(filtered, true); 
+                    
+                    // পেজের টাইটেল আপডেট করা
+                    const title = document.querySelector('h2');
+                    if(title) title.innerText = selectedCat.replace('-', ' ').toUpperCase();
+                } else {
+                    // কোনো ক্যাটাগরি না থাকলে সব দেখাবে
+                    displayProducts(allProducts, true);
+                }
+            } else {
+                // এটা হোমপেজ (index.html), তাই শুধু প্রথম ৮টি
+                displayProducts(allProducts, false);
+            }
+        })
+        .catch(err => console.error("Error:", err));
+}
+
+// ৩. প্রোডাক্ট দেখানোর ফাংশন (লিমিট হ্যান্ডেলিং)
+function displayProducts(products, showAll = false) {
     const grid = document.getElementById('product-grid');
     if (!grid) return;
 
-    // ১. চেক করা হচ্ছে এটা কি হোমপেজ নাকি শপ পেজ
-    const isShopPage = window.location.pathname.includes('shop.html');
+    let productsToShow = showAll ? products : products.slice(0, 8);
 
-    // ২. হোমপেজে থাকলে শুধু ৮টি প্রোডাক্ট দেখাবে, শপ পেজে থাকলে সব
-    let productsToShow = isShopPage ? products : products.slice(0, 8);
-
-    grid.innerHTML = productsToShow.map(p => `
-        <div class="bg-white rounded-xl border border-gray-100 p-3 hover:shadow-2xl transition-all cursor-pointer group" onclick="openModal(${p.id})">
-            <div class="relative overflow-hidden rounded-lg aspect-[3/4]">
-                <img src="${p.images[0]}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                <div class="absolute top-2 right-2 bg-black text-white text-[8px] font-bold px-2 py-1 rounded-sm opacity-0 group-hover:opacity-100 transition">VIEW</div>
+    if (productsToShow.length === 0) {
+        grid.innerHTML = `<p class="text-center col-span-full py-10 text-gray-500 font-bold">No products found in this category.</p>`;
+    } else {
+        grid.innerHTML = productsToShow.map(p => `
+            <div class="bg-white rounded-xl border border-gray-100 p-3 hover:shadow-xl transition cursor-pointer group" onclick="openModal(${p.id})">
+                <div class="overflow-hidden rounded-lg aspect-[3/4]">
+                    <img src="${p.images[0]}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                </div>
+                <div class="p-3 text-center">
+                    <h3 class="font-bold text-gray-800 text-[11px] uppercase">${p.name}</h3>
+                    <p class="font-black text-black mt-1">৳ ${p.price}</p>
+                    <button class="mt-3 w-full bg-black text-white py-2 rounded text-[10px] font-black uppercase tracking-widest">Quick Order</button>
+                </div>
             </div>
-            <div class="p-3 text-center">
-                <h3 class="font-bold text-gray-800 text-[11px] uppercase tracking-tighter">${p.name}</h3>
-                <p class="font-black text-black mt-1 text-sm">৳ ${p.price}</p>
-                <button class="mt-3 w-full bg-black text-white py-2.5 rounded-lg text-[9px] font-black uppercase tracking-widest group-hover:bg-green-600 transition">Quick Order</button>
-            </div>
-        </div>
-    `).join('');
+        `).join('');
+    }
 
-    // ৩. বাটন হ্যান্ডেল করা
+    // বাটন কন্ট্রোল
     const viewAllBtn = document.getElementById('view-all-container');
     if (viewAllBtn) {
-        // শপ পেজে বাটন লুকানো থাকবে, হোমপেজে ৮টার বেশি প্রোডাক্ট থাকলে দেখাবে
-        viewAllBtn.style.display = isShopPage ? 'none' : (products.length > 8 ? 'block' : 'none');
+        // যদি শপ পেজে থাকে অথবা প্রোডাক্ট ৮টির কম হয়, তবে বাটন হাইড থাকবে
+        viewAllBtn.style.display = (showAll || products.length <= 8) ? 'none' : 'block';
     }
+}
+
+window.onload = loadProducts;
 }
 
 // ২. 'View All Items' বাটনে ক্লিক করলে যা হবে
