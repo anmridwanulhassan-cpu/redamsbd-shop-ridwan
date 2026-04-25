@@ -73,7 +73,6 @@ function displayProducts(products, showAll = false) {
         // যদি শপ পেজে থাকে অথবা প্রোডাক্ট ৮টির কম হয়, তবে বাটন হাইড থাকবে
         viewAllBtn.style.display = (showAll || products.length <= 8) ? 'none' : 'block';
     }
-}
 
 // ২. 'View All Items' বাটনে ক্লিক করলে যা হবে
 function showAllProducts() {
