@@ -143,7 +143,6 @@ function setupAutoScroll(slider) {
         isDown = false;
     });
 }
-// ৩. প্রোডাক্ট গ্রিড রেন্ডার করা
 function displayProducts(products, showAll = false) {
     const grid = document.getElementById('product-grid');
     if (!grid) return;
@@ -153,18 +152,34 @@ function displayProducts(products, showAll = false) {
     if (productsToShow.length === 0) {
         grid.innerHTML = `<div class="col-span-full py-20 text-center"><p class="text-gray-400 font-bold uppercase tracking-widest text-sm">No items found</p></div>`;
     } else {
-        grid.innerHTML = productsToShow.map(p => `
-            <div class="bg-white rounded-xl border border-gray-100 p-3 hover:shadow-2xl transition-all cursor-pointer group" onclick="openModal(${p.id})">
-                <div class="relative overflow-hidden rounded-lg aspect-[3/4]">
+        grid.innerHTML = productsToShow.map(p => {
+            // ডিসকাউন্ট ক্যালকুলেশন
+            const hasDiscount = p.originalPrice && p.originalPrice > p.price;
+            const discountPercentage = hasDiscount ? Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100) : 0;
+
+            return `
+            <div class="bg-white rounded-2xl border border-gray-100 p-3 hover:shadow-2xl transition-all duration-500 cursor-pointer group relative" onclick="openModal(${p.id})">
+                
+                ${hasDiscount ? `<div class="absolute top-5 left-5 z-10 bg-red-600 text-white text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-tighter shadow-sm">-${discountPercentage}% OFF</div>` : ''}
+
+                <div class="relative overflow-hidden rounded-xl aspect-[3/4] bg-gray-50">
                     <img src="${p.images[0]}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
                 </div>
+
                 <div class="p-3 text-center">
-                    <h3 class="font-bold text-gray-800 text-[11px] uppercase tracking-tighter">${p.name}</h3>
-                    <p class="font-black text-black mt-1">৳ ${p.price}</p>
-                    <button class="mt-3 w-full bg-black text-white py-2.5 rounded-lg text-[9px] font-black uppercase tracking-widest group-hover:bg-green-600 transition">Order Now</button>
+                    <h3 class="font-bold text-gray-800 text-[11px] uppercase tracking-tighter mb-1">${p.name}</h3>
+                    
+                    <div class="flex items-center justify-center gap-2 mb-3">
+                        <span class="font-black text-black text-sm">৳ ${p.price}</span>
+                        ${hasDiscount ? `<span class="text-gray-400 text-[10px] line-through font-bold tracking-tighter">৳ ${p.originalPrice}</span>` : ''}
+                    </div>
+
+                    <button class="w-full bg-black text-white py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest group-hover:bg-green-600 transition-colors duration-300">
+                        Order Now
+                    </button>
                 </div>
             </div>
-        `).join('');
+        `}).join('');
     }
 
     const viewAllBtn = document.getElementById('view-all-container');
@@ -172,61 +187,77 @@ function displayProducts(products, showAll = false) {
         viewAllBtn.style.display = (showAll || products.length <= 8) ? 'none' : 'block';
     }
 }
-
 // ৪. 'View All' বাটন ফাংশন
 function showAllProducts() {
     displayProducts(allProducts, true);
     document.getElementById('product-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
-
-// ৫. পপ-আপ (Modal) ওপেন
 function openModal(id) {
     const p = allProducts.find(item => item.id === id);
     const content = document.getElementById('modal-content');
     selectedSize = null; selectedColor = null; modalQty = 1;
 
+    const hasDiscount = p.originalPrice && p.originalPrice > p.price;
+
     content.innerHTML = `
         <div class="space-y-4">
-            <img id="main-view" src="${p.images[0]}" class="w-full h-[400px] object-cover rounded-xl shadow-md">
-            <div class="flex gap-2 overflow-x-auto p-1">
-                ${p.images.map(img => `<img src="${img}" onclick="document.getElementById('main-view').src='${img}'" class="w-20 h-20 object-cover rounded cursor-pointer border hover:border-black transition">`).join('')}
+            <div class="relative overflow-hidden rounded-2xl shadow-sm bg-gray-50">
+                <img id="main-view" src="${p.images[0]}" class="w-full h-[450px] object-cover transition duration-500">
+            </div>
+            <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                ${p.images.map(img => `
+                    <img src="${img}" onclick="document.getElementById('main-view').src='${img}'" 
+                    class="w-20 h-24 object-cover rounded-xl cursor-pointer border-2 border-transparent hover:border-black transition-all">
+                `).join('')}
             </div>
         </div>
+
         <div class="flex flex-col">
-            <h2 class="text-2xl font-black mb-1 uppercase tracking-tighter">${p.name}</h2>
-            <p class="text-xl font-bold mb-6 text-gray-800">৳ ${p.price}</p>
+            <h2 class="text-3xl font-black mb-2 uppercase tracking-tighter text-gray-900">${p.name}</h2>
+            
+            <div class="flex items-center gap-3 mb-6">
+                <p class="text-2xl font-black text-black">৳ ${p.price}</p>
+                ${hasDiscount ? `<p class="text-sm font-bold text-gray-400 line-through">৳ ${p.originalPrice}</p>` : ''}
+            </div>
+
             <div class="mb-4">
-                <p class="text-[10px] font-black uppercase mb-2 text-gray-400">Color</p>
+                <p class="text-[10px] font-black uppercase mb-3 text-gray-400 tracking-[0.2em]">Available Color</p>
                 <div class="flex gap-2">
-                    ${p.colors.map(c => `<button onclick="selectFeature('color','${c}',this)" class="px-4 py-2 border rounded-full text-[10px] font-black uppercase hover:bg-black hover:text-white transition">${c}</button>`).join('')}
+                    ${p.colors.map(c => `<button onclick="selectFeature('color','${c}',this)" class="px-5 py-2.5 border-2 border-gray-100 rounded-full text-[10px] font-black uppercase hover:border-black transition-all">${c}</button>`).join('')}
                 </div>
             </div>
+
             <div class="mb-6">
-                <p class="text-[10px] font-black uppercase mb-2 text-gray-400">Size</p>
+                <p class="text-[10px] font-black uppercase mb-3 text-gray-400 tracking-[0.2em]">Select Size</p>
                 <div class="flex gap-2">
-                    ${p.sizes.map(s => `<button onclick="selectFeature('size','${s}',this)" class="w-10 h-10 border rounded-full text-[10px] font-black uppercase flex items-center justify-center hover:bg-black hover:text-white transition">${s}</button>`).join('')}
+                    ${p.sizes.map(s => `<button onclick="selectFeature('size','${s}',this)" class="w-12 h-12 border-2 border-gray-100 rounded-full text-[10px] font-black uppercase flex items-center justify-center hover:border-black transition-all">${s}</button>`).join('')}
                 </div>
             </div>
-            <div class="mb-8 flex items-center gap-4">
-                <div class="flex items-center border border-black rounded-lg overflow-hidden">
-                    <button onclick="updateQty(-1)" class="px-3 py-1 bg-gray-50 hover:bg-black hover:text-white transition font-bold">-</button>
-                    <span id="modal-qty" class="px-5 font-black">1</span>
-                    <button onclick="updateQty(1)" class="px-3 py-1 bg-gray-50 hover:bg-black hover:text-white transition font-bold">+</button>
+
+            <div class="mb-8 flex items-center gap-5">
+                <div class="flex items-center border-2 border-gray-100 rounded-2xl overflow-hidden bg-gray-50">
+                    <button onclick="updateQty(-1)" class="px-5 py-3 hover:bg-black hover:text-white transition font-bold">-</button>
+                    <span id="modal-qty" class="px-6 font-black text-lg">1</span>
+                    <button onclick="updateQty(1)" class="px-5 py-3 hover:bg-black hover:text-white transition font-bold">+</button>
                 </div>
             </div>
-            <button onclick="addToCart(${p.id})" class="w-full bg-black text-white py-4 rounded-xl font-black uppercase tracking-widest shadow-lg hover:bg-gray-800 transition">Add To Cart</button>
+
+            <button onclick="addToCart(${p.id})" class="w-full bg-black text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl hover:bg-gray-800 active:scale-95 transition-all duration-300">
+                Add To Cart
+            </button>
+
+            <div class="mt-8 border-t border-gray-100 pt-6">
+                <button onclick="const box = document.getElementById('details-box'); box.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')" class="flex justify-between items-center w-full group">
+                    <span class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 group-hover:text-black transition">Product Details & Fabric</span>
+                    <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 transition-transform duration-300"></i>
+                </button>
+                <div id="details-box" class="hidden mt-5 text-[11px] leading-relaxed text-gray-600 bg-gray-50 p-5 rounded-2xl border border-gray-100">
+                    ${p.description || "Premium quality fabric and standard stitching for long-lasting comfort. Crafted for the ultimate streetwear experience."}
+                </div>
+            </div>
         </div>
     `;
     document.getElementById('product-modal').classList.replace('hidden', 'flex');
-}
-
-function updateQty(val) { modalQty = Math.max(1, modalQty + val); document.getElementById('modal-qty').innerText = modalQty; }
-
-function selectFeature(type, val, el) {
-    const btns = el.parentElement.getElementsByTagName('button');
-    for (let b of btns) b.classList.remove('bg-black', 'text-white');
-    el.classList.add('bg-black', 'text-white');
-    if (type === 'size') selectedSize = val; else selectedColor = val;
 }
 
 function addToCart(id) {
