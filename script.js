@@ -82,46 +82,47 @@ function renderNewArrivals(products) {
     setupAutoScroll(slider);
 }
 
+let animationId; // ফাংশনের বাইরে এটি ডিক্লেয়ার করুন যাতে ডুপ্লিকেট না হয়
+
 function setupAutoScroll(slider) {
+    if (!slider) return;
+
     let isDown = false;
     let startX;
     let scrollLeft;
-    let scrollSpeed = 1; // এখানে মান কমালে গতি আরও কমবে (0.5 দিলে আরও স্লো হবে)
-    let animationId;
+    let scrollSpeed = 0.6; // এখানে স্পিড ফিক্সড (এটি পরিবর্তন করবেন না)
 
-    // অটোমেটিক কন্টিনিউয়াস স্লাইডিং ফাংশন
     const step = () => {
         if (!isDown) {
             slider.scrollLeft += scrollSpeed;
 
-            // যদি একদম শেষে পৌঁছে যায়, তবে নিঃশব্দে শুরুতে চলে আসবে (লুপ তৈরি করবে)
-            if (slider.scrollLeft >= (slider.scrollWidth - slider.offsetWidth)) {
+            // লুপ লজিক: যখন শেষ মাথায় পৌঁছাবে তখন শুরুতে চলে আসবে
+            if (slider.scrollLeft >= (slider.scrollWidth - slider.offsetWidth - 1)) {
                 slider.scrollLeft = 0;
             }
         }
         animationId = requestAnimationFrame(step);
     };
 
-    // স্লাইডিং শুরু করা
+    // আগে যদি কোনো এনিমেশন চলতে থাকে তবে সেটা বন্ধ করে নতুনটা শুরু করবে
+    if (animationId) {
+        cancelAnimationFrame(animationId);
+    }
     animationId = requestAnimationFrame(step);
 
-    // ইউজার কন্ট্রোল (Mouse/Touch)
+    // মাউস ও টাচ কন্ট্রোল
     slider.addEventListener('mousedown', (e) => {
         isDown = true;
         startX = e.pageX - slider.offsetLeft;
         scrollLeft = slider.scrollLeft;
-        cancelAnimationFrame(animationId); // ইউজার টাচ করলে অটো স্লাইড বন্ধ
     });
 
-    slider.addEventListener('mouseleave', () => {
+    const stopDragging = () => {
         isDown = false;
-        animationId = requestAnimationFrame(step);
-    });
+    };
 
-    slider.addEventListener('mouseup', () => {
-        isDown = false;
-        animationId = requestAnimationFrame(step);
-    });
+    slider.addEventListener('mouseleave', stopDragging);
+    slider.addEventListener('mouseup', stopDragging);
 
     slider.addEventListener('mousemove', (e) => {
         if (!isDown) return;
@@ -131,18 +132,17 @@ function setupAutoScroll(slider) {
         slider.scrollLeft = scrollLeft - walk;
     });
 
-    // মোবাইলের জন্য টাচ সাপোর্ট
-    slider.addEventListener('touchstart', () => {
+    // মোবাইলের জন্য টাচ সাপোর্ট (স্পিড ফিক্স রাখার জন্য জরুরি)
+    slider.addEventListener('touchstart', (e) => {
         isDown = true;
-        cancelAnimationFrame(animationId);
+        startX = e.touches[0].pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
     });
 
     slider.addEventListener('touchend', () => {
         isDown = false;
-        animationId = requestAnimationFrame(step);
     });
 }
-
 // ৩. প্রোডাক্ট গ্রিড রেন্ডার করা
 function displayProducts(products, showAll = false) {
     const grid = document.getElementById('product-grid');
