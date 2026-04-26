@@ -24,6 +24,7 @@ function loadProducts() {
 
             if (isShopPage) {
                 if (selectedCat) {
+                    // ক্যাটাগরি ফিল্টার: আগের নিয়মেই থাকবে
                     const filtered = allProducts.filter(p => 
                         p.category.trim().toLowerCase() === selectedCat.trim().toLowerCase()
                     );
@@ -35,10 +36,36 @@ function loadProducts() {
                     displayProducts(allProducts, true);
                 }
             } else {
-                displayProducts(allProducts, false); // হোমপেজে ৮টি
+                // হোমপেজ লজিক: মেইন গ্রিড + নিউ অ্যারাইভাল স্লাইডার
+                displayProducts(allProducts, false); // হোমপেজে ৮টি গ্রিড
+                renderNewArrivals(allProducts);      // স্লাইডিং সেকশন
             }
         })
         .catch(err => console.error("Error loading products:", err));
+}
+
+// নতুন অ্যারাইভাল স্লাইডার রেন্ডার করার ফাংশন (এটি script.js এর যেকোনো জায়গায় রাখলেই হবে)
+function renderNewArrivals(products) {
+    const slider = document.getElementById('new-arrivals-slider');
+    if (!slider) return;
+
+    // তোমার JSON থেকে লেটেস্ট ৬টি প্রোডাক্ট স্লাইডারে দেখাবে
+    const newItems = products.slice(-6).reverse(); 
+
+    slider.innerHTML = newItems.map(p => `
+        <div class="min-w-[220px] md:min-w-[300px] snap-start group cursor-pointer" onclick="openModal(${p.id})">
+            <div class="relative overflow-hidden rounded-2xl aspect-[3/4] bg-gray-100">
+                <img src="${p.images[0]}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                <div class="absolute top-4 left-4">
+                    <span class="bg-red-600 text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg">New Drop</span>
+                </div>
+            </div>
+            <div class="mt-4 text-center">
+                <h3 class="text-[11px] font-bold uppercase tracking-tight text-gray-800">${p.name}</h3>
+                <p class="text-sm font-black mt-1 text-black">৳ ${p.price}</p>
+            </div>
+        </div>
+    `).join('');
 }
 // নিউ অ্যারাইভাল স্লাইডার রেন্ডার করার ফাংশন
 function renderNewArrivals(products) {
