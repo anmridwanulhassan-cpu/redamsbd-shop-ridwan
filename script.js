@@ -47,63 +47,68 @@ function renderNewArrivals(products) {
     const slider = document.getElementById('new-arrivals-slider');
     if (!slider) return;
 
-    const newItems = products.slice(-8).reverse(); 
+    // শেষ ১০টি প্রোডাক্ট ফিল্টার করা
+    const newItems = products.slice(-10).reverse(); 
 
     slider.innerHTML = newItems.map(p => `
-        <div class="min-w-[240px] md:min-w-[300px] snap-center group cursor-pointer" onclick="openModal(${p.id})">
-            <div class="relative overflow-hidden rounded-2xl aspect-[3/4] bg-gray-50 shadow-sm group-hover:shadow-xl transition-all duration-500">
-                <img src="${p.images[0]}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
-                <div class="absolute top-4 left-4">
-                    <span class="bg-white/90 backdrop-blur-sm text-black text-[8px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-sm">New Drop</span>
+        <div class="min-w-[280px] md:min-w-[340px] snap-center group cursor-pointer" onclick="openModal(${p.id})">
+            <div class="relative overflow-hidden rounded-[2rem] aspect-[3/4] bg-[#f8f8f8] shadow-sm group-hover:shadow-2xl transition-all duration-1000 ease-in-out">
+                
+                <img src="${p.images[0]}" class="w-full h-full object-cover group-hover:scale-110 transition duration-[1.5s] ease-in-out">
+                
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8">
+                     <p class="text-white/70 text-[10px] uppercase tracking-[0.3em] mb-1">${p.category}</p>
+                     <h3 class="text-white text-lg font-black uppercase tracking-tighter">${p.name}</h3>
+                     <p class="text-white font-bold mt-2 text-xl">৳ ${p.price}</p>
+                </div>
+
+                <div class="absolute top-6 right-6">
+                    <div class="bg-white/10 backdrop-blur-xl border border-white/30 text-white text-[10px] font-black px-4 py-2 rounded-full uppercase tracking-[0.2em] shadow-xl flex items-center gap-2">
+                        <span class="h-1.5 w-1.5 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]"></span>
+                        New Drop
+                    </div>
                 </div>
             </div>
-            <div class="mt-5 text-center">
-                <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-1">${p.category}</h3>
-                <h2 class="text-xs font-black uppercase tracking-tight text-gray-900">${p.name}</h2>
-                <p class="text-sm font-black mt-2 text-gray-900">৳ ${p.price}</p>
+
+            <div class="mt-6 text-center group-hover:opacity-0 transition-opacity duration-300">
+                <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 mb-2">${p.category}</h3>
+                <h2 class="text-sm font-black uppercase tracking-tight text-gray-900">${p.name}</h2>
+                <p class="text-lg font-black mt-1 text-black">৳ ${p.price}</p>
             </div>
         </div>
     `).join('');
 
-    // অটোমেটিক স্লাইডিং লজিক
+    // অটো-স্ক্রলিং লজিক (আরও স্মুথ করা হয়েছে)
+    setupAutoScroll(slider);
+}
+
+function setupAutoScroll(slider) {
     let isDown = false;
     let startX;
     let scrollLeft;
-    let autoScrollTimer;
+    let timer;
 
-    // অটো স্ক্রল শুরু করার ফাংশন
-    const startAutoScroll = () => {
-        autoScrollTimer = setInterval(() => {
+    const startTimer = () => {
+        timer = setInterval(() => {
             if (!isDown) {
-                if (slider.scrollLeft + slider.offsetWidth >= slider.scrollWidth) {
+                if (slider.scrollLeft + slider.offsetWidth >= slider.scrollWidth - 10) {
                     slider.scrollTo({ left: 0, behavior: 'smooth' });
                 } else {
-                    slider.scrollBy({ left: 300, behavior: 'smooth' });
+                    slider.scrollBy({ left: 350, behavior: 'smooth' });
                 }
             }
-        }, 4000); // প্রতি ৪ সেকেন্ড পর পর স্লাইড হবে
+        }, 3500);
     };
 
-    startAutoScroll();
-
-    // ইউজার যখন হাত দিয়ে স্ক্রল করবে তখন অটো স্ক্রল বন্ধ থাকবে
     slider.addEventListener('mousedown', (e) => {
         isDown = true;
-        clearInterval(autoScrollTimer);
+        clearInterval(timer);
         startX = e.pageX - slider.offsetLeft;
         scrollLeft = slider.scrollLeft;
     });
 
-    slider.addEventListener('mouseleave', () => {
-        isDown = false;
-        startAutoScroll();
-    });
-
-    slider.addEventListener('mouseup', () => {
-        isDown = false;
-        startAutoScroll();
-    });
-
+    slider.addEventListener('mouseleave', () => { isDown = false; startTimer(); });
+    slider.addEventListener('mouseup', () => { isDown = false; startTimer(); });
     slider.addEventListener('mousemove', (e) => {
         if (!isDown) return;
         e.preventDefault();
@@ -111,39 +116,9 @@ function renderNewArrivals(products) {
         const walk = (x - startX) * 2;
         slider.scrollLeft = scrollLeft - walk;
     });
+
+    startTimer();
 }
-
-// নিউ অ্যারাইভাল স্লাইডার রেন্ডার করার ফাংশন
-function renderNewArrivals(products) {
-    const slider = document.getElementById('new-arrivals-slider');
-    if (!slider) return;
-
-    // আমরা ধরে নিচ্ছি আপনার JSON ফাইলের শেষের ৩-৪টি প্রোডাক্ট হলো নিউ অ্যারাইভাল
-    // অথবা আপনি চাইলে slice(-6) দিয়ে লেটেস্ট ৬টি প্রোডাক্ট নিতে পারেন
-    const newItems = products.slice(-6).reverse(); 
-
-   slider.innerHTML = newItems.map(p => `
-    <div class="min-w-[240px] md:min-w-[300px] snap-center group cursor-pointer" onclick="openModal(${p.id})">
-        <div class="relative overflow-hidden rounded-2xl aspect-[3/4] bg-gray-50 shadow-sm group-hover:shadow-2xl transition-all duration-700">
-            <img src="${p.images[0]}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
-            
-            <div class="absolute top-4 right-4"> <div class="flex items-center gap-1.5 bg-black/70 backdrop-blur-md text-white text-[9px] font-black px-3 py-2 rounded-full uppercase tracking-[0.2em] shadow-lg border border-white/20 transition-all group-hover:bg-green-600/90 group-hover:scale-105">
-                    <span class="relative flex h-1.5 w-1.5">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
-                    </span>
-                    New Drop
-                </div>
-            </div>
-        </div>
-        
-        <div class="mt-5 text-center px-2">
-            <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-1">${p.category}</h3>
-            <h2 class="text-xs font-black uppercase tracking-tight text-gray-900 group-hover:text-green-600 transition">${p.name}</h2>
-            <p class="text-sm font-black mt-2 text-gray-900">৳ ${p.price}</p>
-        </div>
-    </div>
-`).join('');
 
 // ৩. প্রোডাক্ট গ্রিড রেন্ডার করা
 function displayProducts(products, showAll = false) {
