@@ -24,7 +24,6 @@ function loadProducts() {
 
             if (isShopPage) {
                 if (selectedCat) {
-                    // ক্যাটাগরি ফিল্টার: আগের নিয়মেই থাকবে
                     const filtered = allProducts.filter(p => 
                         p.category.trim().toLowerCase() === selectedCat.trim().toLowerCase()
                     );
@@ -36,32 +35,59 @@ function loadProducts() {
                     displayProducts(allProducts, true);
                 }
             } else {
-                // হোমপেজ লজিক: মেইন গ্রিড + নিউ অ্যারাইভাল স্লাইডার
-                displayProducts(allProducts, false); // হোমপেজে ৮টি গ্রিড
-                renderNewArrivals(allProducts);      // স্লাইডিং সেকশন
+                displayProducts(allProducts, false); 
+                renderNewArrivals(allProducts);      
             }
         })
         .catch(err => console.error("Error loading products:", err));
 }
+
+// ✅ নতুন যোগ করা ফাংশন: কালার ও সাইজ সিলেক্ট করার জন্য
+function selectFeature(type, val, el) {
+    // ওই সেকশনের সব বাটনের স্টাইল রিসেট করা
+    const parent = el.parentElement;
+    const buttons = parent.getElementsByTagName('button');
+    for (let btn of buttons) {
+        btn.classList.remove('bg-black', 'text-white', 'border-black');
+        btn.classList.add('border-gray-100');
+    }
+
+    // বর্তমান বাটনে সিলেক্টেড স্টাইল যোগ করা
+    el.classList.add('bg-black', 'text-white', 'border-black');
+    el.classList.remove('border-gray-100');
+
+    // ভ্যালু স্টোর করা
+    if (type === 'size') {
+        selectedSize = val;
+    } else {
+        selectedColor = val;
+    }
+}
+
+// ✅ নতুন যোগ করা ফাংশন: কোয়ান্টিটি আপডেট করার জন্য
+function updateQty(val) {
+    modalQty = Math.max(1, modalQty + val);
+    const qtyElement = document.getElementById('modal-qty');
+    if (qtyElement) {
+        qtyElement.innerText = modalQty;
+    }
+}
+
 function renderNewArrivals(products) {
     const slider = document.getElementById('new-arrivals-slider');
     if (!slider) return;
 
-    // শেষ ১০টি প্রোডাক্ট ফিল্টার করা
     const newItems = products.slice(-10).reverse(); 
 
     slider.innerHTML = newItems.map(p => `
         <div class="min-w-[280px] md:min-w-[340px] snap-center group cursor-pointer" onclick="openModal(${p.id})">
             <div class="relative overflow-hidden rounded-[2rem] aspect-[3/4] bg-[#f8f8f8] shadow-sm group-hover:shadow-2xl transition-all duration-1000 ease-in-out">
-                
                 <img src="${p.images[0]}" class="w-full h-full object-cover group-hover:scale-110 transition duration-[1.5s] ease-in-out">
-                
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8">
                      <p class="text-white/70 text-[10px] uppercase tracking-[0.3em] mb-1">${p.category}</p>
                      <h3 class="text-white text-lg font-black uppercase tracking-tighter">${p.name}</h3>
                      <p class="text-white font-bold mt-2 text-xl">৳ ${p.price}</p>
                 </div>
-
                 <div class="absolute top-6 right-6">
                     <div class="bg-white/10 backdrop-blur-xl border border-white/30 text-white text-[10px] font-black px-4 py-2 rounded-full uppercase tracking-[0.2em] shadow-xl flex items-center gap-2">
                         <span class="h-1.5 w-1.5 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]"></span>
@@ -69,7 +95,6 @@ function renderNewArrivals(products) {
                     </div>
                 </div>
             </div>
-
             <div class="mt-6 text-center group-hover:opacity-0 transition-opacity duration-300">
                 <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 mb-2">${p.category}</h3>
                 <h2 class="text-sm font-black uppercase tracking-tight text-gray-900">${p.name}</h2>
@@ -78,11 +103,10 @@ function renderNewArrivals(products) {
         </div>
     `).join('');
 
-    // অটো-স্ক্রলিং লজিক (আরও স্মুথ করা হয়েছে)
     setupAutoScroll(slider);
 }
 
-let animationId; // ফাংশনের বাইরে এটি ডিক্লেয়ার করুন যাতে ডুপ্লিকেট না হয়
+let animationId; 
 
 function setupAutoScroll(slider) {
     if (!slider) return;
@@ -90,13 +114,11 @@ function setupAutoScroll(slider) {
     let isDown = false;
     let startX;
     let scrollLeft;
-    let scrollSpeed = 0.6; // এখানে স্পিড ফিক্সড (এটি পরিবর্তন করবেন না)
+    let scrollSpeed = 0.6; 
 
     const step = () => {
         if (!isDown) {
             slider.scrollLeft += scrollSpeed;
-
-            // লুপ লজিক: যখন শেষ মাথায় পৌঁছাবে তখন শুরুতে চলে আসবে
             if (slider.scrollLeft >= (slider.scrollWidth - slider.offsetWidth - 1)) {
                 slider.scrollLeft = 0;
             }
@@ -104,26 +126,20 @@ function setupAutoScroll(slider) {
         animationId = requestAnimationFrame(step);
     };
 
-    // আগে যদি কোনো এনিমেশন চলতে থাকে তবে সেটা বন্ধ করে নতুনটা শুরু করবে
     if (animationId) {
         cancelAnimationFrame(animationId);
     }
     animationId = requestAnimationFrame(step);
 
-    // মাউস ও টাচ কন্ট্রোল
     slider.addEventListener('mousedown', (e) => {
         isDown = true;
         startX = e.pageX - slider.offsetLeft;
         scrollLeft = slider.scrollLeft;
     });
 
-    const stopDragging = () => {
-        isDown = false;
-    };
-
+    const stopDragging = () => { isDown = false; };
     slider.addEventListener('mouseleave', stopDragging);
     slider.addEventListener('mouseup', stopDragging);
-
     slider.addEventListener('mousemove', (e) => {
         if (!isDown) return;
         e.preventDefault();
@@ -132,17 +148,14 @@ function setupAutoScroll(slider) {
         slider.scrollLeft = scrollLeft - walk;
     });
 
-    // মোবাইলের জন্য টাচ সাপোর্ট (স্পিড ফিক্স রাখার জন্য জরুরি)
     slider.addEventListener('touchstart', (e) => {
         isDown = true;
         startX = e.touches[0].pageX - slider.offsetLeft;
         scrollLeft = slider.scrollLeft;
     });
-
-    slider.addEventListener('touchend', () => {
-        isDown = false;
-    });
+    slider.addEventListener('touchend', () => { isDown = false; });
 }
+
 function displayProducts(products, showAll = false) {
     const grid = document.getElementById('product-grid');
     if (!grid) return;
@@ -153,27 +166,21 @@ function displayProducts(products, showAll = false) {
         grid.innerHTML = `<div class="col-span-full py-20 text-center"><p class="text-gray-400 font-bold uppercase tracking-widest text-sm">No items found</p></div>`;
     } else {
         grid.innerHTML = productsToShow.map(p => {
-            // ডিসকাউন্ট ক্যালকুলেশন
             const hasDiscount = p.originalPrice && p.originalPrice > p.price;
             const discountPercentage = hasDiscount ? Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100) : 0;
 
             return `
             <div class="bg-white rounded-2xl border border-gray-100 p-3 hover:shadow-2xl transition-all duration-500 cursor-pointer group relative" onclick="openModal(${p.id})">
-                
                 ${hasDiscount ? `<div class="absolute top-5 left-5 z-10 bg-red-600 text-white text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-tighter shadow-sm">-${discountPercentage}% OFF</div>` : ''}
-
                 <div class="relative overflow-hidden rounded-xl aspect-[3/4] bg-gray-50">
                     <img src="${p.images[0]}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
                 </div>
-
                 <div class="p-3 text-center">
                     <h3 class="font-bold text-gray-800 text-[11px] uppercase tracking-tighter mb-1">${p.name}</h3>
-                    
                     <div class="flex items-center justify-center gap-2 mb-3">
                         <span class="font-black text-black text-sm">৳ ${p.price}</span>
                         ${hasDiscount ? `<span class="text-gray-400 text-[10px] line-through font-bold tracking-tighter">৳ ${p.originalPrice}</span>` : ''}
                     </div>
-
                     <button class="w-full bg-black text-white py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest group-hover:bg-green-600 transition-colors duration-300">
                         Order Now
                     </button>
@@ -187,11 +194,12 @@ function displayProducts(products, showAll = false) {
         viewAllBtn.style.display = (showAll || products.length <= 8) ? 'none' : 'block';
     }
 }
-// ৪. 'View All' বাটন ফাংশন
+
 function showAllProducts() {
     displayProducts(allProducts, true);
     document.getElementById('product-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
 function openModal(id) {
     const p = allProducts.find(item => item.id === id);
     const content = document.getElementById('modal-content');
@@ -211,29 +219,24 @@ function openModal(id) {
                 `).join('')}
             </div>
         </div>
-
         <div class="flex flex-col">
             <h2 class="text-3xl font-black mb-2 uppercase tracking-tighter text-gray-900">${p.name}</h2>
-            
             <div class="flex items-center gap-3 mb-6">
                 <p class="text-2xl font-black text-black">৳ ${p.price}</p>
                 ${hasDiscount ? `<p class="text-sm font-bold text-gray-400 line-through">৳ ${p.originalPrice}</p>` : ''}
             </div>
-
             <div class="mb-4">
                 <p class="text-[10px] font-black uppercase mb-3 text-gray-400 tracking-[0.2em]">Available Color</p>
                 <div class="flex gap-2">
                     ${p.colors.map(c => `<button onclick="selectFeature('color','${c}',this)" class="px-5 py-2.5 border-2 border-gray-100 rounded-full text-[10px] font-black uppercase hover:border-black transition-all">${c}</button>`).join('')}
                 </div>
             </div>
-
             <div class="mb-6">
                 <p class="text-[10px] font-black uppercase mb-3 text-gray-400 tracking-[0.2em]">Select Size</p>
                 <div class="flex gap-2">
                     ${p.sizes.map(s => `<button onclick="selectFeature('size','${s}',this)" class="w-12 h-12 border-2 border-gray-100 rounded-full text-[10px] font-black uppercase flex items-center justify-center hover:border-black transition-all">${s}</button>`).join('')}
                 </div>
             </div>
-
             <div class="mb-8 flex items-center gap-5">
                 <div class="flex items-center border-2 border-gray-100 rounded-2xl overflow-hidden bg-gray-50">
                     <button onclick="updateQty(-1)" class="px-5 py-3 hover:bg-black hover:text-white transition font-bold">-</button>
@@ -241,18 +244,16 @@ function openModal(id) {
                     <button onclick="updateQty(1)" class="px-5 py-3 hover:bg-black hover:text-white transition font-bold">+</button>
                 </div>
             </div>
-
             <button onclick="addToCart(${p.id})" class="w-full bg-black text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl hover:bg-gray-800 active:scale-95 transition-all duration-300">
                 Add To Cart
             </button>
-
             <div class="mt-8 border-t border-gray-100 pt-6">
                 <button onclick="const box = document.getElementById('details-box'); box.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')" class="flex justify-between items-center w-full group">
                     <span class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 group-hover:text-black transition">Product Details & Fabric</span>
                     <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 transition-transform duration-300"></i>
                 </button>
                 <div id="details-box" class="hidden mt-5 text-[11px] leading-relaxed text-gray-600 bg-gray-50 p-5 rounded-2xl border border-gray-100">
-                    ${p.description || "Premium quality fabric and standard stitching for long-lasting comfort. Crafted for the ultimate streetwear experience."}
+                    ${p.description || "Premium quality fabric and standard stitching for long-lasting comfort."}
                 </div>
             </div>
         </div>
@@ -267,41 +268,29 @@ function addToCart(id) {
             text: 'Please select both Color and Size.',
             icon: 'warning',
             confirmButtonColor: '#000',
-            target: 'body' // এটি নিশ্চিত করবে যে মেসেজটি সবার উপরে আসবে
+            target: 'body'
         });
         return;
     }
-
     const p = allProducts.find(item => item.id === id);
     cart.push({ ...p, selectedSize, selectedColor, qty: modalQty, image: p.images[0] });
-    
     updateCartUI();
     closeModal();
     toggleCart(true);
-
-    // সাকসেস টোস্ট নোটিফিকেশন
     const Toast = Swal.mixin({
         toast: true,
         position: 'top-end',
         showConfirmButton: false,
         timer: 2000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer)
-            toast.addEventListener('mouseleave', Swal.resumeTimer)
-        }
+        timerProgressBar: true
     });
-
-    Toast.fire({
-        icon: 'success',
-        title: 'Added to your shopping bag!'
-    });
+    Toast.fire({ icon: 'success', title: 'Added to your shopping bag!' });
 }
+
 function updateCartUI() {
     const cartContainer = document.getElementById('cart-items');
     const totalElement = document.getElementById('cart-total');
     const freeDeliveryMsg = document.getElementById('free-delivery-msg');
-    
     let subtotal = 0;
     let itemCount = 0;
 
@@ -345,7 +334,7 @@ function updateCartUI() {
 
     if (totalElement) {
         totalElement.innerHTML = `
-            <div class="space-y-1 mb-3">
+            <div class="space-y-1 mb-3 text-left">
                 <div class="flex justify-between text-[10px] text-gray-400 uppercase font-bold tracking-widest">
                     <span>Subtotal</span>
                     <span>৳${subtotal}</span>
@@ -364,7 +353,9 @@ function updateCartUI() {
 
     document.getElementById('cart-count-drawer').innerText = itemCount;
     const floatCount = document.getElementById('cart-count-float');
+    const navCount = document.getElementById('cart-count');
     if (floatCount) floatCount.innerText = itemCount;
+    if (navCount) navCount.innerText = itemCount;
 }
 
 function removeFromCart(index) { cart.splice(index, 1); updateCartUI(); }
@@ -384,14 +375,8 @@ function confirmOrderWhatsApp() {
     const address = document.getElementById('final-address').value.trim();
     const deliveryOption = document.querySelector('input[name="delivery"]:checked');
 
-    // SweetAlert for Order Validation
     if (!name || !phone || !address) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Please provide your full shipping details.',
-            confirmButtonColor: '#000'
-        });
+        Swal.fire({ icon: 'error', title: 'Oops...', text: 'Please provide your full shipping details.', confirmButtonColor: '#000' });
         return;
     }
 
@@ -408,7 +393,6 @@ function confirmOrderWhatsApp() {
     let deliveryCharge = parseInt(deliveryOption ? deliveryOption.value : 80);
     let area = (deliveryCharge === 80) ? "Inside Dhaka" : "Outside Dhaka";
     let deliveryStatus = (itemCount >= 3) ? "FREE (Offer Applied 🚚)" : `৳${deliveryCharge}`;
-
     const finalTotal = subtotal + (itemCount >= 3 ? 0 : deliveryCharge);
 
     let message = `*NEW ORDER - REDAMS*%0A---------------------------%0A*Customer:* ${name}%0A*Phone:* ${phone}%0A*Address:* ${address}%0A*Area:* ${area}%0A---------------------------%0A*Items:*%0A${itemsText}---------------------------%0A*Subtotal:* ৳${subtotal}%0A*Delivery:* ${deliveryStatus}%0A*Final Total: ৳${finalTotal}*%0A---------------------------%0A_Order from Redams Website_`;
