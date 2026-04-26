@@ -40,6 +40,30 @@ function loadProducts() {
         })
         .catch(err => console.error("Error loading products:", err));
 }
+// নিউ অ্যারাইভাল স্লাইডার রেন্ডার করার ফাংশন
+function renderNewArrivals(products) {
+    const slider = document.getElementById('new-arrivals-slider');
+    if (!slider) return;
+
+    // আমরা ধরে নিচ্ছি আপনার JSON ফাইলের শেষের ৩-৪টি প্রোডাক্ট হলো নিউ অ্যারাইভাল
+    // অথবা আপনি চাইলে slice(-6) দিয়ে লেটেস্ট ৬টি প্রোডাক্ট নিতে পারেন
+    const newItems = products.slice(-6).reverse(); 
+
+    slider.innerHTML = newItems.map(p => `
+        <div class="min-w-[200px] md:min-w-[280px] snap-start group cursor-pointer" onclick="openModal(${p.id})">
+            <div class="relative overflow-hidden rounded-2xl aspect-[3/4] bg-gray-100">
+                <img src="${p.images[0]}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                <div class="absolute top-3 left-3">
+                    <span class="bg-black text-white text-[8px] font-black px-2 py-1 rounded uppercase tracking-widest">New</span>
+                </div>
+            </div>
+            <div class="mt-4 text-center">
+                <h3 class="text-[11px] font-bold uppercase tracking-tight text-gray-800">${p.name}</h3>
+                <p class="text-sm font-black mt-1">৳ ${p.price}</p>
+            </div>
+        </div>
+    `).join('');
+}
 
 // ৩. প্রোডাক্ট গ্রিড রেন্ডার করা
 function displayProducts(products, showAll = false) {
