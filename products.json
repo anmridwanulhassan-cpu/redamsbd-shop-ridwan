@@ -127,23 +127,9 @@
     "colors": ["Black"],
     "sizes": ["M", "L", "XL", "XXL"]
   },
-   {
-    "id": 11,
-    "name": "Abstract 01",
-    "price": 399,
-    "originalPrice": 499,
-    "category": "regular-tshirt",
-    "description": "<b>Fabric:</b> Soft-touch Cotton(180+ GSM)<br><b>Fit:</b> Feminine / Regular Fit.<br>Essential summer colors with a soft and stretchy feel.",
-    "images": [
-     "images/Abstract 01 regular model.jpg",
-      "images/Abstract 01 regular mock up.jpg",
-      "images/size chart regular.jpeg"
-    ],
-    "colors": ["White"],
-    "sizes": [ "M", "L", "XL"]
-  },
+   
   {
-    "id": 12,
+    "id": 11,
     "name": "LOST BOY",
     "price": 399,
     "originalPrice": 499,
@@ -157,7 +143,7 @@
     "sizes": [ "M", "L", "XL"]
   },
   {
-    "id": 13,
+    "id": 12,
     "name": "DROPS",
     "price": 399,
     "originalPrice": 499,
@@ -171,7 +157,7 @@
     "sizes": [ "M", "L", "XL"]
   },
   {
-    "id": 14,
+    "id": 13,
     "name": "REDAMS",
     "price": 399,
     "originalPrice": 499,
@@ -186,7 +172,7 @@
     "sizes": [ "M", "L", "XL"]
   },
     {
-    "id": 15,
+    "id": 14,
     "name": "Relax",
     "price": 399,
     "originalPrice": 499,
@@ -200,7 +186,7 @@
     "sizes": [ "s","M", "L", "XL"]
   },
    {
-    "id": 16,
+    "id": 15,
     "name": "Silent. Ruthless. Unstoppable",
     "price": 399,
     "originalPrice": 499,
