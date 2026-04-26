@@ -150,7 +150,7 @@
     "category": "regular-tshirt",
     "description": "<b>Fabric:</b> Soft-touch Cotton(180+ GSM)<br><b>Fit:</b> Feminine / Regular Fit.<br>Essential summer colors with a soft and stretchy feel.",
     "images": [
-     "images/LOST BOY",
+     "images/LOST BOY.jpg",
      "images/size chart regular.jpeg"
     ],
     "colors": ["Black","White"],
@@ -178,11 +178,11 @@
     "category": "regular-tshirt",
     "description": "<b>Fabric:</b> Soft-touch Cotton(180+ GSM)<br><b>Fit:</b> Feminine / Regular Fit.<br>Essential summer colors with a soft and stretchy feel.",
     "images": [
-     "images/REDAMS BLACK.jpg",
-       "images/redams red.jpg",
+     "images/redams red.jpg",
+       "images/REDAMS BLACK.jpg",
      "images/size chart regular.jpeg"
     ],
-    "colors": ["Black","Maroon"],
+    "colors": ["Maroon","Black"],
     "sizes": [ "M", "L", "XL"]
   },
     {
