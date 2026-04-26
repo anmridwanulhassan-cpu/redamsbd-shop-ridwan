@@ -111,5 +111,107 @@
     ],
     "colors": ["Baby Pink"],
     "sizes": ["S", "M", "L", "XL", "XXL"]
+  },
+   {
+    "id": 10,
+    "name": "Primium Acid Wash",
+    "price": 450,
+    "originalPrice": 520,
+    "category": "acid-wash",
+    "description": "<b>Fabric:</b> 100% Premium Acid wash Cotton (200+ GSM).<br><b>Fit:</b> Drop Shoulder / Oversized.<br><b>Print:</b>Can be customized with High Quality DTF print.<br>Breathable fabric for maximum comfort.",
+    "images": [
+      "images/ACID WASH mock up.jpg",
+      "images/acid wash fabric.jpg",
+      "images/size chart drop.jpeg"
+    ],
+    "colors": ["Black"],
+    "sizes": ["M", "L", "XL", "XXL"]
+  },
+   {
+    "id": 11,
+    "name": "Abstract 01",
+    "price": 399,
+    "originalPrice": 499,
+    "category": "regular-tshirt",
+    "description": "<b>Fabric:</b> Soft-touch Cotton(180+ GSM)<br><b>Fit:</b> Feminine / Regular Fit.<br>Essential summer colors with a soft and stretchy feel.",
+    "images": [
+     "images/Abstract 01 regular model.jpg",
+      "images/Abstract 01 regular mock up.jpg",
+      "images/size chart regular.jpeg"
+    ],
+    "colors": ["White"],
+    "sizes": [ "M", "L", "XL"]
+  },
+  {
+    "id": 12,
+    "name": "LOST BOY",
+    "price": 399,
+    "originalPrice": 499,
+    "category": "regular-tshirt",
+    "description": "<b>Fabric:</b> Soft-touch Cotton(180+ GSM)<br><b>Fit:</b> Feminine / Regular Fit.<br>Essential summer colors with a soft and stretchy feel.",
+    "images": [
+     "images/LOST BOY",
+     "images/size chart regular.jpeg"
+    ],
+    "colors": ["Black","White"],
+    "sizes": [ "M", "L", "XL"]
+  },
+  {
+    "id": 13,
+    "name": "DROPS",
+    "price": 399,
+    "originalPrice": 499,
+    "category": "regular-tshirt",
+    "description": "<b>Fabric:</b> Soft-touch Cotton(180+ GSM)<br><b>Fit:</b> Feminine / Regular Fit.<br>Essential summer colors with a soft and stretchy feel.",
+    "images": [
+     "images/DROPS.jpg",
+     "images/size chart regular.jpeg"
+    ],
+    "colors": ["Black","White"],
+    "sizes": [ "M", "L", "XL"]
+  },
+  {
+    "id": 14,
+    "name": "REDAMS",
+    "price": 399,
+    "originalPrice": 499,
+    "category": "regular-tshirt",
+    "description": "<b>Fabric:</b> Soft-touch Cotton(180+ GSM)<br><b>Fit:</b> Feminine / Regular Fit.<br>Essential summer colors with a soft and stretchy feel.",
+    "images": [
+     "images/REDAMS BLACK.jpg",
+       "images/redams red.jpg",
+     "images/size chart regular.jpeg"
+    ],
+    "colors": ["Black","Maroon"],
+    "sizes": [ "M", "L", "XL"]
+  },
+    {
+    "id": 15,
+    "name": "Relax",
+    "price": 399,
+    "originalPrice": 499,
+    "category": "regular-tshirt",
+    "description": "<b>Fabric:</b> Soft-touch Cotton(180+ GSM)<br><b>Fit:</b> Feminine / Regular Fit.<br>Essential summer colors with a soft and stretchy feel.",
+    "images": [
+     "images/Relax.jpg",
+     "images/size chart regular.jpeg"
+    ],
+    "colors": ["Black","White"],
+    "sizes": [ "s","M", "L", "XL"]
+  },
+   {
+    "id": 16,
+    "name": "Silent. Ruthless. Unstoppable",
+    "price": 399,
+    "originalPrice": 499,
+    "category": "regular-tshirt",
+    "description": "<b>Fabric:</b> Soft-touch Cotton(180+ GSM)<br><b>Fit:</b> Feminine / Regular Fit.<br>Essential summer colors with a soft and stretchy feel.",
+    "images": [
+     "images/Silent. Ruthless. Unstoppable..jpg",
+     "images/size chart regular.jpeg"
+    ],
+    "colors": ["Black","White"],
+    "sizes": [ "s","M", "L", "XL"]
   }
+   
 ]
