@@ -122,21 +122,28 @@ function renderNewArrivals(products) {
     // অথবা আপনি চাইলে slice(-6) দিয়ে লেটেস্ট ৬টি প্রোডাক্ট নিতে পারেন
     const newItems = products.slice(-6).reverse(); 
 
-    slider.innerHTML = newItems.map(p => `
-        <div class="min-w-[200px] md:min-w-[280px] snap-start group cursor-pointer" onclick="openModal(${p.id})">
-            <div class="relative overflow-hidden rounded-2xl aspect-[3/4] bg-gray-100">
-                <img src="${p.images[0]}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                <div class="absolute top-3 left-3">
-                    <span class="bg-black text-white text-[8px] font-black px-2 py-1 rounded uppercase tracking-widest">New</span>
+   slider.innerHTML = newItems.map(p => `
+    <div class="min-w-[240px] md:min-w-[300px] snap-center group cursor-pointer" onclick="openModal(${p.id})">
+        <div class="relative overflow-hidden rounded-2xl aspect-[3/4] bg-gray-50 shadow-sm group-hover:shadow-2xl transition-all duration-700">
+            <img src="${p.images[0]}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
+            
+            <div class="absolute top-4 right-4"> <div class="flex items-center gap-1.5 bg-black/70 backdrop-blur-md text-white text-[9px] font-black px-3 py-2 rounded-full uppercase tracking-[0.2em] shadow-lg border border-white/20 transition-all group-hover:bg-green-600/90 group-hover:scale-105">
+                    <span class="relative flex h-1.5 w-1.5">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
+                    </span>
+                    New Drop
                 </div>
             </div>
-            <div class="mt-4 text-center">
-                <h3 class="text-[11px] font-bold uppercase tracking-tight text-gray-800">${p.name}</h3>
-                <p class="text-sm font-black mt-1">৳ ${p.price}</p>
-            </div>
         </div>
-    `).join('');
-}
+        
+        <div class="mt-5 text-center px-2">
+            <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-1">${p.category}</h3>
+            <h2 class="text-xs font-black uppercase tracking-tight text-gray-900 group-hover:text-green-600 transition">${p.name}</h2>
+            <p class="text-sm font-black mt-2 text-gray-900">৳ ${p.price}</p>
+        </div>
+    </div>
+`).join('');
 
 // ৩. প্রোডাক্ট গ্রিড রেন্ডার করা
 function displayProducts(products, showAll = false) {
