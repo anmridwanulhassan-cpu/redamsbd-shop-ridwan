@@ -43,30 +43,76 @@ function loadProducts() {
         })
         .catch(err => console.error("Error loading products:", err));
 }
-
-// নতুন অ্যারাইভাল স্লাইডার রেন্ডার করার ফাংশন (এটি script.js এর যেকোনো জায়গায় রাখলেই হবে)
 function renderNewArrivals(products) {
     const slider = document.getElementById('new-arrivals-slider');
     if (!slider) return;
 
-    // তোমার JSON থেকে লেটেস্ট ৬টি প্রোডাক্ট স্লাইডারে দেখাবে
-    const newItems = products.slice(-6).reverse(); 
+    const newItems = products.slice(-8).reverse(); 
 
     slider.innerHTML = newItems.map(p => `
-        <div class="min-w-[220px] md:min-w-[300px] snap-start group cursor-pointer" onclick="openModal(${p.id})">
-            <div class="relative overflow-hidden rounded-2xl aspect-[3/4] bg-gray-100">
-                <img src="${p.images[0]}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+        <div class="min-w-[240px] md:min-w-[300px] snap-center group cursor-pointer" onclick="openModal(${p.id})">
+            <div class="relative overflow-hidden rounded-2xl aspect-[3/4] bg-gray-50 shadow-sm group-hover:shadow-xl transition-all duration-500">
+                <img src="${p.images[0]}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
                 <div class="absolute top-4 left-4">
-                    <span class="bg-red-600 text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg">New Drop</span>
+                    <span class="bg-white/90 backdrop-blur-sm text-black text-[8px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-sm">New Drop</span>
                 </div>
             </div>
-            <div class="mt-4 text-center">
-                <h3 class="text-[11px] font-bold uppercase tracking-tight text-gray-800">${p.name}</h3>
-                <p class="text-sm font-black mt-1 text-black">৳ ${p.price}</p>
+            <div class="mt-5 text-center">
+                <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-1">${p.category}</h3>
+                <h2 class="text-xs font-black uppercase tracking-tight text-gray-900">${p.name}</h2>
+                <p class="text-sm font-black mt-2 text-gray-900">৳ ${p.price}</p>
             </div>
         </div>
     `).join('');
+
+    // অটোমেটিক স্লাইডিং লজিক
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+    let autoScrollTimer;
+
+    // অটো স্ক্রল শুরু করার ফাংশন
+    const startAutoScroll = () => {
+        autoScrollTimer = setInterval(() => {
+            if (!isDown) {
+                if (slider.scrollLeft + slider.offsetWidth >= slider.scrollWidth) {
+                    slider.scrollTo({ left: 0, behavior: 'smooth' });
+                } else {
+                    slider.scrollBy({ left: 300, behavior: 'smooth' });
+                }
+            }
+        }, 4000); // প্রতি ৪ সেকেন্ড পর পর স্লাইড হবে
+    };
+
+    startAutoScroll();
+
+    // ইউজার যখন হাত দিয়ে স্ক্রল করবে তখন অটো স্ক্রল বন্ধ থাকবে
+    slider.addEventListener('mousedown', (e) => {
+        isDown = true;
+        clearInterval(autoScrollTimer);
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+    });
+
+    slider.addEventListener('mouseleave', () => {
+        isDown = false;
+        startAutoScroll();
+    });
+
+    slider.addEventListener('mouseup', () => {
+        isDown = false;
+        startAutoScroll();
+    });
+
+    slider.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX) * 2;
+        slider.scrollLeft = scrollLeft - walk;
+    });
 }
+
 // নিউ অ্যারাইভাল স্লাইডার রেন্ডার করার ফাংশন
 function renderNewArrivals(products) {
     const slider = document.getElementById('new-arrivals-slider');
