@@ -67,31 +67,53 @@
         </div>
     </div>
 </nav>
+<div class="pt-20 md:pt-24">
+    <div class="swiper mySwiper container mx-auto px-0 md:px-4 overflow-hidden md:rounded-[2.5rem] shadow-2xl">
+        <div class="swiper-wrapper">
+            
+            <div class="swiper-slide relative group aspect-[16/8] md:aspect-[21/9]">
+                <img src="images/cover photo.jpg" alt="New Collection" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent flex flex-col justify-center px-8 md:px-20 text-left">
+                    <span class="text-red-600 text-[10px] md:text-xs font-black uppercase tracking-[0.5em] mb-4 block animate-pulse">New Season 2026</span>
+                    <h1 class="text-white text-3xl md:text-7xl font-black uppercase tracking-tighter leading-none mb-6">
+                        Define Your <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">Street Identity</span>
+                    </h1>
+                    <div class="flex gap-4">
+                        <a href="shop.html" class="bg-white text-black px-6 py-3 rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all duration-500">Shop Now</a>
+                    </div>
+                </div>
+            </div>
 
-<div class="h-20"></div>
+            <div class="swiper-slide relative group aspect-[16/8] md:aspect-[21/9]">
+                <img src="images/2nd cover.png" alt="Sale" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-8 md:p-20 text-center">
+                    <h1 class="text-white text-4xl md:text-8xl font-black uppercase tracking-tighter leading-none mb-4">Summer Drop</h1>
+                    <p class="text-gray-300 text-[10px] md:text-sm uppercase tracking-[0.3em] mb-8">Exclusive Quality. Essential Style.</p>
+                    <div class="flex justify-center gap-4">
+                        <a href="shop.html" class="bg-red-600 text-white px-8 py-3 rounded-full text-[9px] font-black uppercase tracking-widest shadow-xl">View Drop</a>
+                    </div>
+                </div>
+            </div>
 
-<div class="swiper mySwiper">
-    <div class="swiper-wrapper">
-        <div class="swiper-slide">
-            <img src="images/cover photo.jpg" alt="New Collection" class="w-full h-auto">
         </div>
-        <div class="swiper-slide">
-            <img src="images/2nd cover.png" alt="Sale" class="w-full h-auto">
-        </div>
+        
+        <div class="swiper-button-next !text-white !w-10 !h-10 after:!text-sm bg-black/20 backdrop-blur-md rounded-full hover:bg-black/50 transition hidden md:flex"></div>
+        <div class="swiper-button-prev !text-white !w-10 !h-10 after:!text-sm bg-black/20 backdrop-blur-md rounded-full hover:bg-black/50 transition hidden md:flex"></div>
+        <div class="swiper-pagination !bottom-8"></div>
     </div>
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-pagination"></div>
 </div>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var swiper = new Swiper(".mySwiper", {
             loop: true,
+            effect: "fade", // প্রিমিয়াম লুকের জন্য ফেড ইফেক্ট যোগ করা হয়েছে
+            fadeEffect: { crossFade: true },
             autoplay: {
-                delay: 3500,
+                delay: 4500, // একটু বেশি সময় দেওয়া হয়েছে যাতে ইউজার লেখা পড়তে পারে
                 disableOnInteraction: false,
             },
             pagination: {
@@ -104,8 +126,13 @@
             },
         });
     });
-</script>            
-          
+</script>
+
+<style>
+    /* Swiper Pagination Dots Color */
+    .swiper-pagination-bullet { background: rgba(255,255,255,0.5) !important; opacity: 1; }
+    .swiper-pagination-bullet-active { background: #fff !important; width: 25px !important; border-radius: 5px !important; transition: all 0.3s; }
+</style>
 <div class="container mx-auto px-4 py-12">
    <h2 class="text-2xl font-bold text-center mb-10 uppercase tracking-widest text-gray-800">Featured Categories</h2>
     
