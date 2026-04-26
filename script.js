@@ -86,29 +86,43 @@ function setupAutoScroll(slider) {
     let isDown = false;
     let startX;
     let scrollLeft;
-    let timer;
+    let scrollSpeed = 1; // এখানে মান কমালে গতি আরও কমবে (0.5 দিলে আরও স্লো হবে)
+    let animationId;
 
-    const startTimer = () => {
-        timer = setInterval(() => {
-            if (!isDown) {
-                if (slider.scrollLeft + slider.offsetWidth >= slider.scrollWidth - 10) {
-                    slider.scrollTo({ left: 0, behavior: 'smooth' });
-                } else {
-                    slider.scrollBy({ left: 350, behavior: 'smooth' });
-                }
+    // অটোমেটিক কন্টিনিউয়াস স্লাইডিং ফাংশন
+    const step = () => {
+        if (!isDown) {
+            slider.scrollLeft += scrollSpeed;
+
+            // যদি একদম শেষে পৌঁছে যায়, তবে নিঃশব্দে শুরুতে চলে আসবে (লুপ তৈরি করবে)
+            if (slider.scrollLeft >= (slider.scrollWidth - slider.offsetWidth)) {
+                slider.scrollLeft = 0;
             }
-        }, 3500);
+        }
+        animationId = requestAnimationFrame(step);
     };
 
+    // স্লাইডিং শুরু করা
+    animationId = requestAnimationFrame(step);
+
+    // ইউজার কন্ট্রোল (Mouse/Touch)
     slider.addEventListener('mousedown', (e) => {
         isDown = true;
-        clearInterval(timer);
         startX = e.pageX - slider.offsetLeft;
         scrollLeft = slider.scrollLeft;
+        cancelAnimationFrame(animationId); // ইউজার টাচ করলে অটো স্লাইড বন্ধ
     });
 
-    slider.addEventListener('mouseleave', () => { isDown = false; startTimer(); });
-    slider.addEventListener('mouseup', () => { isDown = false; startTimer(); });
+    slider.addEventListener('mouseleave', () => {
+        isDown = false;
+        animationId = requestAnimationFrame(step);
+    });
+
+    slider.addEventListener('mouseup', () => {
+        isDown = false;
+        animationId = requestAnimationFrame(step);
+    });
+
     slider.addEventListener('mousemove', (e) => {
         if (!isDown) return;
         e.preventDefault();
@@ -117,7 +131,16 @@ function setupAutoScroll(slider) {
         slider.scrollLeft = scrollLeft - walk;
     });
 
-    startTimer();
+    // মোবাইলের জন্য টাচ সাপোর্ট
+    slider.addEventListener('touchstart', () => {
+        isDown = true;
+        cancelAnimationFrame(animationId);
+    });
+
+    slider.addEventListener('touchend', () => {
+        isDown = false;
+        animationId = requestAnimationFrame(step);
+    });
 }
 
 // ৩. প্রোডাক্ট গ্রিড রেন্ডার করা
