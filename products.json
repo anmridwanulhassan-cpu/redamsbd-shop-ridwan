@@ -443,21 +443,6 @@
     ],
     "colors": ["Black", "White"],
     "sizes": ["S", "M", "L", "XL"]
-  },
-   {
-    "id": 33,
-    "name": "Abstract 01",
-    "price": 399,
-    "originalPrice": 450,
-    "category": "regular-tshirt",
-    "description": "<b>Material:</b> Light-weight Cotton.<br><b>Fit:</b> Regular Standard Fit.<br>Basic essentials for layering or solo wear. Solid colors that don't fade.",
-    "images": [
-      "images/Abstract 01 regular model.jpg",
-      "images/Abstract 01 regular mock up.jpg",
-      "images/size chart regular.jpeg"
-    ],
-    "colors": ["Black", "White"],
-    "sizes": ["S", "M", "L", "XL"]
   }
 ]
 
