@@ -387,7 +387,77 @@
     ],
     "colors": ["Black","White"],
     "sizes": [ "M", "L", "XL", "XXL"]
+  },
+  {
+    "id": 29,
+    "name": "BANGLADESH 2.0",
+    "price": 399,
+    "originalPrice": 450,
+    "category": "regular-tshirt",
+    "description": "<b>Material:</b> Light-weight Cotton.<br><b>Fit:</b> Regular Standard Fit.<br>Basic essentials for layering or solo wear. Solid colors that don't fade.",
+    "images": [
+      "images/BANGLADESH 2.0.jpg",
+      "images/size chart regular.jpeg"
+    ],
+    "colors": ["Black", "White"],
+    "sizes": ["S", "M", "L", "XL"]
+  },
+  {
+    "id": 30,
+    "name": "FREEDOM",
+    "price": 399,
+    "originalPrice": 450,
+    "category": "regular-tshirt",
+    "description": "<b>Material:</b> Light-weight Cotton.<br><b>Fit:</b> Regular Standard Fit.<br>Basic essentials for layering or solo wear. Solid colors that don't fade.",
+    "images": [
+      "images/FREEDOM.jpg",
+      "images/size chart regular.jpeg"
+    ],
+    "colors": ["Black", "White"],
+    "sizes": ["S", "M", "L", "XL"]
+  },
+    {
+    "id": 31,
+    "name": "GUNS N' ROSES",
+    "price": 399,
+    "originalPrice": 450,
+    "category": "regular-tshirt",
+    "description": "<b>Material:</b> Light-weight Cotton.<br><b>Fit:</b> Regular Standard Fit.<br>Basic essentials for layering or solo wear. Solid colors that don't fade.",
+    "images": [
+      "images/GUNS N' ROSES.jpg",
+      "images/size chart regular.jpeg"
+    ],
+    "colors": ["Black", "White"],
+    "sizes": ["S", "M", "L", "XL"]
+  },
+  {
+    "id": 32,
+    "name": "Polaroid",
+    "price": 399,
+    "originalPrice": 450,
+    "category": "regular-tshirt",
+    "description": "<b>Material:</b> Light-weight Cotton.<br><b>Fit:</b> Regular Standard Fit.<br>Basic essentials for layering or solo wear. Solid colors that don't fade.",
+    "images": [
+      "images/Polaroid.jpg",
+      "images/size chart regular.jpeg"
+    ],
+    "colors": ["Black", "White"],
+    "sizes": ["S", "M", "L", "XL"]
+  },
+   {
+    "id": 33,
+    "name": "Abstract 01",
+    "price": 399,
+    "originalPrice": 450,
+    "category": "regular-tshirt",
+    "description": "<b>Material:</b> Light-weight Cotton.<br><b>Fit:</b> Regular Standard Fit.<br>Basic essentials for layering or solo wear. Solid colors that don't fade.",
+    "images": [
+      "images/Abstract 01 regular model.jpg",
+      "images/Abstract 01 regular mock up.jpg",
+      "images/size chart regular.jpeg"
+    ],
+    "colors": ["Black", "White"],
+    "sizes": ["S", "M", "L", "XL"]
   }
-  
 ]
 
