@@ -219,6 +219,58 @@
                 <input type="text" id="final-name" placeholder="আপনার নাম" class="w-full p-3 text-sm border rounded-xl outline-none bg-gray-50 focus:bg-white transition">
                 <input type="text" id="final-phone" placeholder="ফোন নম্বর" class="w-full p-3 text-sm border rounded-xl outline-none bg-gray-50 focus:bg-white transition">
                 <textarea id="final-address" placeholder="সম্পূর্ণ ঠিকানা" class="w-full p-3 text-sm border rounded-xl outline-none h-16 bg-gray-50 focus:bg-white transition resize-none"></textarea>
+           <div class="mt-6 space-y-4 bg-gray-50 p-4 md:p-6 rounded-[2.5rem] border border-gray-100">
+    <p class="text-[10px] font-black uppercase text-gray-400 tracking-[0.2em] mb-4 ml-2">Select Payment Method</p>
+    
+    <div class="grid grid-cols-1 gap-3">
+        <label class="payment-card relative flex items-center justify-between p-4 bg-white rounded-2xl border-2 border-transparent has-[:checked]:border-black cursor-pointer transition-all duration-300">
+            <div class="flex items-center gap-3">
+                <input type="radio" name="payment-method" value="COD" checked class="hidden" onclick="updatePaymentUI('COD')">
+                <div class="w-5 h-5 border-2 border-gray-200 rounded-full flex items-center justify-center">
+                    <div class="w-2.5 h-2.5 bg-black rounded-full opacity-0 check-dot transition-opacity"></div>
+                </div>
+                <span class="text-[11px] font-black uppercase tracking-widest">Cash On Delivery</span>
+            </div>
+            <i class="fa-solid fa-truck-fast text-gray-400"></i>
+        </label>
+
+        <label class="payment-card relative flex items-center justify-between p-4 bg-white rounded-2xl border-2 border-transparent has-[:checked]:border-[#e2136e] cursor-pointer transition-all duration-300">
+            <div class="flex items-center gap-3">
+                <input type="radio" name="payment-method" value="bKash" class="hidden" onclick="updatePaymentUI('bKash')">
+                <div class="w-5 h-5 border-2 border-gray-200 rounded-full flex items-center justify-center">
+                    <div class="w-2.5 h-2.5 bg-[#e2136e] rounded-full opacity-0 check-dot transition-opacity"></div>
+                </div>
+                <span class="text-[11px] font-black uppercase tracking-widest">bKash (Advance Charge)</span>
+            </div>
+            <img src="https://www.logo.wine/a/logo/BKash/BKash-Icon-Logo.wine.svg" class="h-6 w-6 object-contain">
+        </label>
+
+        <label class="payment-card relative flex items-center justify-between p-4 bg-white rounded-2xl border-2 border-transparent has-[:checked]:border-[#f7941d] cursor-pointer transition-all duration-300">
+            <div class="flex items-center gap-3">
+                <input type="radio" name="payment-method" value="Nagad" class="hidden" onclick="updatePaymentUI('Nagad')">
+                <div class="w-5 h-5 border-2 border-gray-200 rounded-full flex items-center justify-center">
+                    <div class="w-2.5 h-2.5 bg-[#f7941d] rounded-full opacity-0 check-dot transition-opacity"></div>
+                </div>
+                <span class="text-[11px] font-black uppercase tracking-widest">Nagad (Advance Charge)</span>
+            </div>
+            <img src="https://download.logo.wine/logo/Nagad/Nagad-Vertical-Logo.wine.png" class="h-6 w-6 object-contain">
+        </label>
+    </div>
+
+    <div id="payment-instruction" class="mt-4 p-5 rounded-2xl border transition-all duration-500 bg-white shadow-sm min-h-[120px] flex flex-col justify-center">
+        <div id="instruction-content">
+            <p class="text-[10px] font-bold text-gray-500 uppercase leading-relaxed text-center">
+                অর্ডারটি কনফার্ম করতে দয়া করে ডেলিভারি চার্জ অগ্রিম প্রদান করুন।
+            </p>
+        </div>
+        <input type="text" id="trnx-id" placeholder="Transaction ID (TRXID)" class="w-full mt-4 p-4 text-[10px] font-bold uppercase tracking-widest border border-gray-100 rounded-xl outline-none focus:border-black bg-gray-50 transition-all">
+    </div>
+</div>
+
+<style>
+    /* Radio button logic for showing dot */
+    input:checked + div .check-dot { opacity: 1 !important; }
+</style>
             </div>
             <div id="cart-total" class="pt-2"></div>
             <button onclick="confirmOrderWhatsApp()" class="w-full bg-[#25D366] text-white py-4 rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 shadow-lg">
