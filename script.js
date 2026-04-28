@@ -404,32 +404,68 @@ function updatePaymentUI(method) {
     const instructionBox = document.getElementById('payment-instruction');
     const instructionContent = document.getElementById('instruction-content');
     const trnxInput = document.getElementById('trnx-id');
+    
+    // Reset Trnx Input
+    trnxInput.value = '';
+    validateOrder(); // Reset button status
 
-    // কালার এবং নম্বর সেট করা
     if (method === 'bKash') {
         instructionBox.style.borderColor = '#e2136e';
-        instructionBox.style.backgroundColor = '#fff0f6';
         instructionContent.innerHTML = `
-            <p class="text-[9px] font-black text-[#e2136e] uppercase tracking-widest mb-1">Send Advance Delivery Charge to bKash (Personal)</p>
-            <h3 class="text-2xl font-black tracking-tighter mb-1 text-black">01740550559</h3>
-            <p class="text-[8px] font-bold text-gray-500 uppercase">বিকাশ অ্যাপ থেকে 'Send Money' করুন।</p>
+            <p class="text-[9px] font-black text-[#e2136e] uppercase mb-1">bKash (Personal): 01894357549</p>
+            <p class="text-[10px] font-bold text-black leading-tight">ডেলিভারি চার্জ সেন্ড মানি করে TRXID দিন।</p>
         `;
     } else if (method === 'Nagad') {
         instructionBox.style.borderColor = '#f7941d';
-        instructionBox.style.backgroundColor = '#fff5eb';
         instructionContent.innerHTML = `
-            <p class="text-[9px] font-black text-[#f7941d] uppercase tracking-widest mb-1">Send Advance Delivery Charge to Nagad (Personal)</p>
-            <h3 class="text-2xl font-black tracking-tighter mb-1 text-black">01894357549</h3>
-            <p class="text-[8px] font-bold text-gray-500 uppercase">নগদ অ্যাপ থেকে 'Send Money' করুন।</p>
+            <p class="text-[9px] font-black text-[#f7941d] uppercase mb-1">Nagad (Personal): 017XXXXXXXX</p>
+            <p class="text-[10px] font-bold text-black leading-tight">ডেলিভারি চার্জ সেন্ড মানি করে TRXID দিন।</p>
         `;
     } else {
         instructionBox.style.borderColor = '#eee';
-        instructionBox.style.backgroundColor = '#fff';
-        instructionContent.innerHTML = `
-            <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Cash on Delivery selected</p>
-            <p class="text-[10px] font-bold text-black uppercase leading-tight">ডেলিভারি চার্জ অগ্রিম পাঠাতে উপরের যেকোনো একটি মাধ্যম ব্যবহার করুন।</p>
-        `;
+        instructionContent.innerHTML = `<p class="text-[9px] font-bold text-gray-500 uppercase text-center">ডেলিভারি চার্জ অগ্রিম প্রদান করে অর্ডার কনফার্ম করুন।</p>`;
     }
+}
+
+// TRXID টাইপ করলে বাটন চেক করবে
+document.getElementById('trnx-id').addEventListener('input', validateOrder);
+
+function validateOrder() {
+    const trnxId = document.getElementById('trnx-id').value.trim();
+    const btn = document.getElementById('confirm-order-btn');
+    
+    // ধরি ট্রানজেকশন আইডি অন্তত ৮ ক্যারেক্টার হতে হবে
+    if (trnxId.length >= 8) {
+        btn.disabled = false;
+        btn.classList.remove('bg-gray-300', 'cursor-not-allowed');
+        btn.classList.add('bg-[#25D366]', 'hover:bg-[#1ebd58]');
+        updateCartUI(true); // true মানে চার্জ পেইড
+    } else {
+        btn.disabled = true;
+        btn.classList.remove('bg-[#25D366]', 'hover:bg-[#1ebd58]');
+        btn.classList.add('bg-gray-300', 'cursor-not-allowed');
+        updateCartUI(false);
+    }
+}
+
+function updateCartUI(isPaid = false) {
+    // আপনার আগের কার্ট ক্যালকুলেশন কোড এখানে থাকবে
+    // শুধু ডেলিভারি চার্জ দেখানোর সময় নিচের লজিকটি ব্যবহার করবেন:
+    
+    let deliveryCharge = isPaid ? 0 : document.querySelector('input[name="delivery"]:checked').value;
+    let deliveryDisplay = isPaid ? '<span class="text-green-600 font-black">PAID</span>' : '৳' + deliveryCharge;
+
+    document.getElementById('cart-total').innerHTML = `
+        <div class="flex justify-between text-[10px] font-black uppercase tracking-widest mb-2">
+            <span>Delivery Charge</span>
+            <span>${deliveryDisplay}</span>
+        </div>
+        <div class="flex justify-between text-lg font-black uppercase tracking-tighter">
+            <span>Total</span>
+            <span>৳${calculateTotal(isPaid)}</span>
+        </div>
+    `;
+}
 }
 window.onload = loadProducts;
 
