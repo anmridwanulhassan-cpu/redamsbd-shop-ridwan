@@ -379,6 +379,7 @@ function confirmOrderWhatsApp() {
         Swal.fire({ icon: 'error', title: 'Oops...', text: 'Please provide your full shipping details.', confirmButtonColor: '#000' });
         return;
     }
+    
 
     let subtotal = 0;
     let itemCount = 0;
@@ -399,5 +400,36 @@ function confirmOrderWhatsApp() {
 
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
 }
+function updatePaymentUI(method) {
+    const instructionBox = document.getElementById('payment-instruction');
+    const instructionContent = document.getElementById('instruction-content');
+    const trnxInput = document.getElementById('trnx-id');
 
+    // কালার এবং নম্বর সেট করা
+    if (method === 'bKash') {
+        instructionBox.style.borderColor = '#e2136e';
+        instructionBox.style.backgroundColor = '#fff0f6';
+        instructionContent.innerHTML = `
+            <p class="text-[9px] font-black text-[#e2136e] uppercase tracking-widest mb-1">Send Advance Delivery Charge to bKash (Personal)</p>
+            <h3 class="text-2xl font-black tracking-tighter mb-1 text-black">01740550559</h3>
+            <p class="text-[8px] font-bold text-gray-500 uppercase">বিকাশ অ্যাপ থেকে 'Send Money' করুন।</p>
+        `;
+    } else if (method === 'Nagad') {
+        instructionBox.style.borderColor = '#f7941d';
+        instructionBox.style.backgroundColor = '#fff5eb';
+        instructionContent.innerHTML = `
+            <p class="text-[9px] font-black text-[#f7941d] uppercase tracking-widest mb-1">Send Advance Delivery Charge to Nagad (Personal)</p>
+            <h3 class="text-2xl font-black tracking-tighter mb-1 text-black">01894357549</h3>
+            <p class="text-[8px] font-bold text-gray-500 uppercase">নগদ অ্যাপ থেকে 'Send Money' করুন।</p>
+        `;
+    } else {
+        instructionBox.style.borderColor = '#eee';
+        instructionBox.style.backgroundColor = '#fff';
+        instructionContent.innerHTML = `
+            <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Cash on Delivery selected</p>
+            <p class="text-[10px] font-bold text-black uppercase leading-tight">ডেলিভারি চার্জ অগ্রিম পাঠাতে উপরের যেকোনো একটি মাধ্যম ব্যবহার করুন।</p>
+        `;
+    }
+}
 window.onload = loadProducts;
+
