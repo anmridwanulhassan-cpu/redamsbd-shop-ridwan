@@ -3,6 +3,7 @@ let cart = [];
 let selectedSize = null;
 let selectedColor = null;
 let modalQty = 1;
+let isPaymentVerified = false; // পেমেন্ট ভ্যালিডেশন ট্র্যাক করার জন্য
 
 const WHATSAPP_NUMBER = "8801894357549"; 
 
@@ -42,9 +43,8 @@ function loadProducts() {
         .catch(err => console.error("Error loading products:", err));
 }
 
-// ✅ নতুন যোগ করা ফাংশন: কালার ও সাইজ সিলেক্ট করার জন্য
+// ৩. কালার ও সাইজ সিলেক্ট করার জন্য
 function selectFeature(type, val, el) {
-    // ওই সেকশনের সব বাটনের স্টাইল রিসেট করা
     const parent = el.parentElement;
     const buttons = parent.getElementsByTagName('button');
     for (let btn of buttons) {
@@ -52,11 +52,9 @@ function selectFeature(type, val, el) {
         btn.classList.add('border-gray-100');
     }
 
-    // বর্তমান বাটনে সিলেক্টেড স্টাইল যোগ করা
     el.classList.add('bg-black', 'text-white', 'border-black');
     el.classList.remove('border-gray-100');
 
-    // ভ্যালু স্টোর করা
     if (type === 'size') {
         selectedSize = val;
     } else {
@@ -64,7 +62,7 @@ function selectFeature(type, val, el) {
     }
 }
 
-// ✅ নতুন যোগ করা ফাংশন: কোয়ান্টিটি আপডেট করার জন্য
+// ৪. কোয়ান্টিটি আপডেট করার জন্য
 function updateQty(val) {
     modalQty = Math.max(1, modalQty + val);
     const qtyElement = document.getElementById('modal-qty');
@@ -73,6 +71,7 @@ function updateQty(val) {
     }
 }
 
+// ৫. New Arrivals স্লাইডার রেন্ডার
 function renderNewArrivals(products) {
     const slider = document.getElementById('new-arrivals-slider');
     if (!slider) return;
@@ -107,13 +106,10 @@ function renderNewArrivals(products) {
 }
 
 let animationId; 
-
 function setupAutoScroll(slider) {
     if (!slider) return;
-
     let isDown = false;
-    let startX;
-    let scrollLeft;
+    let startX, scrollLeft;
     let scrollSpeed = 0.6; 
 
     const step = () => {
@@ -126,9 +122,7 @@ function setupAutoScroll(slider) {
         animationId = requestAnimationFrame(step);
     };
 
-    if (animationId) {
-        cancelAnimationFrame(animationId);
-    }
+    if (animationId) cancelAnimationFrame(animationId);
     animationId = requestAnimationFrame(step);
 
     slider.addEventListener('mousedown', (e) => {
@@ -142,20 +136,13 @@ function setupAutoScroll(slider) {
     slider.addEventListener('mouseup', stopDragging);
     slider.addEventListener('mousemove', (e) => {
         if (!isDown) return;
-        e.preventDefault();
         const x = e.pageX - slider.offsetLeft;
         const walk = (x - startX) * 2;
         slider.scrollLeft = scrollLeft - walk;
     });
-
-    slider.addEventListener('touchstart', (e) => {
-        isDown = true;
-        startX = e.touches[0].pageX - slider.offsetLeft;
-        scrollLeft = slider.scrollLeft;
-    });
-    slider.addEventListener('touchend', () => { isDown = false; });
 }
 
+// ৬. প্রোডাক্ট গ্রিড ডিসপ্লে
 function displayProducts(products, showAll = false) {
     const grid = document.getElementById('product-grid');
     if (!grid) return;
@@ -167,11 +154,11 @@ function displayProducts(products, showAll = false) {
     } else {
         grid.innerHTML = productsToShow.map(p => {
             const hasDiscount = p.originalPrice && p.originalPrice > p.price;
-            const discountPercentage = hasDiscount ? Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100) : 0;
+            const discPer = hasDiscount ? Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100) : 0;
 
             return `
             <div class="bg-white rounded-2xl border border-gray-100 p-3 hover:shadow-2xl transition-all duration-500 cursor-pointer group relative" onclick="openModal(${p.id})">
-                ${hasDiscount ? `<div class="absolute top-5 left-5 z-10 bg-red-600 text-white text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-tighter shadow-sm">-${discountPercentage}% OFF</div>` : ''}
+                ${hasDiscount ? `<div class="absolute top-5 left-5 z-10 bg-red-600 text-white text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-tighter shadow-sm">-${discPer}% OFF</div>` : ''}
                 <div class="relative overflow-hidden rounded-xl aspect-[3/4] bg-gray-50">
                     <img src="${p.images[0]}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
                 </div>
@@ -181,18 +168,14 @@ function displayProducts(products, showAll = false) {
                         <span class="font-black text-black text-sm">৳ ${p.price}</span>
                         ${hasDiscount ? `<span class="text-gray-400 text-[10px] line-through font-bold tracking-tighter">৳ ${p.originalPrice}</span>` : ''}
                     </div>
-                    <button class="w-full bg-black text-white py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest group-hover:bg-green-600 transition-colors duration-300">
-                        Order Now
-                    </button>
+                    <button class="w-full bg-black text-white py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest group-hover:bg-green-600 transition-colors duration-300">Order Now</button>
                 </div>
-            </div>
-        `}).join('');
+            </div>`;
+        }).join('');
     }
 
     const viewAllBtn = document.getElementById('view-all-container');
-    if (viewAllBtn) {
-        viewAllBtn.style.display = (showAll || products.length <= 8) ? 'none' : 'block';
-    }
+    if (viewAllBtn) viewAllBtn.style.display = (showAll || products.length <= 8) ? 'none' : 'block';
 }
 
 function showAllProducts() {
@@ -200,6 +183,7 @@ function showAllProducts() {
     document.getElementById('product-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
+// ৭. মোডাল লজিক
 function openModal(id) {
     const p = allProducts.find(item => item.id === id);
     const content = document.getElementById('modal-content');
@@ -213,10 +197,7 @@ function openModal(id) {
                 <img id="main-view" src="${p.images[0]}" class="w-full h-[450px] object-cover transition duration-500">
             </div>
             <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                ${p.images.map(img => `
-                    <img src="${img}" onclick="document.getElementById('main-view').src='${img}'" 
-                    class="w-20 h-24 object-cover rounded-xl cursor-pointer border-2 border-transparent hover:border-black transition-all">
-                `).join('')}
+                ${p.images.map(img => `<img src="${img}" onclick="document.getElementById('main-view').src='${img}'" class="w-20 h-24 object-cover rounded-xl cursor-pointer border-2 border-transparent hover:border-black transition-all">`).join('')}
             </div>
         </div>
         <div class="flex flex-col">
@@ -244,32 +225,16 @@ function openModal(id) {
                     <button onclick="updateQty(1)" class="px-5 py-3 hover:bg-black hover:text-white transition font-bold">+</button>
                 </div>
             </div>
-            <button onclick="addToCart(${p.id})" class="w-full bg-black text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl hover:bg-gray-800 active:scale-95 transition-all duration-300">
-                Add To Cart
-            </button>
-            <div class="mt-8 border-t border-gray-100 pt-6">
-                <button onclick="const box = document.getElementById('details-box'); box.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')" class="flex justify-between items-center w-full group">
-                    <span class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 group-hover:text-black transition">Product Details & Fabric</span>
-                    <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 transition-transform duration-300"></i>
-                </button>
-                <div id="details-box" class="hidden mt-5 text-[11px] leading-relaxed text-gray-600 bg-gray-50 p-5 rounded-2xl border border-gray-100">
-                    ${p.description || "Premium quality fabric and standard stitching for long-lasting comfort."}
-                </div>
-            </div>
+            <button onclick="addToCart(${p.id})" class="w-full bg-black text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl hover:bg-gray-800 active:scale-95 transition-all duration-300">Add To Cart</button>
         </div>
     `;
     document.getElementById('product-modal').classList.replace('hidden', 'flex');
 }
 
+// ৮. কার্ট লজিক
 function addToCart(id) {
     if (!selectedSize || !selectedColor) {
-        Swal.fire({
-            title: 'Selection Required!',
-            text: 'Please select both Color and Size.',
-            icon: 'warning',
-            confirmButtonColor: '#000',
-            target: 'body'
-        });
+        Swal.fire({ title: 'Selection Required!', text: 'Please select both Color and Size.', icon: 'warning', confirmButtonColor: '#000' });
         return;
     }
     const p = allProducts.find(item => item.id === id);
@@ -277,20 +242,18 @@ function addToCart(id) {
     updateCartUI();
     closeModal();
     toggleCart(true);
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true
-    });
+    const Toast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 2000, timerProgressBar: true });
     Toast.fire({ icon: 'success', title: 'Added to your shopping bag!' });
 }
 
-function updateCartUI() {
+function updateCartUI(isPaidOverride = null) {
     const cartContainer = document.getElementById('cart-items');
     const totalElement = document.getElementById('cart-total');
     const freeDeliveryMsg = document.getElementById('free-delivery-msg');
+    
+    // পেইড স্ট্যাটাস চেক
+    if (isPaidOverride !== null) isPaymentVerified = isPaidOverride;
+
     let subtotal = 0;
     let itemCount = 0;
 
@@ -308,29 +271,32 @@ function updateCartUI() {
                     </div>
                 </div>
                 <button onclick="removeFromCart(${index})" class="text-red-500 hover:scale-110 transition">&times;</button>
-            </div>
-        `;
+            </div>`;
     }).join('');
 
     const deliveryOption = document.querySelector('input[name="delivery"]:checked');
     let deliveryCharge = parseInt(deliveryOption ? deliveryOption.value : 80);
 
+    // ফ্রি ডেলিভারি অফার চেক
     if (itemCount >= 3) {
         deliveryCharge = 0;
         if (freeDeliveryMsg) {
-            freeDeliveryMsg.classList.remove('opacity-60', 'text-gray-500');
-            freeDeliveryMsg.classList.add('opacity-100', 'text-green-600', 'scale-105');
+            freeDeliveryMsg.classList.add('text-green-600', 'scale-105', 'opacity-100');
             freeDeliveryMsg.innerHTML = "You've unlocked FREE DELIVERY! 🚚✅";
         }
     } else {
         if (freeDeliveryMsg) {
-            freeDeliveryMsg.classList.add('opacity-60', 'text-gray-500');
-            freeDeliveryMsg.classList.remove('opacity-100', 'text-green-600', 'scale-105');
+            freeDeliveryMsg.classList.remove('text-green-600', 'scale-105', 'opacity-100');
             freeDeliveryMsg.innerHTML = "Buy 3 or more items to get FREE DELIVERY 🚚";
         }
     }
 
-    const finalTotal = subtotal + deliveryCharge;
+    // পেমেন্ট পেইড হলে ডেলিভারি চার্জ মাইনাস
+    const finalDeliveryCharge = isPaymentVerified ? 0 : deliveryCharge;
+    const finalTotal = subtotal + finalDeliveryCharge;
+
+    const deliveryDisplay = isPaymentVerified ? '<span class="text-green-600 font-black">PAID</span>' : 
+                          (deliveryCharge === 0 ? '<span class="text-green-600 font-black">FREE</span>' : '৳' + deliveryCharge);
 
     if (totalElement) {
         totalElement.innerHTML = `
@@ -339,107 +305,56 @@ function updateCartUI() {
                     <span>Subtotal</span>
                     <span>৳${subtotal}</span>
                 </div>
-                <div class="flex justify-between text-[10px] uppercase font-bold ${deliveryCharge === 0 ? 'text-green-600' : 'text-gray-400'} tracking-widest">
+                <div class="flex justify-between text-[10px] uppercase font-bold tracking-widest">
                     <span>Delivery</span>
-                    <span>${deliveryCharge === 0 ? 'FREE' : '৳' + deliveryCharge}</span>
+                    <span>${deliveryDisplay}</span>
                 </div>
                 <div class="flex justify-between items-center border-t border-gray-100 pt-2 mt-2">
                     <span class="text-xs font-black uppercase">Final Total</span>
                     <span class="text-2xl font-black text-black tracking-tighter">৳${finalTotal}</span>
                 </div>
-            </div>
-        `;
+            </div>`;
     }
 
     document.getElementById('cart-count-drawer').innerText = itemCount;
-    const floatCount = document.getElementById('cart-count-float');
-    const navCount = document.getElementById('cart-count');
-    if (floatCount) floatCount.innerText = itemCount;
-    if (navCount) navCount.innerText = itemCount;
+    if (document.getElementById('cart-count-float')) document.getElementById('cart-count-float').innerText = itemCount;
+    if (document.getElementById('cart-count')) document.getElementById('cart-count').innerText = itemCount;
 }
 
-function removeFromCart(index) { cart.splice(index, 1); updateCartUI(); }
-
-function toggleCart(forceOpen = false) {
-    const drawer = document.getElementById('cart-drawer');
-    if (!drawer) return;
-    if (forceOpen === true) drawer.classList.remove('translate-x-full');
-    else drawer.classList.toggle('translate-x-full');
-}
-
-function closeModal() { document.getElementById('product-modal').classList.replace('flex', 'hidden'); }
-
-function confirmOrderWhatsApp() {
-    const name = document.getElementById('final-name').value.trim();
-    const phone = document.getElementById('final-phone').value.trim();
-    const address = document.getElementById('final-address').value.trim();
-    const deliveryOption = document.querySelector('input[name="delivery"]:checked');
-
-    if (!name || !phone || !address) {
-        Swal.fire({ icon: 'error', title: 'Oops...', text: 'Please provide your full shipping details.', confirmButtonColor: '#000' });
-        return;
-    }
-    
-
-    let subtotal = 0;
-    let itemCount = 0;
-    let itemsText = "";
-
-    cart.forEach((item, index) => {
-        itemsText += `${index + 1}. ${item.name} (${item.selectedSize}/${item.selectedColor}) x ${item.qty} = ৳${item.price * item.qty}%0A`;
-        subtotal += item.price * item.qty;
-        itemCount += item.qty;
-    });
-
-    let deliveryCharge = parseInt(deliveryOption ? deliveryOption.value : 80);
-    let area = (deliveryCharge === 80) ? "Inside Dhaka" : "Outside Dhaka";
-    let deliveryStatus = (itemCount >= 3) ? "FREE (Offer Applied 🚚)" : `৳${deliveryCharge}`;
-    const finalTotal = subtotal + (itemCount >= 3 ? 0 : deliveryCharge);
-
-    let message = `*NEW ORDER - REDAMS*%0A---------------------------%0A*Customer:* ${name}%0A*Phone:* ${phone}%0A*Address:* ${address}%0A*Area:* ${area}%0A---------------------------%0A*Items:*%0A${itemsText}---------------------------%0A*Subtotal:* ৳${subtotal}%0A*Delivery:* ${deliveryStatus}%0A*Final Total: ৳${finalTotal}*%0A---------------------------%0A_Order from Redams Website_`;
-
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
-}
+// ৯. পেমেন্ট ভ্যালিডেশন লজিক
 function updatePaymentUI(method) {
     const instructionBox = document.getElementById('payment-instruction');
     const instructionContent = document.getElementById('instruction-content');
     const trnxInput = document.getElementById('trnx-id');
     
-    // Reset Trnx Input
     trnxInput.value = '';
-    validateOrder(); // Reset button status
+    validateOrder(); 
 
     if (method === 'bKash') {
         instructionBox.style.borderColor = '#e2136e';
         instructionContent.innerHTML = `
-            <p class="text-[9px] font-black text-[#e2136e] uppercase mb-1">bKash (Personal): 01894357549</p>
-            <p class="text-[10px] font-bold text-black leading-tight">ডেলিভারি চার্জ সেন্ড মানি করে TRXID দিন।</p>
-        `;
+            <p class="text-[9px] font-black text-[#e2136e] uppercase mb-1">bKash (Personal):01740550559</p>
+            <p class="text-[10px] font-bold text-black leading-tight">ডেলিভারি চার্জ সেন্ড মানি করে TRXID দিন।</p>`;
     } else if (method === 'Nagad') {
         instructionBox.style.borderColor = '#f7941d';
         instructionContent.innerHTML = `
-            <p class="text-[9px] font-black text-[#f7941d] uppercase mb-1">Nagad (Personal): 017XXXXXXXX</p>
-            <p class="text-[10px] font-bold text-black leading-tight">ডেলিভারি চার্জ সেন্ড মানি করে TRXID দিন।</p>
-        `;
+            <p class="text-[9px] font-black text-[#f7941d] uppercase mb-1">Nagad (Personal): 01894357549</p>
+            <p class="text-[10px] font-bold text-black leading-tight">ডেলিভারি চার্জ সেন্ড মানি করে TRXID দিন।</p>`;
     } else {
         instructionBox.style.borderColor = '#eee';
         instructionContent.innerHTML = `<p class="text-[9px] font-bold text-gray-500 uppercase text-center">ডেলিভারি চার্জ অগ্রিম প্রদান করে অর্ডার কনফার্ম করুন।</p>`;
     }
 }
 
-// TRXID টাইপ করলে বাটন চেক করবে
-document.getElementById('trnx-id').addEventListener('input', validateOrder);
-
 function validateOrder() {
     const trnxId = document.getElementById('trnx-id').value.trim();
     const btn = document.getElementById('confirm-order-btn');
     
-    // ধরি ট্রানজেকশন আইডি অন্তত ৮ ক্যারেক্টার হতে হবে
     if (trnxId.length >= 8) {
         btn.disabled = false;
         btn.classList.remove('bg-gray-300', 'cursor-not-allowed');
         btn.classList.add('bg-[#25D366]', 'hover:bg-[#1ebd58]');
-        updateCartUI(true); // true মানে চার্জ পেইড
+        updateCartUI(true); 
     } else {
         btn.disabled = true;
         btn.classList.remove('bg-[#25D366]', 'hover:bg-[#1ebd58]');
@@ -448,24 +363,53 @@ function validateOrder() {
     }
 }
 
-function updateCartUI(isPaid = false) {
-    // আপনার আগের কার্ট ক্যালকুলেশন কোড এখানে থাকবে
-    // শুধু ডেলিভারি চার্জ দেখানোর সময় নিচের লজিকটি ব্যবহার করবেন:
+// পেমেন্ট ইনপুটে লিসেনার যোগ করা
+document.addEventListener('DOMContentLoaded', () => {
+    const trnxInput = document.getElementById('trnx-id');
+    if (trnxInput) {
+        trnxInput.addEventListener('input', validateOrder);
+    }
+});
+
+// ১০. হোয়াটসঅ্যাপ অর্ডার কনফার্ম
+function confirmOrderWhatsApp() {
+    const name = document.getElementById('final-name').value.trim();
+    const phone = document.getElementById('final-phone').value.trim();
+    const address = document.getElementById('final-address').value.trim();
+    const trnxId = document.getElementById('trnx-id').value.trim();
+    const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+
+    if (!name || !phone || !address || cart.length === 0) {
+        Swal.fire({ icon: 'error', title: 'Oops...', text: 'Please fill all details and add items to bag.', confirmButtonColor: '#000' });
+        return;
+    }
+
+    let subtotal = 0, itemCount = 0, itemsText = "";
+    cart.forEach((item, index) => {
+        itemsText += `${index + 1}. ${item.name} (${item.selectedSize}/${item.selectedColor}) x ${item.qty} = ৳${item.price * item.qty}%0A`;
+        subtotal += item.price * item.qty;
+        itemCount += item.qty;
+    });
+
+    const deliveryOption = document.querySelector('input[name="delivery"]:checked');
+    let deliveryCharge = parseInt(deliveryOption.value);
+    let area = (deliveryCharge === 80) ? "Inside Dhaka" : "Outside Dhaka";
     
-    let deliveryCharge = isPaid ? 0 : document.querySelector('input[name="delivery"]:checked').value;
-    let deliveryDisplay = isPaid ? '<span class="text-green-600 font-black">PAID</span>' : '৳' + deliveryCharge;
+    // ফাইনাল ক্যালকুলেশন (পেইড হলে চার্জ ০)
+    const finalTotal = subtotal + (isPaymentVerified ? 0 : (itemCount >= 3 ? 0 : deliveryCharge));
 
-    document.getElementById('cart-total').innerHTML = `
-        <div class="flex justify-between text-[10px] font-black uppercase tracking-widest mb-2">
-            <span>Delivery Charge</span>
-            <span>${deliveryDisplay}</span>
-        </div>
-        <div class="flex justify-between text-lg font-black uppercase tracking-tighter">
-            <span>Total</span>
-            <span>৳${calculateTotal(isPaid)}</span>
-        </div>
-    `;
+    let message = `*NEW ORDER - REDAMS*%0A---------------------------%0A*Customer:* ${name}%0A*Phone:* ${phone}%0A*Address:* ${address}%0A*Area:* ${area}%0A*Payment:* ${paymentMethod}%0A*TRXID:* ${trnxId}%0A---------------------------%0A*Items:*%0A${itemsText}---------------------------%0A*Subtotal:* ৳${subtotal}%0A*Delivery Charge:* ${isPaymentVerified ? 'PAID' : (itemCount >= 3 ? 'FREE' : '৳' + deliveryCharge)}%0A*Final Total: ৳${finalTotal}*%0A---------------------------%0A_Order via Redams Website_`;
+
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
 }
+
+// সাহায্যকারী ফাংশন
+function removeFromCart(index) { cart.splice(index, 1); updateCartUI(); }
+function toggleCart(forceOpen = false) {
+    const drawer = document.getElementById('cart-drawer');
+    if (forceOpen === true) drawer.classList.remove('translate-x-full');
+    else drawer.classList.toggle('translate-x-full');
 }
+function closeModal() { document.getElementById('product-modal').classList.replace('flex', 'hidden'); }
+
 window.onload = loadProducts;
-
