@@ -323,6 +323,6 @@ function setupAutoScroll(slider) {
         slider.scrollLeft += scrollSpeed;
         if (slider.scrollLeft >= (slider.scrollWidth - slider.offsetWidth - 1)) slider.scrollLeft = 0;
         requestAnimationFrame(step);
-    };
+    }; 
     requestAnimationFrame(step);
 }
