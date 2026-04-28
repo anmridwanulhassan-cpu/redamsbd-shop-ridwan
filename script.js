@@ -250,7 +250,7 @@ function updatePaymentUI(method) {
         instructionContent.innerHTML = `<p class="text-[9px] font-black text-[#e2136e] uppercase mb-1">bKash (Personal): 01740550559</p><p class="text-[10px] font-bold text-black leading-tight">ডেলিভারি চার্জ Send Money করে TRXID দিন।</p>`;
     } else if (method === 'Nagad') {
         instructionBox.style.borderColor = '#f7941d';
-        instructionContent.innerHTML = `<p class="text-[9px] font-black text-[#f7941d] uppercase mb-1">Nagad (Personal): 01894357549</p><p class="text-[10px] font-bold text-black leading-tight">ডেলিভারি চার্জ Send Money করে TRXID দিন।</p>`;
+        instructionContent.innerHTML = `<p class="text-[9px] font-black text-[#f7941d] uppercase mb-1">Nagad (Personal): 01740550559</p><p class="text-[10px] font-bold text-black leading-tight">ডেলিভারি চার্জ Send Money করে TRXID দিন।</p>`;
     } else {
         instructionBox.style.borderColor = '#eee';
         instructionContent.innerHTML = `<p class="text-[9px] font-bold text-gray-400 uppercase text-center">ডেলিভারি চার্জ অগ্রিম দিয়ে অর্ডার কনফার্ম করুন।</p>`;
